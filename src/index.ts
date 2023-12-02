@@ -14,6 +14,7 @@ export * from './constants/specialcrops.js';
 export * from './constants/tools.js';
 export * from './constants/weight.js';
 export * from './constants/pests.js';
+export * from './constants/personalbests.js';
 
 export * from './util/itemstats.js';
 export * from './util/jacob.js';
