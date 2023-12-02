@@ -4,6 +4,16 @@ export function CropDisplayName(crop: Crop) {
 	return CROP_DISPLAY_NAMES[crop] ?? 'Unknown Crop';
 }
 
+export function CropFromName(name: string) {
+	const fromDisplay = DISPLAY_NAMES_TO_CROP[name];
+	if (fromDisplay) return fromDisplay;
+
+	const fromShort = SHORT_NAMES_TO_CROP[name];
+	if (fromShort) return fromShort;
+
+	return CropFromItemId(name);
+}
+
 export function CropFromItemId(itemId: string) {
 	return CROP_ITEM_IDS[itemId];
 }
@@ -24,6 +34,34 @@ const CROP_DISPLAY_NAMES: Record<Crop, string> = {
 	[Crop.SugarCane]: 'Sugar Cane',
 	[Crop.Wheat]: 'Wheat',
 	[Crop.Seeds]: 'Seeds',
+};
+
+const DISPLAY_NAMES_TO_CROP: Record<string, Crop> = {
+	Cactus: Crop.Cactus,
+	Carrot: Crop.Carrot,
+	'Cocoa Beans': Crop.CocoaBeans,
+	Melon: Crop.Melon,
+	Mushroom: Crop.Mushroom,
+	'Nether Wart': Crop.NetherWart,
+	Potato: Crop.Potato,
+	Pumpkin: Crop.Pumpkin,
+	'Sugar Cane': Crop.SugarCane,
+	Wheat: Crop.Wheat,
+	Seeds: Crop.Seeds,
+};
+
+const SHORT_NAMES_TO_CROP: Record<string, Crop> = {
+	cactus: Crop.Cactus,
+	carrot: Crop.Carrot,
+	cocoa: Crop.CocoaBeans,
+	melon: Crop.Melon,
+	mushroom: Crop.Mushroom,
+	wart: Crop.NetherWart,
+	potato: Crop.Potato,
+	pumpkin: Crop.Pumpkin,
+	cane: Crop.SugarCane,
+	wheat: Crop.Wheat,
+	seeds: Crop.Seeds,
 };
 
 const CROP_ITEM_IDS: Record<string, Crop> = {

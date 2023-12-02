@@ -185,15 +185,21 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	return result;
 }
 
-export function GetFortuneRequiredForCollection(
-	crop: Crop,
-	collection: number,
-	blocksBroken: number,
-	useTool = false
-): number {
-	const { drops } = GetCropInfo(crop);
+export interface FortuneRequiredCalculatorOptions {
+	blocksBroken: number;
+	crop: Crop;
+	collection: number;
+	useDicers?: boolean;
+	useMooshroom?: boolean;
+}
 
-	if (useTool)
+export function GetFortuneRequiredForCollection(options: FortuneRequiredCalculatorOptions): number {
+	const { blocksBroken, crop, useDicers, useMooshroom } = options;
+	let { collection } = options;
+
+	const { drops } = GetCropInfo(options.crop);
+
+	if (useDicers)
 		switch (crop) {
 			case Crop.Pumpkin:
 				collection -= CalculatePumpkinPerkBonus(blocksBroken);
@@ -202,6 +208,10 @@ export function GetFortuneRequiredForCollection(
 				collection -= CalculateMelonPerkBonus(blocksBroken);
 				break;
 		}
+
+	if (useMooshroom && crop === Crop.Mushroom) {
+		collection -= blocksBroken; // "* breaks" not needed because it's always 1 for mushroom
+	}
 
 	const fortune = (collection * 100) / (drops * blocksBroken) - 100;
 	return Math.ceil(fortune);
