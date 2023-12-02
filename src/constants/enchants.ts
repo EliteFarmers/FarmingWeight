@@ -116,7 +116,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		appliesTo: [ReforgeTarget.Axe],
 		wiki: 'https://wiki.hypixel.net/Sunder_Enchantment',
 		minLevel: 1,
-		maxLevel: 5,
+		maxLevel: 6,
 		levels: {
 			1: {
 				[Stat.FarmingFortune]: 12.5,
@@ -132,6 +132,9 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			},
 			5: {
 				[Stat.FarmingFortune]: 62.5,
+			},
+			6: {
+				[Stat.FarmingFortune]: 75,
 			},
 		},
 	},
