@@ -12,7 +12,7 @@ export function FortuneFromPestBestiary(bestiaryKills: Record<string, number>): 
 		if (!kills) continue;
 
 		// Find the highest reached bracket for this pest
-		const bracket = brackets.find(b => +kills >= b[1]);
+		const bracket = brackets.find((b) => +kills >= b[1]);
 
 		reachedBrackets += bracket ? +bracket[0] : 0;
 	}
@@ -61,7 +61,7 @@ export const PEST_EXCHANGE_RATES = {
 	37: 194,
 	38: 196,
 	39: 198,
-	40: 200
+	40: 200,
 };
 
 export const PEST_IDS = [
@@ -74,7 +74,7 @@ export const PEST_IDS = [
 	'mosquito',
 	'moth',
 	'rat',
-	'slug'
+	'slug',
 ] as const;
 
 const FORTUNE_PER_BRACKET = 0.4;
@@ -95,4 +95,4 @@ const KILLS_PER_BRACKET: Record<number, number> = {
 	13: 125,
 	14: 175,
 	15: 250,
-}
+};

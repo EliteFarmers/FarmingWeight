@@ -27,17 +27,17 @@ const CROP_DISPLAY_NAMES: Record<Crop, string> = {
 };
 
 const CROP_ITEM_IDS: Record<string, Crop> = {
-	'CACTUS': Crop.Cactus,
-	'CARROT_ITEM': Crop.Carrot,
+	CACTUS: Crop.Cactus,
+	CARROT_ITEM: Crop.Carrot,
 	'INK_SACK:3': Crop.CocoaBeans,
-	'MELON': Crop.Melon,
-	'BROWN_MUSHROOM': Crop.Mushroom,
-	'NETHER_STALK': Crop.NetherWart,
-	'POTATO_ITEM': Crop.Potato,
-	'PUMPKIN': Crop.Pumpkin,
-	'SUGAR_CANE': Crop.SugarCane,
-	'WHEAT': Crop.Wheat,
-	'SEEDS': Crop.Seeds,
+	MELON: Crop.Melon,
+	BROWN_MUSHROOM: Crop.Mushroom,
+	NETHER_STALK: Crop.NetherWart,
+	POTATO_ITEM: Crop.Potato,
+	PUMPKIN: Crop.Pumpkin,
+	SUGAR_CANE: Crop.SugarCane,
+	WHEAT: Crop.Wheat,
+	SEEDS: Crop.Seeds,
 };
 
 const ITEM_IDS_TO_CROP: Record<Crop, string> = {

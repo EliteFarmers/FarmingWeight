@@ -1,4 +1,4 @@
-import { Crop } from "./crops";
+import { Crop } from './crops';
 
 export function FortuneFromPersonalBestContest(crop: Crop, personalBest: number) {
 	const cropsPerTier = PERSONAL_BESTS_CROPS_PER_TIER[crop];
@@ -19,5 +19,5 @@ export const PERSONAL_BESTS_CROPS_PER_TIER: Record<Crop, number> = {
 	[Crop.SugarCane]: 2_000,
 	[Crop.NetherWart]: 3_000,
 	[Crop.CocoaBeans]: 3_000,
-	[Crop.Seeds]: 0 // Just for type safety
-}
+	[Crop.Seeds]: 0, // Just for type safety
+};

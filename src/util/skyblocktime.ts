@@ -1,10 +1,18 @@
 export class SkyBlockTime {
 	static readonly SkyBlockEpochSeconds = 1560275700;
 	static readonly MonthNames = [
-		'Early Spring', 'Spring', 'Late Spring',
-		'Early Summer', 'Summer', 'Late Summer',
-		'Early Autumn', 'Autumn', 'Late Autumn',
-		'Early Winter', 'Winter', 'Late Winter',
+		'Early Spring',
+		'Spring',
+		'Late Spring',
+		'Early Summer',
+		'Summer',
+		'Late Summer',
+		'Early Autumn',
+		'Autumn',
+		'Late Autumn',
+		'Early Winter',
+		'Winter',
+		'Late Winter',
 	] as const;
 
 	declare readonly year: number;
@@ -23,8 +31,8 @@ export class SkyBlockTime {
 		const elapsedDays = Math.floor(elapsedSeconds / 1200);
 
 		this.year = Math.floor(elapsedDays / 372) + 1;
-		this.month = Math.floor(elapsedDays % 372 / 31) + 1;
-		this.day = Math.floor(elapsedDays % 372 % 31) + 1;
+		this.month = Math.floor((elapsedDays % 372) / 31) + 1;
+		this.day = Math.floor((elapsedDays % 372) % 31) + 1;
 	}
 
 	static from(sbYear: number, sbMonth = 1, sbDay = 1) {
