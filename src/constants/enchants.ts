@@ -140,6 +140,39 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	},
 } as const;
 
+export const FARMING_ARMOR_ENCHANTS: Record<string, FarmingEnchant> = {
+	pesterminator: {
+		name: 'Pesterminator',
+		appliesTo: [ ReforgeTarget.Armor ],
+		wiki: 'https://wiki.hypixel.net/Pesterminator_Enchantment',
+		levelRequirement: 10,
+		minLevel: 1,
+		maxLevel: 5,
+		levels: {
+			1: {
+				[Stat.FarmingFortune]: 1,
+				[Stat.BonusPestChance]: 2
+			},
+			2: {
+				[Stat.FarmingFortune]: 2,
+				[Stat.BonusPestChance]: 4
+			},
+			3: {
+				[Stat.FarmingFortune]: 3,
+				[Stat.BonusPestChance]: 6
+			},
+			4: {
+				[Stat.FarmingFortune]: 4,
+				[Stat.BonusPestChance]: 8
+			},
+			5: {
+				[Stat.FarmingFortune]: 5,
+				[Stat.BonusPestChance]: 10
+			}
+		},
+	},
+} as const;
+
 export const TURBO_ENCHANTS: Record<string, Crop> = {
 	turbo_cactus: Crop.Cactus,
 	turbo_cane: Crop.SugarCane,
