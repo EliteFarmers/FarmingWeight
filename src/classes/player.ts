@@ -1,5 +1,6 @@
 import { Crop } from '../constants/crops';
 import { FortuneFromPersonalBestContest } from '../constants/personalbests';
+import { FortuneFromPestBestiary } from '../constants/pests';
 import { FarmingPetType } from '../constants/pets';
 import { FORTUNE_PER_CROP_UPGRADE, FORTUNE_PER_PLOT } from '../constants/specific';
 import { ItemIdFromCrop } from '../util/names';
@@ -25,6 +26,7 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	pets: FarmingPetType[];
 
 	personalBests?: Record<string, number>;
+	bestiaryKills?: Record<string, number>;
 }
 
 export function CreatePlayer(options: PlayerOptions) {
@@ -63,6 +65,15 @@ class Player {
 			if (fortune > 0) {
 				breakdown['Personal Best'] = fortune;
 				sum += fortune;
+			}
+		}
+
+		// Bestiary
+		if (this.options.bestiaryKills) {
+			const bestiary = FortuneFromPestBestiary(this.options.bestiaryKills);
+			if (bestiary > 0) {
+				breakdown['Pest Bestiary'] = bestiary;
+				sum += bestiary;
 			}
 		}
 
