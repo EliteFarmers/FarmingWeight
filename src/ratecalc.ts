@@ -2,7 +2,6 @@ import { CROP_INFO, Crop, CropInfo, MAX_CROP_FORTUNE } from './constants/crops';
 import { CalculateMelonPerkBonus } from './crops/melon';
 import { CalculatePumpkinPerkBonus } from './crops/pumpkin';
 import { CalculateAverageSpecialCrops } from './crops/special';
-
 interface CalculateDropsOptions {
 	farmingFortune?: number;
 	blocksBroken: number;
@@ -171,7 +170,7 @@ export function CalculateDetailedDrops(options: CalculateCropDetailedDropsOption
 			if (replenish) {
 				// Replenish takes away one drop per block broken
 				result.coinSources['Collection'] = Math.round((baseDrops - blocksBroken * breaks) * npc);
-				result.collection = Math.round(baseDrops - blocksBroken * breaks);
+				result.collection = Math.round(baseDrops);
 				break;
 			}
 
