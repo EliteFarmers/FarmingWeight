@@ -1,5 +1,3 @@
-export * from './ratecalc.js';
-
 export * from './classes/farmingarmor.js';
 export * from './classes/farmingtool.js';
 export * from './classes/item.js';
@@ -20,6 +18,7 @@ export * from './util/itemstats.js';
 export * from './util/jacob.js';
 export * from './util/names.js';
 export * from './util/skyblocktime.js';
+export * from './util/ratecalc.js';
 
 export * from './crops/special.js';
 export * from './crops/pumpkin.js';
