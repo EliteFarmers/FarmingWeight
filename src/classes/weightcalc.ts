@@ -30,6 +30,7 @@ export interface FarmingWeightInfo {
 		claimed_participants?: number;
 		claimed_medal?: 'bronze' | 'silver' | 'gold';
 	}[];
+	pests?: Record<string, number>;
 }
 
 class FarmingWeight {
@@ -41,6 +42,7 @@ class FarmingWeight {
 	declare earnedGoldMedals: number;
 	declare cropWeights: Record<Crop, number>;
 	declare bonusSources: Record<string, number>;
+	declare uncountedCrops: Record<Crop, number>;
 
 	constructor(info?: FarmingWeightInfo) {
 		this.collection = {} as Record<Crop, number>;
@@ -50,7 +52,9 @@ class FarmingWeight {
 		this.earnedGoldMedals = 0;
 		this.tier12MinionCount = 0;
 		this.bonusSources = {} as Record<string, number>;
+		this.uncountedCrops = {} as Record<Crop, number>;
 
+		// this.setUncountedCrops();
 		this.setCropsFromCollections(info?.collection ?? {});
 		this.addMinions(info?.minions ?? []);
 	}
