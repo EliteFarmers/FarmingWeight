@@ -1,5 +1,6 @@
 import { Crop } from '../constants/crops';
 import { BONUS_WEIGHT, CROP_WEIGHT, TIER_12_MINIONS } from '../constants/weight';
+import { uncountedCropsFromPests } from '../util/pests';
 
 export function createFarmingWeightCalculator(info?: FarmingWeightInfo) {
 	return new FarmingWeight(info);
@@ -42,9 +43,13 @@ class FarmingWeight {
 	declare earnedGoldMedals: number;
 	declare cropWeights: Record<Crop, number>;
 	declare bonusSources: Record<string, number>;
-	declare uncountedCrops: Record<Crop, number>;
+	declare uncountedCrops: Partial<Record<Crop, number>>;
+
+	readonly info?: FarmingWeightInfo;
 
 	constructor(info?: FarmingWeightInfo) {
+		this.info = info;
+
 		this.collection = {} as Record<Crop, number>;
 		this.levelCapUpgrade = info?.levelCapUpgrade ?? 0;
 		this.anitaBonusFarmingFortuneLevel = info?.anitaBonusFarmingFortuneLevel ?? 0;
@@ -54,7 +59,7 @@ class FarmingWeight {
 		this.bonusSources = {} as Record<string, number>;
 		this.uncountedCrops = {} as Record<Crop, number>;
 
-		// this.setUncountedCrops();
+		this.calcUncountedCrops(info?.pests ?? {});
 		this.setCropsFromCollections(info?.collection ?? {});
 		this.addMinions(info?.minions ?? []);
 	}
@@ -147,6 +152,7 @@ class FarmingWeight {
 			bonusWeight: bonusTotal,
 			cropWeight: cropTotal,
 			bonusSources: bonus,
+			uncountedCrops: this.uncountedCrops,
 		};
 	};
 
@@ -192,7 +198,13 @@ class FarmingWeight {
 		let doubleBreakWeight = 0;
 
 		for (const crop of crops) {
-			const collected = this.collection[crop] ?? 0;
+			let collected = this.collection[crop] ?? 0;
+
+			// Subtract uncounted crops
+			if (this.uncountedCrops[crop]) {
+				collected = Math.max(0, collected - (this.uncountedCrops[crop] ?? 0));
+			}
+
 			const weight = collected / CROP_WEIGHT[crop];
 
 			totalWeight += weight;
@@ -221,6 +233,12 @@ class FarmingWeight {
 
 		return cropWeight;
 	};
+
+	calcUncountedCrops = (bestiary: Record<string, number>) => {
+		this.uncountedCrops = uncountedCropsFromPests(bestiary);
+		this.getCropWeights();
+		return this;
+	}
 
 	getCropWeight = (crop: Crop) => {
 		CROP_WEIGHT[crop];

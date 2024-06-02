@@ -130,7 +130,7 @@ export const PEST_COLLECTION_BRACKETS = [
 // Taken from https://api.elitebot.dev/weights/all
 export const PEST_COLLECTION_ADJUSTMENTS: Record<Pest, Record<number, number>> = {
 	mite: {
-		0: 672,
+		0: 0,
 		50: 1285.333312988281,
 		100: 1898.6666259765625,
 		250: 2512,
@@ -139,7 +139,7 @@ export const PEST_COLLECTION_ADJUSTMENTS: Record<Pest, Record<number, number>> =
 		1000: 3861.3333740234375,
 	},
 	cricket: {
-		0: 774.4,
+		0: 0,
 		50: 1430.3999755859375,
 		100: 2086.399951171875,
 		250: 2742.4,
@@ -148,7 +148,7 @@ export const PEST_COLLECTION_ADJUSTMENTS: Record<Pest, Record<number, number>> =
 		1000: 4185.600048828125,
 	},
 	moth: {
-		0: 774.4,
+		0: 0,
 		50: 1430.3999755859375,
 		100: 2086.399951171875,
 		250: 2742.4,
@@ -157,7 +157,7 @@ export const PEST_COLLECTION_ADJUSTMENTS: Record<Pest, Record<number, number>> =
 		1000: 4185.600048828125,
 	},
 	worm: {
-		0: 1184,
+		0: 0,
 		50: 2010.6666259765625,
 		100: 2837.333251953125,
 		250: 3664,
@@ -166,7 +166,7 @@ export const PEST_COLLECTION_ADJUSTMENTS: Record<Pest, Record<number, number>> =
 		1000: 5482.666748046875,
 	},
 	slug: {
-		0: 211.2,
+		0: 0,
 		50: 632.5333312988281,
 		100: 1053.8666625976562,
 		250: 1475.2,
@@ -175,7 +175,7 @@ export const PEST_COLLECTION_ADJUSTMENTS: Record<Pest, Record<number, number>> =
 		1000: 2402.133337402344,
 	},
 	beetle: {
-		0: 928,
+		0: 0,
 		50: 1647.9999694824216,
 		100: 2367.9999389648438,
 		250: 3088,
@@ -184,7 +184,7 @@ export const PEST_COLLECTION_ADJUSTMENTS: Record<Pest, Record<number, number>> =
 		1000: 4672.000061035156,
 	},
 	locust: {
-		0: 928,
+		0: 0,
 		50: 1647.9999694824216,
 		100: 2367.9999389648438,
 		250: 3088,
@@ -193,7 +193,7 @@ export const PEST_COLLECTION_ADJUSTMENTS: Record<Pest, Record<number, number>> =
 		1000: 4672.000061035156,
 	},
 	rat: {
-		0: 416,
+		0: 0,
 		50: 922.6666564941406,
 		100: 1429.333312988281,
 		250: 1936,
@@ -202,7 +202,7 @@ export const PEST_COLLECTION_ADJUSTMENTS: Record<Pest, Record<number, number>> =
 		1000: 3050.6666870117188,
 	},
 	mosquito: {
-		0: 672,
+		0: 0,
 		50: 1285.333312988281,
 		100: 1898.6666259765625,
 		250: 2512,
@@ -211,7 +211,7 @@ export const PEST_COLLECTION_ADJUSTMENTS: Record<Pest, Record<number, number>> =
 		1000: 3861.3333740234375,
 	},
 	fly: {
-		0: 3162.24,
+		0: 0,
 		50: 7179.839925842285,
 		100: 11197.43985168457,
 		250: 15215.04,
