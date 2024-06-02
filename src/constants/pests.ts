@@ -88,7 +88,7 @@ export const PEST_IDS: Pest[] = [
 	Pest.Moth,
 	Pest.Rat,
 	Pest.Slug,
-] as const;
+];
 
 export const PEST_TO_CROP: Record<Pest, Crop> = {
 	mite: Crop.Cactus,
