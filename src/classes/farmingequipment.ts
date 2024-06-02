@@ -28,7 +28,7 @@ export class FarmingEquipment {
 
 		const info = EQUIPMENT_INFO[item.skyblockId as keyof typeof EQUIPMENT_INFO];
 		if (!info) {
-			throw new Error(`Unknown lotus gear: ${item.name} (${item.skyblockId})`);
+			throw new Error(`Unknown equipment: ${item.name} (${item.skyblockId})`);
 		}
 		this.info = info;
 

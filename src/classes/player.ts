@@ -1,6 +1,6 @@
 import { Crop } from '../constants/crops';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests';
-import { fortuneFromPestBestiary } from '../constants/pests';
+import { fortuneFromPestBestiary } from '../util/pests';
 import { FarmingPetType } from '../constants/pets';
 import {
 	FORTUNE_PER_ANITA_BONUS,
@@ -52,6 +52,7 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 	anitaBonus?: number;
 
 	extraFortune?: ExtraFarmingFortune[];
+	zorro?: boolean;
 }
 
 export function createFarmingPlayer(options: PlayerOptions) {
@@ -182,10 +183,10 @@ export class FarmingPlayer {
 		}
 
 		// Lotus Gear
-		const lotusGear = this.equipment.reduce((a, b) => a + b.fortune, 0);
-		if (lotusGear > 0) {
-			breakdown['Lotus Equipment'] = lotusGear;
-			sum += lotusGear;
+		const equipment = this.equipment.reduce((a, b) => a + b.fortune, 0);
+		if (equipment > 0) {
+			breakdown['Equipment'] = equipment;
+			sum += equipment;
 		}
 
 		// Anita Bonus
