@@ -7,6 +7,8 @@ export * from './fortune/item.js';
 export * from './weight/weightcalc.js';
 export * from './player/player.js';
 
+export * from './upgrades/upgrades.js';
+
 export * from './constants/garden.js';
 export * from './constants/armor.js';
 export * from './constants/crops.js';

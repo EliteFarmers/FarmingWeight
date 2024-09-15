@@ -1,3 +1,4 @@
+import { PlayerOptions } from '../player/player';
 import { Crop } from './crops';
 import { ReforgeTarget, Stat } from './reforges';
 
@@ -7,9 +8,34 @@ export interface FarmingEnchant {
 	wiki: string;
 	minLevel: number;
 	maxLevel: number;
+	cropSpecific?: Crop;
 	levels?: Record<number, Partial<Record<Stat, number>>>;
-	multipliedLevels?: Record<number, Partial<Record<Stat, number>>>;
+	computed?: Record<number, Partial<Record<Stat, (opt: PlayerOptions) => number>>>;
+	cropComputed?: Record<number, Partial<Record<Stat, (crop: Crop, opt?: PlayerOptions) => number>>>;
 	levelRequirement?: number;
+}
+
+const turboEnchant = {
+	appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+	minLevel: 1,
+	maxLevel: 5,
+	levels: {
+		1: {
+			[Stat.FarmingFortune]: 5
+		},
+		2: {
+			[Stat.FarmingFortune]: 10
+		},
+		3: {
+			[Stat.FarmingFortune]: 15
+		},
+		4: {
+			[Stat.FarmingFortune]: 20
+		},
+		5: {
+			[Stat.FarmingFortune]: 25
+		},
+	},
 }
 
 export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
@@ -96,18 +122,30 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		wiki: 'https://wiki.hypixel.net/Dedication_Enchantment',
 		minLevel: 1,
 		maxLevel: 4,
-		multipliedLevels: {
+		cropComputed: {
 			1: {
-				[Stat.FarmingFortune]: 0.5,
+				[Stat.FarmingFortune]: (crop, opt) => {
+					if (!crop) return 0;
+					return 0.5 * (opt?.milestones?.[crop] ?? 0);
+				},
 			},
 			2: {
-				[Stat.FarmingFortune]: 0.75,
+				[Stat.FarmingFortune]: (crop, opt) => {
+					if (!crop) return 0;
+					return 0.75 * (opt?.milestones?.[crop] ?? 0);
+				},
 			},
 			3: {
-				[Stat.FarmingFortune]: 1,
+				[Stat.FarmingFortune]: (crop, opt) => {
+					if (!crop) return 0;
+					return 1 * (opt?.milestones?.[crop] ?? 0);
+				},
 			},
 			4: {
-				[Stat.FarmingFortune]: 2,
+				[Stat.FarmingFortune]: (crop, opt) => {
+					if (!crop) return 0;
+					return 2 * (opt?.milestones?.[crop] ?? 0);
+				},
 			},
 		},
 	},
@@ -138,9 +176,6 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 			},
 		},
 	},
-} as const;
-
-export const FARMING_ARMOR_ENCHANTS: Record<string, FarmingEnchant> = {
 	pesterminator: {
 		name: 'Pesterminator',
 		appliesTo: [ReforgeTarget.Armor],
@@ -171,9 +206,6 @@ export const FARMING_ARMOR_ENCHANTS: Record<string, FarmingEnchant> = {
 			},
 		},
 	},
-} as const;
-
-export const EQUIPMENT_ENCHANTS: Record<string, FarmingEnchant> = {
 	green_thumb: {
 		name: 'Green Thumb',
 		appliesTo: [ReforgeTarget.Equipment],
@@ -181,37 +213,92 @@ export const EQUIPMENT_ENCHANTS: Record<string, FarmingEnchant> = {
 		levelRequirement: 24,
 		minLevel: 1,
 		maxLevel: 5,
-		multipliedLevels: {
+		computed: {
 			1: {
-				[Stat.FarmingFortune]: 0.05
+				[Stat.FarmingFortune]: (opt) => {
+					return 0.05 * (opt.uniqueVisitors ?? 0);
+				},
 			},
 			2: {
-				[Stat.FarmingFortune]: 0.1
+				[Stat.FarmingFortune]: (opt) => {
+					return 0.1 * (opt.uniqueVisitors ?? 0);
+				},
 			},
 			3: {
-				[Stat.FarmingFortune]: 0.15
+				[Stat.FarmingFortune]: (opt) => {
+					return 0.15 * (opt.uniqueVisitors ?? 0);
+				},
 			},
 			4: {
-				[Stat.FarmingFortune]: 0.2
+				[Stat.FarmingFortune]: (opt) => {
+					return 0.2 * (opt.uniqueVisitors ?? 0);
+				},
 			},
 			5: {
-				[Stat.FarmingFortune]: 0.25
+				[Stat.FarmingFortune]: (opt) => {
+					return 0.25 * (opt.uniqueVisitors ?? 0);
+				},
 			},
 		},
 	},
+	turbo_cactus: {
+		name: 'Turbo-Cacti',
+		wiki: 'https://wiki.hypixel.net/Turbo-Cacti_Enchantment',
+		cropSpecific: Crop.Cactus,
+		...turboEnchant
+	},
+	turbo_cane: {
+		name: 'Turbo-Cane',
+		wiki: 'https://wiki.hypixel.net/Turbo-Cane_Enchantment',
+		cropSpecific: Crop.SugarCane,
+		...turboEnchant
+	},
+	turbo_carrot: {
+		name: 'Turbo-Carrot',
+		wiki: 'https://wiki.hypixel.net/Turbo-Carrot_Enchantment',
+		cropSpecific: Crop.Carrot,
+		...turboEnchant
+	},
+	turbo_coco: {
+		name: 'Turbo-Cocoa',
+		wiki: 'https://wiki.hypixel.net/Turbo-Cocoa_Enchantment',
+		cropSpecific: Crop.CocoaBeans,
+		...turboEnchant
+	},
+	turbo_melon: {
+		name: 'Turbo-Melon',
+		wiki: 'https://wiki.hypixel.net/Turbo-Melon_Enchantment',
+		cropSpecific: Crop.Melon,
+		...turboEnchant
+	},
+	turbo_mushrooms: {
+		name: 'Turbo-Mushrooms',
+		wiki: 'https://wiki.hypixel.net/Turbo-Mushrooms_Enchantment',
+		cropSpecific: Crop.Mushroom,
+		...turboEnchant
+	},
+	turbo_potato: {
+		name: 'Turbo-Potato',
+		wiki: 'https://wiki.hypixel.net/Turbo-Potato_Enchantment',
+		cropSpecific: Crop.Potato,
+		...turboEnchant
+	},
+	turbo_pumpkin: {
+		name: 'Turbo-Pumpkin',
+		wiki: 'https://wiki.hypixel.net/Turbo-Pumpkin_Enchantment',
+		cropSpecific: Crop.Pumpkin,
+		...turboEnchant
+	},
+	turbo_warts: {
+		name: 'Turbo-Warts',
+		wiki: 'https://wiki.hypixel.net/Turbo-Warts_Enchantment',
+		cropSpecific: Crop.NetherWart,
+		...turboEnchant
+	},
+	turbo_wheat: {
+		name: 'Turbo-Wheat',
+		wiki: 'https://wiki.hypixel.net/Turbo-Wheat_Enchantment',
+		cropSpecific: Crop.Wheat,
+		...turboEnchant
+	},
 } as const;
-
-export const TURBO_ENCHANTS: Record<string, Crop> = {
-	turbo_cactus: Crop.Cactus,
-	turbo_cane: Crop.SugarCane,
-	turbo_carrot: Crop.Carrot,
-	turbo_coco: Crop.CocoaBeans,
-	turbo_melon: Crop.Melon,
-	turbo_mushrooms: Crop.Mushroom,
-	turbo_potato: Crop.Potato,
-	turbo_pumpkin: Crop.Pumpkin,
-	turbo_warts: Crop.NetherWart,
-	turbo_wheat: Crop.Wheat,
-};
-
-export const TURBO_ENCHANT_FORTUNE = 5;

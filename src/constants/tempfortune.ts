@@ -27,7 +27,7 @@ export const TEMPORARY_FORTUNE: Record<keyof TemporaryFarmingFortune, TemporaryF
 		}
 	},
 	chocolateTruffle: {
-		name: 'Refined Dark Chocolate Truffle',
+		name: 'Refined Dark Cacao Truffle',
 		fortune: settings => {
 			if (!settings.chocolateTruffle) return;
 			return 30;

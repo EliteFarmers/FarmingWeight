@@ -3,11 +3,12 @@ import { fortuneFromPersonalBestContest } from '../constants/personalbests';
 import { fortuneFromPestBestiary } from '../util/pests';
 import { FarmingPetType } from '../constants/pets';
 import {
-	FORTUNE_PER_ANITA_BONUS,
-	FORTUNE_PER_COMMUNITY_CENTER,
-	FORTUNE_PER_CROP_UPGRADE,
-	FORTUNE_PER_FARMING_LEVEL,
-	FORTUNE_PER_PLOT,
+	ANITA_FORTUNE_UPGRADE,
+	COMMUNITY_CENTER_UPGRADE,
+	GARDEN_CROP_UPGRADES,
+	FARMING_LEVEL,
+	UNLOCKED_PLOTS,
+	PEST_BESTIARY_SOURCE,
 } from '../constants/specific';
 import { getCropDisplayName, getItemIdFromCrop } from '../util/names';
 import { FarmingAccessory } from '../fortune/farmingaccessory';
@@ -18,6 +19,9 @@ import { EliteItemDto } from '../fortune/item';
 import { FarmingEquipment } from '../fortune/farmingequipment';
 import { TEMPORARY_FORTUNE, TemporaryFarmingFortune } from '../constants/tempfortune';
 import { createFarmingWeightCalculator, FarmingWeightInfo } from '../weight/weightcalc';
+import { Upgrade } from '../constants/upgrades';
+import { getFortune } from '../upgrades/upgrades';
+import { getFortuneProgress } from '../upgrades/progress';
 
 export interface FortuneMissingFromAPI {
 	cropUpgrades?: Record<Crop, number>;
@@ -69,6 +73,12 @@ export interface PlayerOptions extends FortuneMissingFromAPI {
 		enabled: boolean;
 		mode: ZorroMode;
 	}
+}
+
+export interface FortuneProgress {
+	total: number;
+	progress: number;
+	upgrades: Upgrade[];
 }
 
 export function createFarmingPlayer(options: PlayerOptions) {
@@ -189,14 +199,14 @@ export class FarmingPlayer {
 		const breakdown = {} as Record<string, number>;
 
 		// Plots
-		const plots = FORTUNE_PER_PLOT * (this.options.plotsUnlocked ?? 0);
+		const plots = getFortune(this.options.plotsUnlocked, UNLOCKED_PLOTS);
 		if (plots > 0) {
 			breakdown['Unlocked Plots'] = plots;
 			sum += plots;
 		}
 
 		// Farming Level
-		const level = FORTUNE_PER_FARMING_LEVEL * (this.options.farmingLevel ?? 0);
+		const level = getFortune(this.options.farmingLevel, FARMING_LEVEL);
 		if (level > 0) {
 			breakdown['Farming Level'] = level;
 			sum += level;
@@ -226,14 +236,14 @@ export class FarmingPlayer {
 		}
 
 		// Anita Bonus
-		const anitaBonus = (this.options.anitaBonus ?? 0) * FORTUNE_PER_ANITA_BONUS;
+		const anitaBonus = getFortune(this.options.anitaBonus, ANITA_FORTUNE_UPGRADE);
 		if (anitaBonus > 0) {
 			breakdown['Anita Bonus Drops'] = anitaBonus;
 			sum += anitaBonus;
 		}
 
 		// Community Center
-		const communityCenter = (this.options.communityCenter ?? 0) * FORTUNE_PER_COMMUNITY_CENTER;
+		const communityCenter = getFortune(this.options.communityCenter, COMMUNITY_CENTER_UPGRADE);
 		if (communityCenter > 0) {
 			breakdown['Community Center'] = communityCenter;
 			sum += communityCenter;
@@ -285,6 +295,16 @@ export class FarmingPlayer {
 		return sum;
 	}
 
+	getGeneralFortuneProgress() {
+		return [
+			getFortuneProgress(this.options.farmingLevel, FARMING_LEVEL),
+			getFortuneProgress(fortuneFromPestBestiary(this.options.bestiaryKills ?? {}), PEST_BESTIARY_SOURCE),
+			getFortuneProgress(this.options.plotsUnlocked, UNLOCKED_PLOTS),
+			getFortuneProgress(this.options.anitaBonus, ANITA_FORTUNE_UPGRADE),
+			getFortuneProgress(this.options.communityCenter, COMMUNITY_CENTER_UPGRADE),
+		]
+	}
+
 	getTempFortune() {
 		let sum = 0;
 		const breakdown = {} as Record<string, number>;
@@ -318,7 +338,7 @@ export class FarmingPlayer {
 		const breakdown = {} as Record<string, number>;
 
 		// Crop upgrades
-		const upgrade = FORTUNE_PER_CROP_UPGRADE * (this.options.cropUpgrades?.[crop] ?? 0);
+		const upgrade = getFortune(this.options.cropUpgrades?.[crop], GARDEN_CROP_UPGRADES);
 		if (upgrade > 0) {
 			breakdown['Crop Upgrade'] = upgrade;
 			sum += upgrade;

@@ -1,3 +1,4 @@
+import { UpgradeableInfo } from '../fortune/upgradable';
 import { Rarity, ReforgeTarget, Stat } from './reforges';
 import { Skill } from './skills';
 import { SpecialCrop } from './specialcrops';
@@ -14,7 +15,7 @@ export enum GearSlot {
 	Gloves = 'Gloves',
 }
 
-export interface FarmingArmorInfo {
+export interface FarmingArmorInfo extends UpgradeableInfo {
 	special?: SpecialCrop[];
 	slot: GearSlot;
 	family?: string;
@@ -38,10 +39,13 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Farmer_Boots',
 		upgrade: {
 			id: 'RANCHERS_BOOTS',
-			reason: UpgradeReason.Standard,
+			reason: UpgradeReason.NextTier,
 		},
 		maxRarity: Rarity.Rare,
 		slot: GearSlot.Boots,
+		gemSlots: {
+			peridot: 1,
+		},
 		skillReq: {
 			[Skill.Farming]: 18,
 		},
@@ -62,6 +66,9 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 		maxRarity: Rarity.Legendary,
 		slot: GearSlot.Boots,
+		gemSlots: {
+			peridot: 2,
+		},
 		skillReq: {
 			[Skill.Farming]: 21,
 		},
@@ -81,6 +88,9 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 		maxRarity: Rarity.Rare,
 		slot: GearSlot.Helmet,
+		gemSlots: {
+			peridot: 2,
+		},
 		skillReq: {
 			[Skill.Farming]: 15,
 		},
@@ -101,6 +111,9 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Helmet,
+		gemSlots: {
+			peridot: 2,
+		},
 		maxRarity: Rarity.Epic,
 		stats: {
 			[Stat.FarmingFortune]: 10,
@@ -119,6 +132,9 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Chestplate,
 		maxRarity: Rarity.Epic,
+		gemSlots: {
+			peridot: 2,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 10,
 		},
@@ -136,6 +152,9 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Leggings,
 		maxRarity: Rarity.Epic,
+		gemSlots: {
+			peridot: 2,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 10,
 		},
@@ -153,6 +172,9 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'FARM_ARMOR',
 		slot: GearSlot.Boots,
 		maxRarity: Rarity.Epic,
+		gemSlots: {
+			peridot: 2,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 10,
 		},
@@ -170,6 +192,9 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'RABBIT',
 		slot: GearSlot.Helmet,
 		maxRarity: Rarity.Uncommon,
+		gemSlots: {
+			peridot: 1,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 15,
 		},
@@ -186,6 +211,9 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 		family: 'RABBIT',
 		slot: GearSlot.Chestplate,
+		gemSlots: {
+			peridot: 1,
+		},
 		maxRarity: Rarity.Uncommon,
 		stats: {
 			[Stat.FarmingFortune]: 15,
@@ -204,6 +232,9 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'RABBIT',
 		slot: GearSlot.Leggings,
 		maxRarity: Rarity.Uncommon,
+		gemSlots: {
+			peridot: 1,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 15,
 		},
@@ -221,6 +252,9 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'RABBIT',
 		slot: GearSlot.Boots,
 		maxRarity: Rarity.Uncommon,
+		gemSlots: {
+			peridot: 1,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 15,
 		},
@@ -233,7 +267,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
 		upgrade: {
 			id: 'CROPIE_HELMET',
-			reason: UpgradeReason.Standard, 
+			reason: UpgradeReason.NextTier, 
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -251,7 +285,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
 		upgrade: {
 			id: 'CROPIE_CHESTPLATE',
-			reason: UpgradeReason.Standard, 
+			reason: UpgradeReason.NextTier, 
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -269,7 +303,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
 		upgrade: {
 			id: 'CROPIE_LEGGINGS',
-			reason: UpgradeReason.Standard, 
+			reason: UpgradeReason.NextTier, 
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -287,7 +321,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
 		upgrade: {
 			id: 'CROPIE_BOOTS',
-			reason: UpgradeReason.Standard, 
+			reason: UpgradeReason.NextTier, 
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -305,12 +339,15 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
 		upgrade: {
 			id: 'SQUASH_HELMET',
-			reason: UpgradeReason.Standard, 
+			reason: UpgradeReason.NextTier, 
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Helmet,
 		maxRarity: Rarity.Epic,
+		gemSlots: {
+			peridot: 1,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 20,
 		},
@@ -323,12 +360,15 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
 		upgrade: {
 			id: 'SQUASH_CHESTPLATE',
-			reason: UpgradeReason.Standard, 
+			reason: UpgradeReason.NextTier, 
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Chestplate,
 		maxRarity: Rarity.Epic,
+		gemSlots: {
+			peridot: 1,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 25,
 		},
@@ -341,12 +381,15 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
 		upgrade: {
 			id: 'SQUASH_LEGGINGS',
-			reason: UpgradeReason.Standard, 
+			reason: UpgradeReason.NextTier, 
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Leggings,
 		maxRarity: Rarity.Epic,
+		gemSlots: {
+			peridot: 1,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 25,
 		},
@@ -359,12 +402,15 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
 		upgrade: {
 			id: 'SQUASH_BOOTS',
-			reason: UpgradeReason.Standard, 
+			reason: UpgradeReason.NextTier, 
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
 		slot: GearSlot.Boots,
 		maxRarity: Rarity.Epic,
+		gemSlots: {
+			peridot: 1,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 20,
 		},
@@ -377,12 +423,15 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
 		upgrade: {
 			id: 'FERMENTO_HELMET',
-			reason: UpgradeReason.Standard, 
+			reason: UpgradeReason.NextTier, 
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Helmet,
 		maxRarity: Rarity.Legendary,
+		gemSlots: {
+			peridot: 1,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 25,
 		},
@@ -395,12 +444,15 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
 		upgrade: {
 			id: 'FERMENTO_CHESTPLATE',
-			reason: UpgradeReason.Standard, 
+			reason: UpgradeReason.NextTier, 
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Chestplate,
 		maxRarity: Rarity.Legendary,
+		gemSlots: {
+			peridot: 1,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 30,
 		},
@@ -413,12 +465,15 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
 		upgrade: {
 			id: 'FERMENTO_LEGGINGS',
-			reason: UpgradeReason.Standard, 
+			reason: UpgradeReason.NextTier, 
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Leggings,
 		maxRarity: Rarity.Legendary,
+		gemSlots: {
+			peridot: 1,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 30,
 		},
@@ -431,12 +486,15 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
 		upgrade: {
 			id: 'FERMENTO_BOOTS',
-			reason: UpgradeReason.Standard, 
+			reason: UpgradeReason.NextTier, 
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
 		slot: GearSlot.Boots,
 		maxRarity: Rarity.Legendary,
+		gemSlots: {
+			peridot: 1,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 25,
 		},
@@ -451,6 +509,9 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 		slot: GearSlot.Helmet,
 		maxRarity: Rarity.Legendary,
+		gemSlots: {
+			peridot: 2,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 30,
 		},
@@ -465,6 +526,9 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 		slot: GearSlot.Chestplate,
 		maxRarity: Rarity.Legendary,
+		gemSlots: {
+			peridot: 2,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 35,
 		},
@@ -479,6 +543,9 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 		slot: GearSlot.Leggings,
 		maxRarity: Rarity.Legendary,
+		gemSlots: {
+			peridot: 2,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 35,
 		},
@@ -498,6 +565,9 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 		slot: GearSlot.Boots,
 		maxRarity: Rarity.Legendary,
+		gemSlots: {
+			peridot: 2,
+		},
 		stats: {
 			[Stat.FarmingFortune]: 30,
 		},

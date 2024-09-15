@@ -1,15 +1,20 @@
 import { FarmingArmorInfo } from '../constants/armor';
-import { EQUIPMENT_ENCHANTS } from '../constants/enchants';
+import { FARMING_ENCHANTS } from '../constants/enchants';
 import { EQUIPMENT_INFO } from '../constants/equipment';
-import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
+import { REFORGES, Rarity, Reforge, ReforgeTarget, ReforgeTier, Stat } from '../constants/reforges';
 import { getRarityFromLore } from '../util/itemstats';
 import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
 import { PlayerOptions, ZorroMode } from '../player/player';
+import { Upgradeable } from './upgradable';
+import { getUpgrades } from '../upgrades/upgrades';
+import { getFortuneFromEnchant } from '../util/enchants';
 
-export class FarmingEquipment {
+export class FarmingEquipment implements Upgradeable {
 	public readonly item: EliteItemDto;
 	public readonly info: FarmingArmorInfo;
+	public readonly type = ReforgeTarget.Equipment;
+
 	public get slot() {
 		return this.info.slot;
 	}
@@ -21,7 +26,7 @@ export class FarmingEquipment {
 
 	public declare fortune: number;
 	public declare fortuneBreakdown: Record<string, number>;
-	private declare options?: PlayerOptions;
+	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
 		this.options = options;
@@ -42,6 +47,10 @@ export class FarmingEquipment {
 		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
 
 		this.getFortune();
+	}
+
+	getUpgrades() {
+		return getUpgrades(this);
 	}
 
 	setOptions(options: PlayerOptions) {
@@ -67,15 +76,15 @@ export class FarmingEquipment {
 			sum += reforge;
 		}
 
-		// Green Thumb
-		const uniqueVisitors = this.options?.uniqueVisitors ?? 0;
-		const greenThumbLevel = this.item.enchantments?.green_thumb ?? 0;
-		if (uniqueVisitors > 0 && greenThumbLevel > 0) {
-			const greenThumb = EQUIPMENT_ENCHANTS.green_thumb?.multipliedLevels?.[greenThumbLevel]?.[Stat.FarmingFortune];
-			if (greenThumb) {
-				const greenThumbFortune = uniqueVisitors * greenThumb;
-				this.fortuneBreakdown['Green Thumb'] = greenThumbFortune;
-				sum += greenThumbFortune;
+		// Enchantments
+		for (const [key, level] of Object.entries(this.item.enchantments ?? {})) {
+			const enchant = FARMING_ENCHANTS[key];
+			if (!enchant || !level || enchant.cropSpecific) continue;
+			
+			const fortune = getFortuneFromEnchant(level, enchant, this.options);
+			if (fortune > 0) {
+				this.fortuneBreakdown[enchant.name] = fortune;
+				sum += fortune;
 			}
 		}
 

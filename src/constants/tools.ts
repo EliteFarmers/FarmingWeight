@@ -1,6 +1,7 @@
+import { UpgradeableInfo } from '../fortune/upgradable';
 import { Crop } from './crops';
 import { Rarity, ReforgeTarget, Stat } from './reforges';
-import { Upgrade, UpgradeReason } from './upgrades';
+import { UpgradeReason } from './upgrades';
 
 export enum FarmingToolType {
 	Other = 'Other',
@@ -8,13 +9,12 @@ export enum FarmingToolType {
 	MathematicalHoe = 'Mathematical Hoe',
 }
 
-export interface FarmingToolInfo {
+export interface FarmingToolInfo extends UpgradeableInfo {
 	crop: Crop;
 	name: string;
 	maxRarity: Rarity;
 	reforgeType: ReforgeTarget;
 	type: FarmingToolType;
-	upgrade?: Upgrade;
 	wiki: string;
 	stats?: Partial<Record<Rarity, Partial<Record<Stat, number>>>>;
 	baseStats?: Partial<Record<Stat, number>>;
@@ -107,6 +107,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.Other,
+		gemSlots: {
+			peridot: 2,
+		},
 		name: 'Cactus Knife',
 		wiki: 'https://wiki.hypixel.net/Cactus_Knife',
 	},
@@ -115,6 +118,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Other,
+		gemSlots: {
+			peridot: 2,
+		},
 		name: 'Cocoa Chopper',
 		wiki: 'https://wiki.hypixel.net/Cocoa_Chopper',
 		baseStats: {
@@ -126,6 +132,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.Other,
+		gemSlots: {
+			peridot: 2,
+		},
 		name: 'Fungi Cutter',
 		wiki: 'https://wiki.hypixel.net/Fungi_Cutter',
 		baseStats: {
@@ -140,7 +149,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.Dicer,
 		upgrade: { 
 			id: 'MELON_DICER_2',
-			reason: UpgradeReason.Standard
+			reason: UpgradeReason.NextTier
+		},
+		gemSlots: {
+			peridot: 1,
 		},
 		name: 'Melon Dicer',
 		wiki: 'https://wiki.hypixel.net/Melon_Dicer',
@@ -152,18 +164,24 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.Dicer,
 		upgrade: { 
 			id: 'MELON_DICER_3',
-			reason: UpgradeReason.Standard
+			reason: UpgradeReason.NextTier
+		},
+		gemSlots: {
+			peridot: 2,
 		},
 		name: 'Melon Dicer 2.0',
-		wiki: 'https://wiki.hypixel.net/Melon_Dicer',
+		wiki: 'https://wiki.hypixel.net/Melon_Dicer_2.0',
 	},
 	MELON_DICER_3: {
 		crop: Crop.Melon,
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
+		gemSlots: {
+			peridot: 3,
+		},
 		name: 'Melon Dicer 3.0',
-		wiki: 'https://wiki.hypixel.net/Melon_Dicer',
+		wiki: 'https://wiki.hypixel.net/Melon_Dicer_3.0',
 	},
 
 	PUMPKIN_DICER: {
@@ -173,7 +191,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.Dicer,
 		upgrade: { 
 			id: 'PUMPKIN_DICER_2',
-			reason: UpgradeReason.Standard
+			reason: UpgradeReason.NextTier
+		},
+		gemSlots: {
+			peridot: 1,
 		},
 		name: 'Pumpkin Dicer',
 		wiki: 'https://wiki.hypixel.net/Pumpkin_Dicer',
@@ -183,20 +204,26 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
+		gemSlots: {
+			peridot: 2,
+		},
 		upgrade: { 
 			id: 'PUMPKIN_DICER_3',
-			reason: UpgradeReason.Standard
+			reason: UpgradeReason.NextTier
 		},
 		name: 'Pumpkin Dicer 2.0',
-		wiki: 'https://wiki.hypixel.net/Pumpkin_Dicer',
+		wiki: 'https://wiki.hypixel.net/Pumpkin_Dicer_2.0',
 	},
 	PUMPKIN_DICER_3: {
 		crop: Crop.Pumpkin,
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Axe,
 		type: FarmingToolType.Dicer,
+		gemSlots: {
+			peridot: 3,
+		},
 		name: 'Pumpkin Dicer 3.0',
-		wiki: 'https://wiki.hypixel.net/Pumpkin_Dicer',
+		wiki: 'https://wiki.hypixel.net/Pumpkin_Dicer_3.0',
 	},
 
 	THEORETICAL_HOE_CARROT_1: {
@@ -206,7 +233,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: { 
 			id: 'THEORETICAL_HOE_CARROT_2',
-			reason: UpgradeReason.Standard
+			reason: UpgradeReason.NextTier
+		},
+		gemSlots: {
+			peridot: 1,
 		},
 		name: 'Gauss Carrot Hoe',
 		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe',
@@ -219,7 +249,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: { 
 			id: 'THEORETICAL_HOE_CARROT_3',
-			reason: UpgradeReason.Standard
+			reason: UpgradeReason.NextTier
+		},
+		gemSlots: {
+			peridot: 2,
 		},
 		name: 'Gauss Carrot Hoe',
 		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe',
@@ -230,6 +263,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
+		gemSlots: {
+			peridot: 3,
+		},
 		name: 'Gauss Carrot Hoe',
 		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe',
 		stats: t3hoeStats,
@@ -242,7 +278,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: { 
 			id: 'THEORETICAL_HOE_WARTS_2',
-			reason: UpgradeReason.Standard
+			reason: UpgradeReason.NextTier
+		},
+		gemSlots: {
+			peridot: 1,
 		},
 		name: 'Newton Nether Warts Hoe',
 		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe',
@@ -255,7 +294,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: { 
 			id: 'THEORETICAL_HOE_WARTS_3',
-			reason: UpgradeReason.Standard
+			reason: UpgradeReason.NextTier
+		},
+		gemSlots: {
+			peridot: 2,
 		},
 		name: 'Newton Nether Warts Hoe',
 		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe',
@@ -266,6 +308,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
+		gemSlots: {
+			peridot: 3,
+		},
 		name: 'Newton Nether Warts Hoe',
 		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe',
 		stats: t3hoeStats,
@@ -278,7 +323,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: { 
 			id: 'THEORETICAL_HOE_POTATO_2',
-			reason: UpgradeReason.Standard
+			reason: UpgradeReason.NextTier
+		},
+		gemSlots: {
+			peridot: 1,
 		},
 		name: 'Pythagorean Potato Hoe',
 		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe',
@@ -291,7 +339,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: { 
 			id: 'THEORETICAL_HOE_POTATO_3',
-			reason: UpgradeReason.Standard
+			reason: UpgradeReason.NextTier
+		},
+		gemSlots: {
+			peridot: 2,
 		},
 		name: 'Pythagorean Potato Hoe',
 		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe',
@@ -302,6 +353,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
+		gemSlots: {
+			peridot: 3,
+		},
 		name: 'Pythagorean Potato Hoe',
 		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe',
 		stats: t3hoeStats,
@@ -314,7 +368,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: { 
 			id: 'THEORETICAL_HOE_CANE_2',
-			reason: UpgradeReason.Standard
+			reason: UpgradeReason.NextTier
+		},
+		gemSlots: {
+			peridot: 1,
 		},
 		name: 'Turing Sugar Cane Hoe',
 		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe',
@@ -327,7 +384,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: { 
 			id: 'THEORETICAL_HOE_CANE_3',
-			reason: UpgradeReason.Standard
+			reason: UpgradeReason.NextTier
+		},
+		gemSlots: {
+			peridot: 2,
 		},
 		name: 'Turing Sugar Cane Hoe',
 		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe',
@@ -338,6 +398,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
+		gemSlots: {
+			peridot: 3,
+		},
 		name: 'Turing Sugar Cane Hoe',
 		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe',
 		stats: t3hoeStats,
@@ -350,7 +413,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: { 
 			id: 'THEORETICAL_HOE_WHEAT_2',
-			reason: UpgradeReason.Standard
+			reason: UpgradeReason.NextTier
+		},
+		gemSlots: {
+			peridot: 1,
 		},
 		name: "Euclid's Wheat Hoe",
 		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe',
@@ -363,7 +429,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		type: FarmingToolType.MathematicalHoe,
 		upgrade: { 
 			id: 'THEORETICAL_HOE_WHEAT_3',
-			reason: UpgradeReason.Standard
+			reason: UpgradeReason.NextTier
+		},
+		gemSlots: {
+			peridot: 2,
 		},
 		name: "Euclid's Wheat Hoe",
 		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe',
@@ -374,6 +443,9 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Hoe,
 		type: FarmingToolType.MathematicalHoe,
+		gemSlots: {
+			peridot: 3,
+		},
 		name: "Euclid's Wheat Hoe",
 		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe',
 		stats: t3hoeStats,

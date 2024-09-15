@@ -1,13 +1,14 @@
+import { UpgradeableInfo } from '../fortune/upgradable';
 import { Crop } from './crops';
 import { Rarity, Stat } from './reforges';
 import { Skill } from './skills';
+import { UpgradeReason } from './upgrades';
 
-export interface FarmingAccessoryInfo {
+export interface FarmingAccessoryInfo extends UpgradeableInfo {
 	name: string;
 	wiki: string;
 	family?: string;
 	maxRarity: Rarity;
-	upgrade?: string;
 	crops?: Crop[];
 	stats?: Partial<Record<Stat, number>>;
 	skillReq?: Partial<Record<Skill, number>>;
@@ -27,7 +28,10 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		name: 'Squash Ring',
 		wiki: 'https://wiki.hypixel.net/Squash_Ring',
 		family: 'Fermento',
-		upgrade: 'FERMENTO_ARTIFACT',
+		upgrade: {
+			id: 'FERMENTO_ARTIFACT',
+			reason: UpgradeReason.NextTier
+		},
 		maxRarity: Rarity.Rare,
 		crops: [Crop.Wheat, Crop.Carrot, Crop.Potato, Crop.Pumpkin, Crop.Melon, Crop.Mushroom, Crop.CocoaBeans],
 		stats: {
@@ -38,7 +42,10 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		name: 'Cropie Talisman',
 		wiki: 'https://wiki.hypixel.net/Cropie_Talisman',
 		family: 'Fermento',
-		upgrade: 'SQUASH_RING',
+		upgrade: {
+			id: 'SQUASH_RING',
+			reason: UpgradeReason.NextTier
+		},
 		maxRarity: Rarity.Uncommon,
 		crops: [Crop.Wheat, Crop.Carrot, Crop.Potato],
 		stats: {
@@ -48,6 +55,9 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 	POWER_RELIC: {
 		name: 'Relic of Power',
 		wiki: 'https://wiki.hypixel.net/Relic_Of_Power',
+		gemSlots: {
+			peridot: 1,
+		},
 		maxRarity: Rarity.Legendary,
 	},
 };

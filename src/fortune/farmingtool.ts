@@ -1,5 +1,5 @@
 import { Crop } from '../constants/crops';
-import { FARMING_ENCHANTS, TURBO_ENCHANTS, TURBO_ENCHANT_FORTUNE } from '../constants/enchants';
+import { FARMING_ENCHANTS } from '../constants/enchants';
 import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
 import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../constants/tools';
 import { getPeridotFortune } from '../util/gems';
@@ -7,11 +7,22 @@ import { getRarityFromLore, previousRarity } from '../util/itemstats';
 import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from '../player/player';
+import { Upgradeable } from './upgradable';
+import { getUpgrades } from '../upgrades/upgrades';
+import { getFortuneFromEnchant } from '../util/enchants';
 
-export class FarmingTool {
+export class FarmingTool implements Upgradeable {
 	public declare item: EliteItemDto;
 	public declare crop: Crop;
-	public declare tool: FarmingToolInfo;
+	public declare info: FarmingToolInfo;
+	public get type() {
+		return this.info.reforgeType;
+	}
+	
+	// Backwards compatibility
+	public get tool(): FarmingToolInfo {
+		return this.info;
+	}
 
 	public declare itemname: string;
 	private declare colorPrefix: string;
@@ -33,10 +44,14 @@ export class FarmingTool {
 	public declare fortune: number;
 	public declare fortuneBreakdown: Record<string, number>;
 
-	private declare options?: PlayerOptions;
+	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
 		this.rebuildTool(item, options);
+	}
+
+	getUpgrades() {
+		return getUpgrades(this);
 	}
 
 	setOptions(options: PlayerOptions) {
@@ -54,7 +69,7 @@ export class FarmingTool {
 			throw new Error(`Unknown farming tool: ${item.name} (${item.skyblockId})`);
 		}
 
-		this.tool = tool;
+		this.info = tool;
 		this.crop = tool.crop;
 
 		if (item.lore) {
@@ -169,38 +184,14 @@ export class FarmingTool {
 		for (const [enchant, level] of enchantments) {
 			if (!level) continue;
 
-			if (enchant in TURBO_ENCHANTS) {
-				const matchingCrop = TURBO_ENCHANTS[enchant];
-				if (!matchingCrop || matchingCrop !== this.crop) continue;
-
-				const gain = TURBO_ENCHANT_FORTUNE * level;
-				this.fortuneBreakdown['Turbo'] = gain;
-				sum += gain;
-
-				continue;
-			}
-
 			const enchantment = FARMING_ENCHANTS[enchant];
 			if (!enchantment || !level) continue;
+			if (enchantment.cropSpecific && enchantment.cropSpecific !== this.crop) continue;
 
-			const fortune = enchantment.levels?.[level]?.[Stat.FarmingFortune] ?? 0;
+			const fortune = getFortuneFromEnchant(level, enchantment, this.options, this.crop);
 			if (fortune > 0) {
 				this.fortuneBreakdown[enchantment.name] = fortune;
 				sum += fortune;
-			}
-		}
-
-		const milestone = this.options?.milestones?.[this.crop] ?? 0;
-		if (milestone && 'dedication' in (this.item.enchantments ?? {})) {
-			const level = this.item.enchantments?.dedication;
-			const enchantment = FARMING_ENCHANTS.dedication;
-
-			if (level && enchantment) {
-				const multiplier = enchantment.multipliedLevels?.[level]?.[Stat.FarmingFortune] ?? 0;
-				if (multiplier > 0 && !isNaN(milestone)) {
-					this.fortuneBreakdown[enchantment.name] = multiplier * milestone;
-					sum += multiplier * milestone;
-				}
 			}
 		}
 

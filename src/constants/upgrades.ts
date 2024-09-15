@@ -1,16 +1,70 @@
 import type { GearSlot } from "./armor";
 import { Crop } from "./crops";
-import { FARMING_TOOLS } from "./tools";
+import { Stat } from "./reforges";
+import type { FARMING_TOOLS } from "./tools";
 
 export enum UpgradeReason {
-	Standard = 'standard', // Standard upgrade
-	DeadEnd = 'dead_end', // Not worth using, no more upgrades
+	NextTier = 'next', // Standard upgrade
+	DeadEnd = 'dead', // Not worth using, no more upgrades
 	Situational = 'situational', // Worth using in some situations
+}
+
+// export interface UpgradeCost {
+// 	items: Record<string, number>;
+// 	coins?: number;
+// 	copper?: number;
+// }
+
+export interface FortuneSource {
+	name: string;
+	fortunePerLevel: number;
+	cropSpecific?: boolean;
+	maxLevel: number;
+	wiki: string;
+	statsPerLevel?: Partial<Record<Stat, number>>;
+}
+
+export interface FortuneSourceProgress {
+	name: string;
+	fortune: number;
+	progress: number;
+	max: number;
+	fortunePerLevel: number;
+	maxFortune: number;
+	wiki?: string;
+	upgrades: FortuneUpgrade[];
+}
+
+export interface UpgradeCost {
+	items: Record<string, number>;
+	coins?: number;
+	copper?: number;
+}
+
+export enum UpgradeAction {
+	Apply = 'apply',
+	Recombobulate = 'recombobulate',
+}
+
+export interface FortuneUpgradeImprovement {
+	name: string;
+	fortune: number;
+}
+
+export interface FortuneUpgrade {
+	title: string;
+	increase: number;
+	action: UpgradeAction;
+	cost?: UpgradeCost;
+	wiki?: string;
+	improvements?: FortuneUpgradeImprovement[];
+	// upgrade: Upgrade;
 }
 
 export interface Upgrade {
 	id: string;
 	reason: UpgradeReason;
+	cost?: UpgradeCost;
 	why?: string;
 }
 

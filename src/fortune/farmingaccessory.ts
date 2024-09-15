@@ -1,12 +1,14 @@
 import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../constants/accessories';
 import { Rarity, Stat } from '../constants/reforges';
+import { getUpgrades } from '../upgrades/upgrades';
 import { getPeridotFortune } from '../util/gems';
 import { getRarityFromLore } from '../util/itemstats';
 import { EliteItemDto } from './item';
+import { Upgradeable } from './upgradable';
 
-export class FarmingAccessory {
-	public readonly item: EliteItemDto;
-	public readonly info: FarmingAccessoryInfo;
+export class FarmingAccessory implements Upgradeable {
+	public declare readonly item: EliteItemDto;
+	public declare readonly info: FarmingAccessoryInfo;
 
 	public declare readonly rarity: Rarity;
 	public declare readonly recombobulated: boolean;
@@ -19,7 +21,7 @@ export class FarmingAccessory {
 
 		const info = FARMING_ACCESSORIES_INFO[item.skyblockId as keyof typeof FARMING_ACCESSORIES_INFO];
 		if (!info) {
-			throw new Error(`Unknown lotus gear: ${item.name} (${item.skyblockId})`);
+			throw new Error(`Unknown accessory: ${item.name} (${item.skyblockId})`);
 		}
 		this.info = info;
 
@@ -30,6 +32,10 @@ export class FarmingAccessory {
 		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
 
 		this.sumFortune();
+	}
+
+	getUpgrades() {
+		return getUpgrades(this);
 	}
 
 	private sumFortune() {
