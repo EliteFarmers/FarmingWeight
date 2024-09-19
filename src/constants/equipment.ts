@@ -10,7 +10,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		family: 'LOTUS',
 		slot: GearSlot.Gloves,
 		maxRarity: Rarity.Epic,
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 5,
 		},
 		skillReq: {
@@ -24,7 +24,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		family: 'LOTUS',
 		slot: GearSlot.Belt,
 		maxRarity: Rarity.Epic,
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 5,
 		},
 		skillReq: {
@@ -38,7 +38,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		family: 'LOTUS',
 		slot: GearSlot.Necklace,
 		maxRarity: Rarity.Epic,
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 5,
 		},
 		skillReq: {
@@ -57,7 +57,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		family: 'LOTUS',
 		slot: GearSlot.Cloak,
 		maxRarity: Rarity.Epic,
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 5,
 		},
 		skillReq: {
@@ -75,7 +75,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		},
 		slot: GearSlot.Cloak,
 		maxRarity: Rarity.Mythic,
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 10,
 			[Stat.FarmingWisdom]: 1,
 			[Stat.Strength]: 10,

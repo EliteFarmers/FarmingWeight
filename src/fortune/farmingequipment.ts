@@ -7,8 +7,9 @@ import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
 import { PlayerOptions, ZorroMode } from '../player/player';
 import { Upgradeable } from './upgradable';
-import { getUpgrades } from '../upgrades/upgrades';
+import { getLastItemUpgrade, getUpgrades } from '../upgrades/upgrades';
 import { getFortuneFromEnchant } from '../util/enchants';
+import { FortuneSourceProgress } from '../constants/upgrades';
 
 export class FarmingEquipment implements Upgradeable {
 	public readonly item: EliteItemDto;
@@ -53,6 +54,18 @@ export class FarmingEquipment implements Upgradeable {
 		return getUpgrades(this);
 	}
 
+	getItemUpgrade() {
+		return this.info.upgrade;
+	}
+
+	getLastItemUpgrade() {
+		return getLastItemUpgrade(this, EQUIPMENT_INFO);
+	}
+
+	getProgress(): FortuneSourceProgress[] {
+		return [];
+	}
+
 	setOptions(options: PlayerOptions) {
 		this.options = options;
 		this.getFortune();
@@ -63,7 +76,7 @@ export class FarmingEquipment implements Upgradeable {
 		let sum = 0;
 
 		// Base fortune
-		const base = this.info.stats?.[Stat.FarmingFortune] ?? 0;
+		const base = this.info.baseStats?.[Stat.FarmingFortune] ?? 0;
 		if (base > 0) {
 			this.fortuneBreakdown['Base Stats'] = base;
 			sum += base;

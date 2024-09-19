@@ -8,8 +8,9 @@ import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from '../player/player';
 import { Upgradeable } from './upgradable';
-import { getUpgrades } from '../upgrades/upgrades';
+import { getLastItemUpgrade, getUpgrades } from '../upgrades/upgrades';
 import { getFortuneFromEnchant } from '../util/enchants';
+import { FortuneSourceProgress } from '../constants/upgrades';
 
 export class FarmingTool implements Upgradeable {
 	public declare item: EliteItemDto;
@@ -52,6 +53,18 @@ export class FarmingTool implements Upgradeable {
 
 	getUpgrades() {
 		return getUpgrades(this);
+	}
+
+	getItemUpgrade() {
+		return this.info.upgrade;
+	}
+
+	getLastItemUpgrade() {
+		return getLastItemUpgrade(this, FARMING_TOOLS);
+	}
+
+	getProgress(): FortuneSourceProgress[] {
+		return [];
 	}
 
 	setOptions(options: PlayerOptions) {

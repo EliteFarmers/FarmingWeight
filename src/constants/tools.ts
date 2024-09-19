@@ -12,12 +12,8 @@ export enum FarmingToolType {
 export interface FarmingToolInfo extends UpgradeableInfo {
 	crop: Crop;
 	name: string;
-	maxRarity: Rarity;
-	reforgeType: ReforgeTarget;
 	type: FarmingToolType;
-	wiki: string;
-	stats?: Partial<Record<Rarity, Partial<Record<Stat, number>>>>;
-	baseStats?: Partial<Record<Stat, number>>;
+	reforgeType: ReforgeTarget;
 }
 
 const t1hoeStats = {

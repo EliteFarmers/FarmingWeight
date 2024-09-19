@@ -11,8 +11,9 @@ import { FarmingEquipment } from './farmingequipment';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from '../player/player';
 import { Upgradeable } from './upgradable';
-import { getUpgrades } from '../upgrades/upgrades';
+import { getLastItemUpgrade, getUpgrades } from '../upgrades/upgrades';
 import { getFortuneFromEnchant } from '../util/enchants';
+import { FortuneSourceProgress } from '../constants/upgrades';
 
 export interface ActiveArmorSetBonus {
 	count: number;
@@ -333,7 +334,7 @@ export class FarmingArmor implements Upgradeable {
 		let sum = 0;
 
 		// Base fortune
-		const base = this.info.stats?.[Stat.FarmingFortune] ?? 0;
+		const base = this.info.baseStats?.[Stat.FarmingFortune] ?? 0;
 		if (base > 0) {
 			this.fortuneBreakdown['Base Stats'] = base;
 			sum += base;
@@ -383,6 +384,18 @@ export class FarmingArmor implements Upgradeable {
 
 	getUpgrades() {
 		return getUpgrades(this);
+	}
+
+	getItemUpgrade() {
+		return this.info.upgrade;
+	}
+
+	getLastItemUpgrade() {
+		return getLastItemUpgrade(this, ARMOR_INFO);
+	}
+
+	getProgress(): FortuneSourceProgress[] {
+		return [];
 	}
 
 	static isValid(item: EliteItemDto): boolean {

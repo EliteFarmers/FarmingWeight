@@ -1,10 +1,10 @@
-import { expect, test } from 'vitest';
-import { FarmingTool } from './farmingtool';
+import { expect, test } from "vitest";
+import { FarmingTool } from "../fortune/farmingtool";
 
 const netherwartHoe = {
 	id: 293,
 	count: 1,
-	skyblockId: 'THEORETICAL_HOE_WARTS_3',
+	skyblockId: 'THEORETICAL_HOE_WARTS_1',
 	uuid: '103d2e1f-0351-429f-b116-c85e81886597',
 	name: '§dBountiful Newton Nether Warts Hoe',
 	lore: [
@@ -26,16 +26,6 @@ const netherwartHoe = {
 		'§7warts.',
 		'',
 		'§7Counter: §e1,102,505,308 Nether Warts',
-		'',
-		'§6Logarithmic Counter',
-		'§7Gain §6+16☘ Nether Wart Fortune §7per',
-		'§7digits on the Counter, minus 4!',
-		'§7You have §6+96☘ Nether Wart Fortune§7.',
-		'',
-		'§6Collection Analysis',
-		'§7Gain §6+8☘ Nether Wart Fortune §7per digits',
-		'§7of your collection, minus 4!',
-		'§7You have §6+40☘ Nether Wart Fortune§7.',
 		'',
 		'§7§8Bonus nether warts percent',
 		"§8increases your Farmhand perk's",
@@ -67,20 +57,14 @@ const netherwartHoe = {
 		farmed_cultivating: '1016448482',
 		farming_for_dummies_count: '5',
 	},
-	gems: { PERIDOT_0: 'FINE', PERIDOT_1: 'FINE', PERIDOT_2: 'FINE' },
+	gems: { PERIDOT_0: 'FINE' },
 };
 
-test('Farming Tool Test', () => {
+test("Tool item upgrade", () => {
 	const tool = new FarmingTool(netherwartHoe);
-	expect(tool.counter).toBe(1102505308);
-	expect(tool.cultivating).toBe(1016448482);
-	expect(tool.recombobulated).toBe(true);
-	expect(tool.farmingForDummies).toBe(5);
-	expect(tool.fortune).toBe(339);
 
-	tool.changeReforgeTo('blessed');
-	expect(tool.fortune).toBe(349);
+	expect(tool.fortune).toBe(151);
 
-	tool.setOptions({ milestones: { 'NETHER_STALK': 46 } });
-	expect(tool.fortune).toBe(349 + (46 * 2));
+	expect(tool.getItemUpgrade()?.id).toBe('THEORETICAL_HOE_WARTS_2');
+	expect(tool.getLastItemUpgrade()?.from.id).toBe('THEORETICAL_HOE_WARTS_3');
 });

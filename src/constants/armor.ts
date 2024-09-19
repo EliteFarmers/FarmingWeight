@@ -23,7 +23,6 @@ export interface FarmingArmorInfo extends UpgradeableInfo {
 	maxRarity: Rarity;
 	upgrade?: Upgrade;
 	wiki: string;
-	stats?: Partial<Record<Stat, number>>;
 	contestStatsMultiplier?: number;
 	perLevelStats?: {
 		skill: Skill;
@@ -115,7 +114,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 			peridot: 2,
 		},
 		maxRarity: Rarity.Epic,
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 10,
 		},
 		skillReq: {
@@ -135,7 +134,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 2,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 10,
 		},
 		skillReq: {
@@ -155,7 +154,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 2,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 10,
 		},
 		skillReq: {
@@ -175,7 +174,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 2,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 10,
 		},
 		skillReq: {
@@ -195,7 +194,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 1,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 15,
 		},
 		skillReq: {
@@ -215,7 +214,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 			peridot: 1,
 		},
 		maxRarity: Rarity.Uncommon,
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 15,
 		},
 		skillReq: {
@@ -235,7 +234,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 1,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 15,
 		},
 		skillReq: {
@@ -255,7 +254,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 1,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 15,
 		},
 		skillReq: {
@@ -273,7 +272,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		special: [SpecialCrop.Cropie],
 		slot: GearSlot.Helmet,
 		maxRarity: Rarity.Rare,
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 15,
 		},
 		skillReq: {
@@ -291,7 +290,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		special: [SpecialCrop.Cropie],
 		slot: GearSlot.Chestplate,
 		maxRarity: Rarity.Rare,
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 20,
 		},
 		skillReq: {
@@ -309,7 +308,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		special: [SpecialCrop.Cropie],
 		slot: GearSlot.Leggings,
 		maxRarity: Rarity.Rare,
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 20,
 		},
 		skillReq: {
@@ -327,7 +326,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		special: [SpecialCrop.Cropie],
 		slot: GearSlot.Boots,
 		maxRarity: Rarity.Rare,
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 15,
 		},
 		skillReq: {
@@ -348,7 +347,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 1,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 20,
 		},
 		skillReq: {
@@ -369,7 +368,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 1,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 25,
 		},
 		skillReq: {
@@ -390,7 +389,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 1,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 25,
 		},
 		skillReq: {
@@ -411,7 +410,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 1,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 20,
 		},
 		skillReq: {
@@ -432,7 +431,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 1,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 25,
 		},
 		skillReq: {
@@ -453,7 +452,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 1,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 30,
 		},
 		skillReq: {
@@ -474,7 +473,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 1,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 30,
 		},
 		skillReq: {
@@ -495,7 +494,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 1,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 25,
 		},
 		skillReq: {
@@ -512,7 +511,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 2,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 30,
 		},
 		skillReq: {
@@ -529,7 +528,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 2,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 35,
 		},
 		skillReq: {
@@ -546,7 +545,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 2,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 35,
 		},
 		skillReq: {
@@ -568,7 +567,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		gemSlots: {
 			peridot: 2,
 		},
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 30,
 		},
 		skillReq: {

@@ -10,7 +10,6 @@ export interface FarmingAccessoryInfo extends UpgradeableInfo {
 	family?: string;
 	maxRarity: Rarity;
 	crops?: Crop[];
-	stats?: Partial<Record<Stat, number>>;
 	skillReq?: Partial<Record<Skill, number>>;
 }
 
@@ -20,7 +19,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		wiki: 'https://wiki.hypixel.net/Fermento_Artifact',
 		family: 'Fermento',
 		maxRarity: Rarity.Epic,
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 30,
 		},
 	},
@@ -34,7 +33,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		},
 		maxRarity: Rarity.Rare,
 		crops: [Crop.Wheat, Crop.Carrot, Crop.Potato, Crop.Pumpkin, Crop.Melon, Crop.Mushroom, Crop.CocoaBeans],
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 20,
 		},
 	},
@@ -48,7 +47,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		},
 		maxRarity: Rarity.Uncommon,
 		crops: [Crop.Wheat, Crop.Carrot, Crop.Potato],
-		stats: {
+		baseStats: {
 			[Stat.FarmingFortune]: 10,
 		},
 	},

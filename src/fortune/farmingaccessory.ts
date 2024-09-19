@@ -1,6 +1,7 @@
 import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../constants/accessories';
 import { Rarity, Stat } from '../constants/reforges';
-import { getUpgrades } from '../upgrades/upgrades';
+import { FortuneSourceProgress } from '../constants/upgrades';
+import { getLastItemUpgrade, getUpgrades } from '../upgrades/upgrades';
 import { getPeridotFortune } from '../util/gems';
 import { getRarityFromLore } from '../util/itemstats';
 import { EliteItemDto } from './item';
@@ -38,12 +39,24 @@ export class FarmingAccessory implements Upgradeable {
 		return getUpgrades(this);
 	}
 
+	getItemUpgrade() {
+		return this.info.upgrade;
+	}
+
+	getLastItemUpgrade() {
+		return getLastItemUpgrade(this, FARMING_ACCESSORIES_INFO);
+	}
+
+	getProgress(): FortuneSourceProgress[] {
+		return [];
+	}
+
 	private sumFortune() {
 		this.fortuneBreakdown = {};
 		let sum = 0;
 
 		// Base fortune
-		const base = this.info.stats?.[Stat.FarmingFortune] ?? 0;
+		const base = this.info.baseStats?.[Stat.FarmingFortune] ?? 0;
 		if (base > 0) {
 			this.fortuneBreakdown['Base Stats'] = base;
 			sum += base;
