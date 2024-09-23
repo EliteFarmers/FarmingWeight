@@ -1,18 +1,101 @@
-import { Stat } from "../../constants/reforges";
+import { FARMING_ENCHANTS } from "../../constants/enchants";
+import { Rarity, REFORGES, ReforgeTarget, Stat } from "../../constants/reforges";
+import { FarmingToolType } from "../../constants/tools";
 import { FarmingTool } from "../../fortune/farmingtool";
+import { GemRarity } from "../../fortune/item";
+import { Upgradeable } from "../../fortune/upgradable";
+import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from "../../util/enchants";
+import { getPeridotFortune, getPeridotGemFortune } from "../../util/gems";
 
-export interface DynamicFortuneSource {
+export interface DynamicFortuneSource<T extends Upgradeable> {
 	name: string;
-	exisits: (tool: FarmingTool) => boolean;
-	items: string[];
+	exists: (upgradable: T) => boolean;
+	max: (upgradable: T) => number;
+	current: (upgradable: T) => number;
 }
 
-export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource[] = [
+export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	{
-		name: 'Base Stats',
-		exisits: (tool) => {
-			return tool.getLastItemUpgrade()?.info?.baseStats?.[Stat.FarmingFortune] !== undefined
+		name: 'Tool Base Stats',
+		exists: (tool) => {
+			return (tool.getLastItemUpgrade() ?? tool)?.info?.baseStats?.[Stat.FarmingFortune] !== undefined
 		},
-		items: [ 'baseStats' ]
-	}
+		max: (tool) => {
+			return (tool.getLastItemUpgrade() ?? tool)?.info?.baseStats?.[Stat.FarmingFortune] ?? 0;
+		},
+		current: (tool) => {
+			return tool.info.baseStats?.[Stat.FarmingFortune] ?? 0;
+		}
+	},
+	{
+		name: 'Tool Base Stats',
+		exists: (tool) => {
+			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
+			return last?.stats?.[last.maxRarity]?.[Stat.FarmingFortune] !== undefined
+		},
+		max: (tool) => {
+			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
+			return last?.stats?.[last.maxRarity]?.[Stat.FarmingFortune] ?? 0;
+		},
+		current: (tool) => {
+			return tool.info.stats?.[tool.rarity]?.[Stat.FarmingFortune] ?? 0;
+		}
+	},
+	{
+		name: 'Tool Reforge',
+		exists: () => true,
+		max: (tool) => {
+			return tool.reforge?.name === 'Bountiful' 
+				? tool.reforge?.tiers?.[tool.info.maxRarity]?.stats[Stat.FarmingFortune] ?? 0
+				: REFORGES.blessed?.tiers[tool.info.maxRarity]?.stats[Stat.FarmingFortune] ?? 0;
+		},
+		current: (tool) => {
+			return tool.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
+		}
+	},
+	{
+		name: 'Tool Gemstone',
+		exists: (tool) => {
+			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
+			return last?.gemSlots?.peridot !== undefined
+		},
+		max: (tool) => {
+			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
+			return (last?.gemSlots?.peridot ?? 0) * getPeridotGemFortune(last?.maxRarity ?? Rarity.Common, GemRarity.Perfect);
+		},
+		current: (tool) => {
+			return getPeridotFortune(tool.rarity, tool.item);
+		}
+	},
+	{
+		name: 'Farming For Dummies',
+		exists: () => true,
+		max: () => 5,
+		current: (tool) => {
+			return +(tool.item.attributes?.farming_for_dummies_count ?? 0);
+		}
+	},
+	{
+		name: 'Logarithmic Counter',
+		exists: (tool) => tool.info.type === FarmingToolType.MathematicalHoe,
+		max: () => 16 * 7, // 10 billion counter
+		current: (tool) => {
+			const numberOfDigits = Math.max(Math.floor(Math.log10(Math.abs(tool.counter ?? 0))), 0) + 1;
+			return Math.max((numberOfDigits - 4) * 16, 0);
+		}
+	},
+	{
+		name: 'Collection Analysis',
+		exists: (tool) => tool.info.type === FarmingToolType.MathematicalHoe,
+		max: () => 8 * 7, // 10 billion collection
+		current: (tool) => tool.collAnalysis ?? 0
+	},
+	...Object.entries(FARMING_ENCHANTS)
+		.filter(([, enchant]) => enchant.appliesTo.includes(ReforgeTarget.Hoe) || enchant.appliesTo.includes(ReforgeTarget.Axe))
+		.map(([id, enchant]) => ({
+			name: enchant.name,
+			exists: (tool) => enchant.appliesTo.includes(tool.type) && (!enchant.cropSpecific || enchant.cropSpecific === tool.crop),
+			max: (tool) => getMaxFortuneFromEnchant(enchant, tool.options, tool.crop),
+			current: (tool) => getFortuneFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, tool.options, tool.crop)
+		}) as DynamicFortuneSource<FarmingTool>)
 ];

@@ -1,5 +1,6 @@
 import { PlayerOptions } from '../player/player';
 import { Crop } from './crops';
+import { CROP_MILESTONES, GARDEN_VISITORS } from './garden';
 import { ReforgeTarget, Stat } from './reforges';
 
 export interface FarmingEnchant {
@@ -12,6 +13,7 @@ export interface FarmingEnchant {
 	levels?: Record<number, Partial<Record<Stat, number>>>;
 	computed?: Record<number, Partial<Record<Stat, (opt: PlayerOptions) => number>>>;
 	cropComputed?: Record<number, Partial<Record<Stat, (crop: Crop, opt?: PlayerOptions) => number>>>;
+	maxStats?: Partial<Record<Stat, number>>;
 	levelRequirement?: number;
 }
 
@@ -148,6 +150,9 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 				},
 			},
 		},
+		maxStats: {
+			[Stat.FarmingFortune]: 2 * CROP_MILESTONES[Crop.Wheat].length,
+		},
 	},
 	sunder: {
 		name: 'Sunder',
@@ -239,6 +244,9 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 					return 0.25 * (opt.uniqueVisitors ?? 0);
 				},
 			},
+		},
+		maxStats: {
+			[Stat.FarmingFortune]: 0.25 * Object.keys(GARDEN_VISITORS).length,
 		},
 	},
 	turbo_cactus: {

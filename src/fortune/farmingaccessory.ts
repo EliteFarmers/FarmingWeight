@@ -32,7 +32,7 @@ export class FarmingAccessory implements Upgradeable {
 
 		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
 
-		this.sumFortune();
+		this.getFortune();
 	}
 
 	getUpgrades() {
@@ -51,7 +51,7 @@ export class FarmingAccessory implements Upgradeable {
 		return [];
 	}
 
-	private sumFortune() {
+	getFortune() {
 		this.fortuneBreakdown = {};
 		let sum = 0;
 

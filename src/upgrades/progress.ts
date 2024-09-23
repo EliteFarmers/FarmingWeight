@@ -6,7 +6,7 @@ import { getFortune } from "./upgrades";
 export function getFortuneProgress(level: number | null | undefined, source: FortuneSource): FortuneSourceProgress {
 	return {
 		name: source.name,
-		max: source.maxLevel,
+		maxLevel: source.maxLevel,
 		fortunePerLevel: source.fortunePerLevel,
 		wiki: source.wiki,
 		fortune: getFortune(level, source),
@@ -24,7 +24,7 @@ export function getItemProgress(item: Upgradeable): FortuneSourceProgress {
 		name: item.item.name ?? item.item.skyblockId ?? 'Unknown Item',
 		fortune: item.fortune,
 		progress: 0,
-		max: 0,
+		maxLevel: 0,
 		fortunePerLevel: 0,
 		maxFortune: 0,
 		wiki: info.wiki,

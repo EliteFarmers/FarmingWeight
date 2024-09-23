@@ -321,15 +321,15 @@ export class FarmingArmor implements Upgradeable {
 		this.reforgeStats = this.reforge?.tiers?.[this.rarity];
 		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
 
-		this.sumFortune();
+		this.getFortune();
 	}
 
 	setOptions(options: PlayerOptions) {
 		this.options = options;
-		this.fortune = this.sumFortune();
+		this.fortune = this.getFortune();
 	}
 
-	private sumFortune() {
+	getFortune() {
 		this.fortuneBreakdown = {};
 		let sum = 0;
 

@@ -8,9 +8,10 @@ import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from '../player/player';
 import { Upgradeable } from './upgradable';
-import { getLastItemUpgrade, getUpgrades } from '../upgrades/upgrades';
+import { getLastItemUpgrade, getSourceProgress, getUpgrades } from '../upgrades/upgrades';
 import { getFortuneFromEnchant } from '../util/enchants';
 import { FortuneSourceProgress } from '../constants/upgrades';
+import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources';
 
 export class FarmingTool implements Upgradeable {
 	public declare item: EliteItemDto;
@@ -64,7 +65,7 @@ export class FarmingTool implements Upgradeable {
 	}
 
 	getProgress(): FortuneSourceProgress[] {
-		return [];
+		return getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES);
 	}
 
 	setOptions(options: PlayerOptions) {
@@ -91,8 +92,6 @@ export class FarmingTool implements Upgradeable {
 
 		this.counter = this.getCounter();
 		this.cultivating = this.getCultivating() ?? 0;
-		this.logCounter = 0;
-		this.collAnalysis = 0;
 
 		this.setReforge(item.attributes?.modifier ?? '');
 
@@ -172,7 +171,7 @@ export class FarmingTool implements Upgradeable {
 
 		// Collection analysis and digit bonuses
 		if (this.tool.type === FarmingToolType.MathematicalHoe) {
-			this.getFarmingAbilityFortune(this);
+			this.getFarmingAbilityFortune();
 
 			if (this.logCounter > 0) {
 				this.fortuneBreakdown['Logarithmic Counter'] = this.logCounter;
@@ -240,16 +239,18 @@ export class FarmingTool implements Upgradeable {
 		return this.item?.enchantments?.dedication && (this.options?.milestones?.[this.crop] ?? 0) <= 0;
 	}
 
-	private getFarmingAbilityFortune(tool: FarmingTool) {
+	private getFarmingAbilityFortune() {
 		const regex = /§7You have §6\+(\d+)☘/g;
+		let foundCounter = false;
 
-		for (const line of tool.item.lore ?? []) {
+		for (const line of this.item.lore ?? []) {
 			const found = extractNumberFromLine(line, regex) ?? 0;
 			if (!found) continue;
 
-			if (!this.logCounter) {
+			if (!foundCounter) {
 				this.logCounter = found;
-			} else if (!this.collAnalysis) {
+				foundCounter = true;
+			} else {
 				this.collAnalysis = found;
 			}
 		}

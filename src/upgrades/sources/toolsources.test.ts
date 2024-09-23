@@ -1,5 +1,6 @@
-import { expect, test } from 'vitest';
-import { FarmingTool } from './farmingtool';
+import { expect, test } from "vitest";
+import { FarmingTool } from "../../fortune/farmingtool";
+import { Crop } from "../../constants/crops";
 
 const netherwartHoe = {
 	id: 293,
@@ -67,25 +68,84 @@ const netherwartHoe = {
 		farmed_cultivating: '1016448482',
 		farming_for_dummies_count: '5',
 	},
-	gems: { PERIDOT_0: 'FINE', PERIDOT_1: 'FINE', PERIDOT_2: 'FINE' },
+	gems: { PERIDOT_0: 'PERFECT' },
 };
 
-test('Farming Tool Test', () => {
-	const tool = new FarmingTool(netherwartHoe);
+
+test("Test tool fortune sources", () => {
+	const tool = new FarmingTool(netherwartHoe, {
+		milestones: {
+			[Crop.NetherWart]: 12,
+		}
+	});
+
+	expect(tool.fortune).toBe(355);
+
 	expect(tool.counter).toBe(1102505308);
-	expect(tool.cultivating).toBe(1016448482);
-	expect(tool.recombobulated).toBe(true);
-	expect(tool.farmingForDummies).toBe(5);
-	expect(tool.fortune).toBe(339);
-	expect(tool.collAnalysis).toBe(40);
-	expect(tool.logCounter).toBe(96);
 
-	tool.changeReforgeTo('blessed');
-	expect(tool.fortune).toBe(349);
+	const progress = tool.getProgress();
+	expect(progress).toStrictEqual([
+		{
+			name: 'Tool Base Stats',
+			fortune: 50,
+			maxFortune: 50,
+			progress: 1,
+		},
+		{
+			name: 'Tool Reforge',
+			fortune: 10,
+			maxFortune: 10,
+			progress: 1,
+		},
+		{
+			name: 'Tool Gemstone',
+			fortune: 10,
+			maxFortune: 30,
+			progress: 10 / 30,
+		},
+		{
+			name: 'Farming For Dummies',
+			fortune: 5,
+			maxFortune: 5,
+			progress: 1,
+		},
+		{
+			name: 'Logarithmic Counter',
+			fortune: 96,
+			maxFortune: 112,
+			progress: 96 / 112,
+		},
+		{
+			name: 'Collection Analysis',
+			fortune: 40,
+			maxFortune: 56,
+			progress: 40 / 56,
+		},
+		{
+			name: 'Harvesting',
+			fortune: 75,
+			maxFortune: 75,
+			progress: 1,
+		},
+		{
+			name: 'Cultivating',
+			fortune: 20,
+			maxFortune: 20,
+			progress: 1,
+		},
+		{
+			name: 'Dedication',
+			fortune: 24,
+			maxFortune: 92,
+			progress: 24 / 92,
+		},
+		{
+			name: 'Turbo-Warts',
+			fortune: 25,
+			maxFortune: 25,
+			progress: 1,
+		}
+	]);
 
-	tool.setOptions({ milestones: { 'NETHER_STALK': 46 } });
-	expect(tool.fortune).toBe(349 + (46 * 2));
-
-	expect(tool.collAnalysis).toBe(40);
-	expect(tool.logCounter).toBe(96);
+	expect(progress.reduce((acc, curr) => acc + curr.fortune, 0)).toBe(355);
 });

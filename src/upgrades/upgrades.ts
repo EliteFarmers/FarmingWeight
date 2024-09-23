@@ -1,11 +1,12 @@
 import { FARMING_ENCHANTS } from "../constants/enchants";
 import { Stat } from "../constants/reforges";
-import { FortuneSource, FortuneUpgrade, FortuneUpgradeImprovement, Upgrade, UpgradeAction, UpgradeReason } from "../constants/upgrades";
+import { FortuneSource, FortuneSourceProgress, FortuneUpgrade, FortuneUpgradeImprovement, Upgrade, UpgradeAction, UpgradeReason } from "../constants/upgrades";
 import { GemRarity } from "../fortune/item";
 import { Upgradeable, UpgradeableInfo } from "../fortune/upgradable";
 import { getFortuneFromEnchant } from "../util/enchants";
 import { getGemRarityName, getNextGemRarity, getPeridotFortune, getPeridotGemFortune, getPeridotGems } from "../util/gems";
 import { nextRarity } from "../util/itemstats";
+import { DynamicFortuneSource } from "./sources/toolsources";
 
 export function getFortune(level: number | null | undefined, source: FortuneSource) {
 	return Math.min(Math.max(level ?? 0, 0), source.maxLevel) * source.fortunePerLevel;
@@ -36,6 +37,29 @@ export function getLastItemUpgrade(upgradeable: Upgradeable, options: Partial<Re
 	if (!item || last === upgrade) return undefined;
 
 	return { from: last, info: item };
+}
+
+export function getSourceProgress<T extends Upgradeable>(upgradeable: T, sources: DynamicFortuneSource<T>[]): FortuneSourceProgress[] {
+	const result = [] as FortuneSourceProgress[];
+
+	// Ensure the item fortune is up to date
+	upgradeable.getFortune();
+
+	for (const source of sources) {
+		if (!source.exists(upgradeable)) continue;
+
+		const max = source.max(upgradeable);
+		const current = source.current(upgradeable);
+
+		result.push({
+			name: source.name,
+			fortune: current,
+			maxFortune: max,
+			progress: current / max,
+		});
+	}
+
+	return result;
 }
 
 export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUpgrade | undefined {
