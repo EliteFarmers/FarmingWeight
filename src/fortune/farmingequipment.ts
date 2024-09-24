@@ -7,9 +7,11 @@ import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
 import { PlayerOptions, ZorroMode } from '../player/player';
 import { Upgradeable } from './upgradable';
-import { getLastItemUpgrade, getUpgrades } from '../upgrades/upgrades';
+import { getLastItemUpgrade, getSourceProgress, getUpgrades } from '../upgrades/upgrades';
 import { getFortuneFromEnchant } from '../util/enchants';
 import { FortuneSourceProgress } from '../constants/upgrades';
+import { FarmingArmor } from './farmingarmor';
+import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources';
 
 export class FarmingEquipment implements Upgradeable {
 	public readonly item: EliteItemDto;
@@ -63,7 +65,7 @@ export class FarmingEquipment implements Upgradeable {
 	}
 
 	getProgress(): FortuneSourceProgress[] {
-		return [];
+		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES);
 	}
 
 	setOptions(options: PlayerOptions) {

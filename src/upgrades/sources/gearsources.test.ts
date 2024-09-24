@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import { FarmingArmor } from '../../fortune/farmingarmor';
+import { FarmingEquipment } from '../../fortune/farmingequipment';
 
 const almostMaxHelmet = {
 	id: 397,
@@ -89,7 +90,7 @@ test('Almost maxed fermento fortune sources', () => {
 			fortune: 3,
 			maxFortune: 5,
 			progress: 3 / 5,
-		}
+		},
 	]);
 });
 
@@ -124,7 +125,7 @@ test('Melon boots fortune sources', () => {
 	const item = new FarmingArmor(melonBoots);
 	expect(item.fortune).toBe(15);
 	expect(item.fortuneBreakdown['Base Stats']).toBe(15);
-	
+
 	const progress = item.getProgress();
 	expect(progress).toStrictEqual([
 		{
@@ -150,7 +151,7 @@ test('Melon boots fortune sources', () => {
 			fortune: 0,
 			maxFortune: 5,
 			progress: 0,
-		}
+		},
 	]);
 
 	expect(progress.reduce((acc, curr) => acc + curr.fortune, 0)).toBe(item.fortune);
@@ -168,10 +169,76 @@ test('Same maxed armor fortune sources', () => {
 	for (let i = 0; i < helmetProgress.length; i++) {
 		helmetProgress[i].fortune = 0;
 		helmetProgress[i].progress = 0;
-		
+
 		bootsProgress[i].fortune = 0;
 		bootsProgress[i].progress = 0;
 	}
 
 	expect(helmetProgress).toStrictEqual(bootsProgress);
+});
+
+const lotusNecklace = {
+	id: 397,
+	count: 1,
+	skyblockId: 'LOTUS_NECKLACE',
+	uuid: 'b74ec0ba-0d2f-4d97-82a9-65428a9b8d5a',
+	name: '§5Rooted Lotus Necklace',
+	lore: [
+		'§7Health: §a+21 §9(+11)',
+		'§7Farming Fortune: §a+40.5 §9(+15)',
+		'',
+		'§9Green Thumb V',
+		'§7Grants §60.25☘ Farming Fortune §7per',
+		'§7unique visitor served.',
+		'',
+		'§6Piece Bonus: Salesperson',
+		'§7Complete §aGarden Visitor Offers §7to',
+		'§7gain §6☘ Farming Fortune§7.',
+		'',
+		'§7Piece Bonus: §6+12☘',
+		'§7Next Upgrade: §6+13☘ §8(§a2,890§7/§c3,000§8)',
+		'',
+		'§5§l§ka§r §5§l§5§lEPIC NECKLACE §5§l§ka',
+	],
+	enchantments: { green_thumb: 5 },
+	attributes: { modifier: 'rooted', timestamp: '1676577900000', rarity_upgrades: '1' },
+};
+
+test('Lotus necklace fortune sources', () => {
+	const necklace = new FarmingEquipment(lotusNecklace, {
+		uniqueVisitors: 82
+	});
+
+	expect(necklace.fortune).toBe(52.5);
+
+	const progress = necklace.getProgress();
+
+	expect(progress.reduce((acc, curr) => acc + curr.fortune, 0)).toBe(necklace.fortune);
+
+	expect(progress).toStrictEqual([
+		{
+			name: 'Base Stats',
+			fortune: 5,
+			maxFortune: 5,
+			progress: 1,
+		},
+		{
+			name: 'Reforge Stats',
+			fortune: 15,
+			maxFortune: 15,
+			progress: 1,
+		},
+		{
+			name: 'Salesperson Ability',
+			fortune: 12,
+			maxFortune: 15,
+			progress: 0.8,
+		},
+		{
+			name: 'Green Thumb',
+			fortune: 82 * 0.25,
+			maxFortune: 84 * 0.25,
+			progress: 82 / 84,
+		},
+	]);	
 });
