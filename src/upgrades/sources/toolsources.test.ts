@@ -86,19 +86,19 @@ test("Test tool fortune sources", () => {
 	const progress = tool.getProgress();
 	expect(progress).toStrictEqual([
 		{
-			name: 'Tool Base Stats',
+			name: 'Base Stats',
 			fortune: 50,
 			maxFortune: 50,
 			progress: 1,
 		},
 		{
-			name: 'Tool Reforge',
+			name: 'Reforge Stats',
 			fortune: 10,
 			maxFortune: 10,
 			progress: 1,
 		},
 		{
-			name: 'Tool Gemstone',
+			name: 'Gemstone Slots',
 			fortune: 10,
 			maxFortune: 30,
 			progress: 10 / 30,
@@ -147,5 +147,10 @@ test("Test tool fortune sources", () => {
 		}
 	]);
 
-	expect(progress.reduce((acc, curr) => acc + curr.fortune, 0)).toBe(355);
+	expect(progress.reduce((acc, curr) => acc + curr.fortune, 0)).toBe(tool.fortune);
+
+	tool.changeReforgeTo('blessed');
+	expect(tool.fortune).toBe(365);
+
+	expect(tool.getProgress().reduce((acc, curr) => acc + curr.fortune, 0)).toBe(tool.fortune);
 });

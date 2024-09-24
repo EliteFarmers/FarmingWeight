@@ -16,7 +16,7 @@ export interface DynamicFortuneSource<T extends Upgradeable> {
 
 export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	{
-		name: 'Tool Base Stats',
+		name: 'Base Stats',
 		exists: (tool) => {
 			return (tool.getLastItemUpgrade() ?? tool)?.info?.baseStats?.[Stat.FarmingFortune] !== undefined
 		},
@@ -28,7 +28,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		}
 	},
 	{
-		name: 'Tool Base Stats',
+		name: 'Base Stats',
 		exists: (tool) => {
 			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
 			return last?.stats?.[last.maxRarity]?.[Stat.FarmingFortune] !== undefined
@@ -42,7 +42,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		}
 	},
 	{
-		name: 'Tool Reforge',
+		name: 'Reforge Stats',
 		exists: () => true,
 		max: (tool) => {
 			return tool.reforge?.name === 'Bountiful' 
@@ -54,7 +54,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		}
 	},
 	{
-		name: 'Tool Gemstone',
+		name: 'Gemstone Slots',
 		exists: (tool) => {
 			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
 			return last?.gemSlots?.peridot !== undefined

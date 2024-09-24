@@ -507,7 +507,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'FERMENTO',
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 		slot: GearSlot.Helmet,
-		maxRarity: Rarity.Legendary,
+		maxRarity: Rarity.Mythic,
 		gemSlots: {
 			peridot: 2,
 		},
@@ -524,7 +524,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'FERMENTO',
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 		slot: GearSlot.Chestplate,
-		maxRarity: Rarity.Legendary,
+		maxRarity: Rarity.Mythic,
 		gemSlots: {
 			peridot: 2,
 		},
@@ -541,7 +541,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'FERMENTO',
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 		slot: GearSlot.Leggings,
-		maxRarity: Rarity.Legendary,
+		maxRarity: Rarity.Mythic,
 		gemSlots: {
 			peridot: 2,
 		},
@@ -563,7 +563,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'FERMENTO',
 		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento],
 		slot: GearSlot.Boots,
-		maxRarity: Rarity.Legendary,
+		maxRarity: Rarity.Mythic,
 		gemSlots: {
 			peridot: 2,
 		},

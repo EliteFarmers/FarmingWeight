@@ -3,6 +3,19 @@ import { Crop } from './crops';
 import { CROP_MILESTONES, GARDEN_VISITORS } from './garden';
 import { ReforgeTarget, Stat } from './reforges';
 
+export enum EnchantTierProcurement {
+	Normal = 'normal',
+	Loot = 'loot',
+	SelfLeveling = 'selfleveling',
+}
+
+export interface FarmingEnchantTier {
+	stats?: Partial<Record<Stat, number>>;
+	computed?: Partial<Record<Stat, (opt: PlayerOptions) => number>>;
+	cropComputed?: Partial<Record<Stat, (crop: Crop, opt?: PlayerOptions) => number>>;
+	procurement?: EnchantTierProcurement;
+}
+
 export interface FarmingEnchant {
 	name: string;
 	appliesTo: readonly ReforgeTarget[];
@@ -10,9 +23,7 @@ export interface FarmingEnchant {
 	minLevel: number;
 	maxLevel: number;
 	cropSpecific?: Crop;
-	levels?: Record<number, Partial<Record<Stat, number>>>;
-	computed?: Record<number, Partial<Record<Stat, (opt: PlayerOptions) => number>>>;
-	cropComputed?: Record<number, Partial<Record<Stat, (crop: Crop, opt?: PlayerOptions) => number>>>;
+	levels: Record<number, FarmingEnchantTier>;
 	maxStats?: Partial<Record<Stat, number>>;
 	levelRequirement?: number;
 }
@@ -23,19 +34,29 @@ const turboEnchant = {
 	maxLevel: 5,
 	levels: {
 		1: {
-			[Stat.FarmingFortune]: 5
+			stats: {
+				[Stat.FarmingFortune]: 5
+			}
 		},
 		2: {
-			[Stat.FarmingFortune]: 10
+			stats: {
+				[Stat.FarmingFortune]: 10
+			}
 		},
 		3: {
-			[Stat.FarmingFortune]: 15
+			stats: {
+				[Stat.FarmingFortune]: 15
+			}
 		},
 		4: {
-			[Stat.FarmingFortune]: 20
+			stats: {
+				[Stat.FarmingFortune]: 20
+			}
 		},
 		5: {
-			[Stat.FarmingFortune]: 25
+			stats: {
+				[Stat.FarmingFortune]: 25
+			}
 		},
 	},
 }
@@ -50,22 +71,35 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		maxLevel: 6,
 		levels: {
 			1: {
-				[Stat.FarmingFortune]: 12.5,
+				stats: {
+					[Stat.FarmingFortune]: 12.5,
+				}
 			},
 			2: {
-				[Stat.FarmingFortune]: 25,
+				stats: {
+					[Stat.FarmingFortune]: 25,
+				}
 			},
 			3: {
-				[Stat.FarmingFortune]: 37.5,
+				stats: {
+					[Stat.FarmingFortune]: 37.5,
+				}
 			},
 			4: {
-				[Stat.FarmingFortune]: 50,
+				stats: {
+					[Stat.FarmingFortune]: 50,
+				}
 			},
 			5: {
-				[Stat.FarmingFortune]: 62.5,
+				stats: {
+					[Stat.FarmingFortune]: 62.5,
+				}
 			},
 			6: {
-				[Stat.FarmingFortune]: 75,
+				stats: {
+					[Stat.FarmingFortune]: 75,
+				},
+				procurement: EnchantTierProcurement.Loot,
 			},
 		},
 	},
@@ -77,44 +111,73 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		maxLevel: 10,
 		levels: {
 			1: {
-				[Stat.FarmingWisdom]: 1,
-				[Stat.FarmingFortune]: 2,
+				stats: {
+					[Stat.FarmingWisdom]: 1,
+					[Stat.FarmingFortune]: 2,
+				}
 			},
 			2: {
-				[Stat.FarmingWisdom]: 2,
-				[Stat.FarmingFortune]: 4,
+				stats: {
+					[Stat.FarmingWisdom]: 2,
+					[Stat.FarmingFortune]: 4,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			3: {
-				[Stat.FarmingWisdom]: 3,
-				[Stat.FarmingFortune]: 6,
+				stats: {
+					[Stat.FarmingWisdom]: 3,
+					[Stat.FarmingFortune]: 6,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			4: {
-				[Stat.FarmingWisdom]: 4,
-				[Stat.FarmingFortune]: 8,
+				stats: {
+					[Stat.FarmingWisdom]: 4,
+					[Stat.FarmingFortune]: 8,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			5: {
-				[Stat.FarmingWisdom]: 5,
-				[Stat.FarmingFortune]: 10,
+				stats: {
+					[Stat.FarmingWisdom]: 5,
+					[Stat.FarmingFortune]: 10,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			6: {
-				[Stat.FarmingWisdom]: 6,
-				[Stat.FarmingFortune]: 12,
+				stats: {
+					[Stat.FarmingWisdom]: 6,
+					[Stat.FarmingFortune]: 12,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			7: {
-				[Stat.FarmingWisdom]: 7,
-				[Stat.FarmingFortune]: 14,
+				stats: {
+					[Stat.FarmingWisdom]: 7,
+					[Stat.FarmingFortune]: 14,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			8: {
-				[Stat.FarmingWisdom]: 8,
-				[Stat.FarmingFortune]: 16,
+				stats: {
+					[Stat.FarmingWisdom]: 8,
+					[Stat.FarmingFortune]: 16,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			9: {
-				[Stat.FarmingWisdom]: 9,
-				[Stat.FarmingFortune]: 18,
+				stats: {
+					[Stat.FarmingWisdom]: 9,
+					[Stat.FarmingFortune]: 18,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 			10: {
-				[Stat.FarmingWisdom]: 10,
-				[Stat.FarmingFortune]: 20,
+				stats: {
+					[Stat.FarmingWisdom]: 10,
+					[Stat.FarmingFortune]: 20,
+				},
+				procurement: EnchantTierProcurement.SelfLeveling,
 			},
 		},
 	},
@@ -124,30 +187,39 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		wiki: 'https://wiki.hypixel.net/Dedication_Enchantment',
 		minLevel: 1,
 		maxLevel: 4,
-		cropComputed: {
+		levels: {
 			1: {
-				[Stat.FarmingFortune]: (crop, opt) => {
-					if (!crop) return 0;
-					return 0.5 * (opt?.milestones?.[crop] ?? 0);
-				},
+				cropComputed: {
+					[Stat.FarmingFortune]: (crop, opt) => {
+						if (!crop) return 0;
+						return 0.5 * (opt?.milestones?.[crop] ?? 0);
+					},
+				}
 			},
 			2: {
-				[Stat.FarmingFortune]: (crop, opt) => {
-					if (!crop) return 0;
-					return 0.75 * (opt?.milestones?.[crop] ?? 0);
-				},
+				cropComputed: {
+					[Stat.FarmingFortune]: (crop, opt) => {
+						if (!crop) return 0;
+						return 0.75 * (opt?.milestones?.[crop] ?? 0);
+					},
+				}
 			},
 			3: {
-				[Stat.FarmingFortune]: (crop, opt) => {
-					if (!crop) return 0;
-					return 1 * (opt?.milestones?.[crop] ?? 0);
-				},
+				cropComputed: {
+					[Stat.FarmingFortune]: (crop, opt) => {
+						if (!crop) return 0;
+						return 1 * (opt?.milestones?.[crop] ?? 0);
+					},
+				}
 			},
 			4: {
-				[Stat.FarmingFortune]: (crop, opt) => {
-					if (!crop) return 0;
-					return 2 * (opt?.milestones?.[crop] ?? 0);
+				cropComputed: {
+					[Stat.FarmingFortune]: (crop, opt) => {
+						if (!crop) return 0;
+						return 2 * (opt?.milestones?.[crop] ?? 0);
+					},
 				},
+				procurement: EnchantTierProcurement.Loot,
 			},
 		},
 		maxStats: {
@@ -162,22 +234,35 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		maxLevel: 6,
 		levels: {
 			1: {
-				[Stat.FarmingFortune]: 12.5,
+				stats: {
+					[Stat.FarmingFortune]: 12.5,
+				}
 			},
 			2: {
-				[Stat.FarmingFortune]: 25,
+				stats: {
+					[Stat.FarmingFortune]: 25,
+				}
 			},
 			3: {
-				[Stat.FarmingFortune]: 37.5,
+				stats: {
+					[Stat.FarmingFortune]: 37.5,
+				}
 			},
 			4: {
-				[Stat.FarmingFortune]: 50,
+				stats: {
+					[Stat.FarmingFortune]: 50,
+				}
 			},
 			5: {
-				[Stat.FarmingFortune]: 62.5,
+				stats: {
+					[Stat.FarmingFortune]: 62.5,
+				}
 			},
 			6: {
-				[Stat.FarmingFortune]: 75,
+				stats: {
+					[Stat.FarmingFortune]: 75,
+				},
+				procurement: EnchantTierProcurement.Loot,
 			},
 		},
 	},
@@ -190,24 +275,34 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		maxLevel: 5,
 		levels: {
 			1: {
-				[Stat.FarmingFortune]: 1,
-				[Stat.BonusPestChance]: 2,
+				stats: {
+					[Stat.FarmingFortune]: 1,
+					[Stat.BonusPestChance]: 2,
+				}
 			},
 			2: {
-				[Stat.FarmingFortune]: 2,
-				[Stat.BonusPestChance]: 4,
+				stats: {
+					[Stat.FarmingFortune]: 2,
+					[Stat.BonusPestChance]: 4,
+				}
 			},
 			3: {
-				[Stat.FarmingFortune]: 3,
-				[Stat.BonusPestChance]: 6,
+				stats: {
+					[Stat.FarmingFortune]: 3,
+					[Stat.BonusPestChance]: 6,
+				}
 			},
 			4: {
-				[Stat.FarmingFortune]: 4,
-				[Stat.BonusPestChance]: 8,
+				stats: {
+					[Stat.FarmingFortune]: 4,
+					[Stat.BonusPestChance]: 8,
+				}
 			},
 			5: {
-				[Stat.FarmingFortune]: 5,
-				[Stat.BonusPestChance]: 10,
+				stats: {
+					[Stat.FarmingFortune]: 5,
+					[Stat.BonusPestChance]: 10,
+				}
 			},
 		},
 	},
@@ -218,31 +313,31 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		levelRequirement: 24,
 		minLevel: 1,
 		maxLevel: 5,
-		computed: {
+		levels: {
 			1: {
-				[Stat.FarmingFortune]: (opt) => {
-					return 0.05 * (opt.uniqueVisitors ?? 0);
-				},
+				computed: {
+					[Stat.FarmingFortune]: (opt) => 0.05 * (opt.uniqueVisitors ?? 0)
+				}
 			},
 			2: {
-				[Stat.FarmingFortune]: (opt) => {
-					return 0.1 * (opt.uniqueVisitors ?? 0);
-				},
+				computed: {
+					[Stat.FarmingFortune]: (opt) => 0.1 * (opt.uniqueVisitors ?? 0)
+				}
 			},
 			3: {
-				[Stat.FarmingFortune]: (opt) => {
-					return 0.15 * (opt.uniqueVisitors ?? 0);
-				},
+				computed: {
+					[Stat.FarmingFortune]: (opt) => 0.15 * (opt.uniqueVisitors ?? 0)
+				}
 			},
 			4: {
-				[Stat.FarmingFortune]: (opt) => {
-					return 0.2 * (opt.uniqueVisitors ?? 0);
-				},
+				computed: {
+					[Stat.FarmingFortune]: (opt) => 0.2 * (opt.uniqueVisitors ?? 0)
+				}
 			},
 			5: {
-				[Stat.FarmingFortune]: (opt) => {
-					return 0.25 * (opt.uniqueVisitors ?? 0);
-				},
+				computed: {
+					[Stat.FarmingFortune]: (opt) => 0.25 * (opt.uniqueVisitors ?? 0)
+				}
 			},
 		},
 		maxStats: {

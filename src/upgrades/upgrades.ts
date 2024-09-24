@@ -1,6 +1,6 @@
-import { FARMING_ENCHANTS } from "../constants/enchants";
+import { EnchantTierProcurement, FARMING_ENCHANTS } from "../constants/enchants";
 import { Stat } from "../constants/reforges";
-import { FortuneSource, FortuneSourceProgress, FortuneUpgrade, FortuneUpgradeImprovement, Upgrade, UpgradeAction, UpgradeReason } from "../constants/upgrades";
+import { FortuneSource, FortuneSourceProgress, FortuneUpgrade, FortuneUpgradeImprovement, Upgrade, UpgradeAction, UpgradeCategory, UpgradeReason } from "../constants/upgrades";
 import { GemRarity } from "../fortune/item";
 import { Upgradeable, UpgradeableInfo } from "../fortune/upgradable";
 import { getFortuneFromEnchant } from "../util/enchants";
@@ -20,7 +20,7 @@ export function getUpgrades(upgradeable: Upgradeable): FortuneUpgrade[] {
 	].filter(u => u) as FortuneUpgrade[];
 }
 
-export function getLastItemUpgrade(upgradeable: Upgradeable, options: Partial<Record<string, UpgradeableInfo>>): { from: Upgrade, info: UpgradeableInfo } | undefined {
+export function getLastItemUpgrade(upgradeable: Upgradeable, options: Partial<Record<string, UpgradeableInfo>>): { upgrade: Upgrade, info: UpgradeableInfo } | undefined {
 	const upgrade = upgradeable.getItemUpgrade();
 	if (!upgrade) return undefined;
 
@@ -36,7 +36,7 @@ export function getLastItemUpgrade(upgradeable: Upgradeable, options: Partial<Re
 
 	if (!item || last === upgrade) return undefined;
 
-	return { from: last, info: item };
+	return { upgrade: last, info: item };
 }
 
 export function getSourceProgress<T extends Upgradeable>(upgradeable: T, sources: DynamicFortuneSource<T>[]): FortuneSourceProgress[] {
@@ -73,6 +73,7 @@ export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUp
 		title: 'Recombobulator',
 		increase: 0,
 		action: UpgradeAction.Recombobulate,
+		category: UpgradeCategory.Rarity,
 		improvements: [] as FortuneUpgradeImprovement[]
 	} satisfies FortuneUpgrade;
 
@@ -129,11 +130,16 @@ export function getUpgradeableEnchants(upgradeable: Upgradeable): FortuneUpgrade
 
 		// If the enchantment is not applied, add an entry for applying it
 		if (!applied) {
+			const procurement = enchant.levels[enchant.minLevel]?.procurement;
+
 			result.push({
 				title: enchant.name + ' 1',
 				increase: getFortuneFromEnchant(enchant.minLevel, enchant, upgradeable.options, upgradeable.crop),
 				wiki: enchant.wiki,
-				action: UpgradeAction.Apply
+				action: (!procurement || procurement === EnchantTierProcurement.Normal) 
+					? UpgradeAction.Apply 
+					: UpgradeAction.LevelUp,
+				category: UpgradeCategory.Enchant
 			});
 
 			continue;
@@ -149,7 +155,8 @@ export function getUpgradeableEnchants(upgradeable: Upgradeable): FortuneUpgrade
 		result.push({
 			title: enchant.name + ' ' + (applied + 1),
 			increase: nextFortune - currentFortune,
-			action: UpgradeAction.Apply
+			action: UpgradeAction.Apply,
+			category: UpgradeCategory.Enchant
 		});
 	}
 
@@ -171,7 +178,8 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 		result.push({
 			title: 'Fine Peridot Gemstone',
 			increase: getPeridotGemFortune(upgradeable.rarity, GemRarity.Fine),
-			action: UpgradeAction.Apply
+			action: UpgradeAction.Apply,
+			category: UpgradeCategory.Gem
 		});
 	}
 	
@@ -187,7 +195,8 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 			result.push({
 				title: getGemRarityName(nextGem) + ' Peridot Gemstone',
 				increase: nextFortune - currentFortune,
-				action: UpgradeAction.Apply
+				action: UpgradeAction.Apply,
+				category: UpgradeCategory.Gem
 			});
 		}
 	}

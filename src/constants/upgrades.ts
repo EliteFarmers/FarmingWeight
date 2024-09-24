@@ -41,9 +41,17 @@ export interface UpgradeCost {
 	copper?: number;
 }
 
+export enum UpgradeCategory {
+	Enchant = 'enchant',
+	Rarity = 'rarity',
+	Item = 'item',
+	Gem = 'gem',
+}
+
 export enum UpgradeAction {
 	Apply = 'apply',
 	Recombobulate = 'recombobulate',
+	LevelUp = 'levelup',
 }
 
 export interface FortuneUpgradeImprovement {
@@ -55,6 +63,7 @@ export interface FortuneUpgrade {
 	title: string;
 	increase: number;
 	action: UpgradeAction;
+	category: UpgradeCategory;
 	cost?: UpgradeCost;
 	wiki?: string;
 	improvements?: FortuneUpgradeImprovement[];

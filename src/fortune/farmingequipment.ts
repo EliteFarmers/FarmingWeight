@@ -176,7 +176,12 @@ export class FarmingEquipment implements Upgradeable {
 		return Math.max(0, found - base - reforge);
 	}
 
-	private getPieceBonus(): number {
+	
+	/**
+	 * Get the bonus from the Salesperson lotus piece
+	 * @returns {number} Fortune from the Salesperson lotus piece
+	 */
+	getPieceBonus(): number {
 		const regex = /§7Piece Bonus: §6\+(\d+)☘/g;
 		let found = 0;
 

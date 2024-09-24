@@ -66,5 +66,5 @@ test("Tool item upgrade", () => {
 	expect(tool.fortune).toBe(151);
 
 	expect(tool.getItemUpgrade()?.id).toBe('THEORETICAL_HOE_WARTS_2');
-	expect(tool.getLastItemUpgrade()?.from.id).toBe('THEORETICAL_HOE_WARTS_3');
+	expect(tool.getLastItemUpgrade()?.upgrade.id).toBe('THEORETICAL_HOE_WARTS_3');
 });
