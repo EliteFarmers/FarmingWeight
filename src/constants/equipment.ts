@@ -83,6 +83,15 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		},
 		contestStatsMultiplier: 2
 	},
+	PEST_VEST: {
+		name: 'Pest Vest',
+		wiki: 'https://wiki.hypixel.net/Pest_Vest',
+		slot: GearSlot.Cloak,
+		maxRarity: Rarity.Legendary,
+		baseStats: {
+			[Stat.BonusPestChance]: 10
+		}
+	}
 };
 
 export const VISITORS_SERVED_BONUS = {
