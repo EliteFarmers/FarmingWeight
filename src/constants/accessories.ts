@@ -16,6 +16,7 @@ export interface FarmingAccessoryInfo extends UpgradeableInfo {
 
 export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryInfo>> = {
 	FERMENTO_ARTIFACT: {
+		skyblockId: 'FERMENTO_ARTIFACT',
 		name: 'Fermento Artifact',
 		wiki: 'https://wiki.hypixel.net/Fermento_Artifact',
 		family: 'Fermento',
@@ -25,6 +26,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		},
 	},
 	SQUASH_RING: {
+		skyblockId: 'SQUASH_RING',
 		name: 'Squash Ring',
 		wiki: 'https://wiki.hypixel.net/Squash_Ring',
 		family: 'Fermento',
@@ -39,6 +41,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		},
 	},
 	CROPIE_TALISMAN: {
+		skyblockId: 'CROPIE_TALISMAN',
 		name: 'Cropie Talisman',
 		wiki: 'https://wiki.hypixel.net/Cropie_Talisman',
 		family: 'Fermento',
@@ -53,6 +56,7 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		},
 	},
 	POWER_RELIC: {
+		skyblockId: 'POWER_RELIC',
 		name: 'Relic of Power',
 		wiki: 'https://wiki.hypixel.net/Relic_Of_Power',
 		gemSlots: {

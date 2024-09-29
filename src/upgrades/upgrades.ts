@@ -13,7 +13,7 @@ export function getFortune(level: number | null | undefined, source: FortuneSour
 	return Math.min(Math.max(level ?? 0, 0), source.maxLevel) * source.fortunePerLevel;
 }
 
-export function getUpgrades(upgradeable: Upgradeable): FortuneUpgrade[] {
+export function getItemUpgrades(upgradeable: Upgradeable): FortuneUpgrade[] {
 	return [
 		getUpgradeableRarityUpgrade(upgradeable),
 		...getUpgradeableEnchants(upgradeable),
@@ -41,7 +41,7 @@ export function getLastToolUpgrade(tool: FarmingToolInfo): UpgradeableInfo | und
 }
 
 
-export function getLastItemUpgrade(upgradeable: Upgradeable, options: Partial<Record<string, UpgradeableInfo>>): { upgrade: Upgrade, info: UpgradeableInfo } | undefined {
+export function getLastItemUpgradeableTo(upgradeable: Upgradeable, options: Partial<Record<string, UpgradeableInfo>>): { upgrade: Upgrade, info: UpgradeableInfo } | undefined {
 	const upgrade = upgradeable.getItemUpgrade();
 	if (!upgrade) return undefined;
 

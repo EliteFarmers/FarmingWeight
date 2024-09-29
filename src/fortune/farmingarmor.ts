@@ -12,7 +12,7 @@ import { FarmingEquipment } from './farmingequipment';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from '../player/player';
 import { Upgradeable, UpgradeableInfo } from './upgradable';
-import { getLastItemUpgrade, getSourceProgress, getUpgrades } from '../upgrades/upgrades';
+import { getLastItemUpgradeableTo, getSourceProgress, getItemUpgrades } from '../upgrades/upgrades';
 import { getFortuneFromEnchant } from '../util/enchants';
 import { FortuneSourceProgress } from '../constants/upgrades';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources';
@@ -408,7 +408,7 @@ export class FarmingArmor implements Upgradeable {
 	}
 
 	getUpgrades() {
-		return getUpgrades(this);
+		return getItemUpgrades(this);
 	}
 
 	getItemUpgrade() {
@@ -416,7 +416,7 @@ export class FarmingArmor implements Upgradeable {
 	}
 
 	getLastItemUpgrade() {
-		return getLastItemUpgrade(this, ARMOR_INFO);
+		return getLastItemUpgradeableTo(this, ARMOR_INFO);
 	}
 
 	getProgress(): FortuneSourceProgress[] {
