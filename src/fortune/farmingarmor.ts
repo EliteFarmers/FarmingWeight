@@ -11,11 +11,12 @@ import { getRarityFromLore } from '../util/itemstats';
 import { FarmingEquipment } from './farmingequipment';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from '../player/player';
-import { Upgradeable } from './upgradable';
+import { Upgradeable, UpgradeableInfo } from './upgradable';
 import { getLastItemUpgrade, getSourceProgress, getUpgrades } from '../upgrades/upgrades';
 import { getFortuneFromEnchant } from '../util/enchants';
 import { FortuneSourceProgress } from '../constants/upgrades';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources';
+import { ARMOR_SET_FORTUNE_SOURCES } from '../upgrades/sources/armorsetsources';
 
 export interface ActiveArmorSetBonus {
 	count: number;
@@ -267,6 +268,10 @@ export class ArmorSet {
 		return calculateAverageSpecialCrops(blocksBroken, crop, count);
 	}
 
+	getProgress() {
+		return getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES);
+	}
+
 	get slots(): Record<GearSlot, FarmingArmor | FarmingEquipment | undefined> {
 		return {
 			[GearSlot.Helmet]: this.helmet,
@@ -427,5 +432,19 @@ export class FarmingArmor implements Upgradeable {
 			.filter((item) => FarmingArmor.isValid(item))
 			.map((item) => new FarmingArmor(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
+	}
+
+	static fakeItem(info: UpgradeableInfo, options?: PlayerOptions): FarmingArmor | undefined {
+		const fake: EliteItemDto = {
+			name: 'Fake Item',
+			skyblockId: info.skyblockId,
+			lore: [],
+			attributes: {},
+			enchantments: {},
+		};
+
+		if (!FarmingArmor.isValid(fake)) return undefined;
+
+		return new FarmingArmor(fake, options);
 	}
 }

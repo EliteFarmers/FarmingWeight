@@ -23,6 +23,7 @@ import { Upgrade } from '../constants/upgrades';
 import { getFortune, getSourceProgress } from '../upgrades/upgrades';
 import { getFortuneProgress } from '../upgrades/progress';
 import { CROP_FORTUNE_SOURCES } from '../upgrades/sources/cropsources';
+import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources';
 
 export interface FortuneMissingFromAPI {
 	cropUpgrades?: Partial<Record<Crop, number>>;
@@ -196,6 +197,10 @@ export class FarmingPlayer {
 			pet.fortune = pet.getFortune();
 		}
 		this.permFortune = this.getGeneralFortune();
+	}
+
+	getProgress() {
+		return getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES);
 	}
 
 	getGeneralFortune() {

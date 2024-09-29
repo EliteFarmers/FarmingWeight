@@ -16,6 +16,55 @@ export enum GearSlot {
 	Gloves = 'Gloves',
 }
 
+export interface GearSlotInfo {
+	name: string;
+	startingItem: string;
+	target: ReforgeTarget;
+}
+
+export const GEAR_SLOTS: Record<GearSlot, GearSlotInfo> = {
+	[GearSlot.Helmet]: {
+		name: 'Helmet',
+		target: ReforgeTarget.Armor,
+		startingItem: 'FARM_ARMOR_HELMET',
+	},
+	[GearSlot.Chestplate]: {
+		name: 'Chestplate',
+		target: ReforgeTarget.Armor,
+		startingItem: 'FARM_ARMOR_CHESTPLATE',
+	},
+	[GearSlot.Leggings]: {
+		name: 'Leggings',
+		target: ReforgeTarget.Armor,
+		startingItem: 'FARM_ARMOR_LEGGINGS',
+	},
+	[GearSlot.Boots]: {
+		name: 'Boots',
+		target: ReforgeTarget.Armor,
+		startingItem: 'FARM_ARMOR_BOOTS',
+	},
+	[GearSlot.Necklace]: {
+		name: 'Necklace',
+		target: ReforgeTarget.Equipment,
+		startingItem: 'LOTUS_NECKLACE',
+	},
+	[GearSlot.Cloak]: {
+		name: 'Cloak',
+		target: ReforgeTarget.Equipment,
+		startingItem: 'LOTUS_CLOAK',
+	},
+	[GearSlot.Belt]: {
+		name: 'Belt',
+		target: ReforgeTarget.Equipment,
+		startingItem: 'LOTUS_BELT',
+	},
+	[GearSlot.Gloves]: {
+		name: 'Gloves',
+		target: ReforgeTarget.Equipment,
+		startingItem: 'LOTUS_BRACELET',
+	},
+};
+
 export interface FarmingArmorInfo extends UpgradeableInfo {
 	special?: SpecialCrop[];
 	slot: GearSlot;

@@ -17,7 +17,7 @@ export const UNLOCKED_PLOTS: FortuneSource = {
 
 export const FARMING_LEVEL: FortuneSource = {
 	name: 'Farming Level',
-	fortunePerLevel: 1,
+	fortunePerLevel: 4,
 	maxLevel: 60,
 	wiki: 'https://wiki.hypixel.net/Farming#Leveling_Rewards',
 };
@@ -41,4 +41,11 @@ export const PEST_BESTIARY_SOURCE: FortuneSource = {
 	fortunePerLevel: 1,
 	maxLevel: 60,
 	wiki: 'https://wiki.hypixel.net/Bestiary#Garden_'
+};
+
+export const REFINED_TRUFFLE_SOURCE: FortuneSource = {
+	name: 'Refined Dark Cacao Truffle',
+	fortunePerLevel: 1,
+	maxLevel: 5,
+	wiki: 'https://wiki.hypixel.net/Refined_Dark_Cacao_Truffle'
 };
