@@ -11,7 +11,7 @@ export enum FarmingPets {
 	Bee = 'BEE',
 	Rabbit = 'RABBIT',
 	Slug = 'SLUG',
-	TRex = 'T_REX',
+	TRex = 'TYRANNOSAURUS',
 }
 
 export interface FarmingPetType {
