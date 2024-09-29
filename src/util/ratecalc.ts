@@ -1,5 +1,6 @@
 import { CROP_INFO, Crop, CropInfo, MAX_CROP_FORTUNE } from '../constants/crops';
-import { REFORGES, Rarity, Stat } from '../constants/reforges';
+import { REFORGES, Rarity } from '../constants/reforges';
+import { Stat } from "../constants/stats";
 import { BEST_FARMING_TOOLS } from '../constants/tools';
 import { calculateMelonPerkBonus } from '../crops/melon';
 import { calculatePumpkinPerkBonus } from '../crops/pumpkin';

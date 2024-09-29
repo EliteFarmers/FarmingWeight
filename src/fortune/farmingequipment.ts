@@ -1,7 +1,8 @@
 import { FarmingArmorInfo } from '../constants/armor';
 import { FARMING_ENCHANTS } from '../constants/enchants';
 import { EQUIPMENT_INFO } from '../constants/equipment';
-import { REFORGES, Rarity, Reforge, ReforgeTarget, ReforgeTier, Stat } from '../constants/reforges';
+import { REFORGES, Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges';
+import { Stat } from "../constants/stats";
 import { getRarityFromLore } from '../util/itemstats';
 import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';

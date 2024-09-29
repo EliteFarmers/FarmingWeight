@@ -23,6 +23,7 @@ export * from './constants/personalbests.js';
 export * from './constants/equipment.js';
 export * from './constants/upgrades.js';
 export * from './constants/tempfortune.js';
+export * from './constants/stats.js';
 
 export * from './util/garden.js';
 export * from './util/itemstats.js';

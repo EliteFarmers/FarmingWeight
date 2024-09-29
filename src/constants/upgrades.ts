@@ -1,6 +1,6 @@
 import type { GearSlot } from "./armor";
 import { Crop } from "./crops";
-import { Stat } from "./reforges";
+import { Stat } from "./stats";
 import type { FARMING_TOOLS } from "./tools";
 
 export enum UpgradeReason {

@@ -1,7 +1,8 @@
 import { PlayerOptions } from '../player/player';
 import { Crop } from './crops';
 import { CROP_MILESTONES, GARDEN_VISITORS } from './garden';
-import { ReforgeTarget, Stat } from './reforges';
+import { ReforgeTarget } from './reforges';
+import { Stat } from "./stats";
 
 export enum EnchantTierProcurement {
 	Normal = 'normal',

@@ -1,5 +1,6 @@
 import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../constants/accessories';
-import { Rarity, Stat } from '../constants/reforges';
+import { Rarity } from '../constants/reforges';
+import { Stat } from "../constants/stats";
 import { FortuneSourceProgress } from '../constants/upgrades';
 import { getLastItemUpgrade, getUpgrades } from '../upgrades/upgrades';
 import { getPeridotFortune } from '../util/gems';

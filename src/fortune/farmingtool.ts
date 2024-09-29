@@ -1,6 +1,7 @@
 import { Crop } from '../constants/crops';
 import { FARMING_ENCHANTS } from '../constants/enchants';
-import { REFORGES, Rarity, Reforge, ReforgeTier, Stat } from '../constants/reforges';
+import { REFORGES, Rarity, Reforge, ReforgeTier } from '../constants/reforges';
+import { Stat } from "../constants/stats";
 import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../constants/tools';
 import { getPeridotFortune } from '../util/gems';
 import { getRarityFromLore, previousRarity } from '../util/itemstats';

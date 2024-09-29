@@ -1,5 +1,6 @@
 import { UpgradeableInfo } from '../fortune/upgradable';
-import { Rarity, ReforgeTarget, Stat } from './reforges';
+import { Rarity, ReforgeTarget } from './reforges';
+import { Stat } from "./stats";
 import { Skill } from './skills';
 import { SpecialCrop } from './specialcrops';
 import { Upgrade, UpgradeReason } from './upgrades';

@@ -1,5 +1,6 @@
 import { FARMING_ENCHANTS } from "../../constants/enchants";
-import { Rarity, REFORGES, ReforgeTarget, Stat } from "../../constants/reforges";
+import { Rarity, REFORGES, ReforgeTarget } from "../../constants/reforges";
+import { Stat } from "../../constants/stats";
 import { FarmingToolType } from "../../constants/tools";
 import { FarmingTool } from "../../fortune/farmingtool";
 import { GemRarity } from "../../fortune/item";

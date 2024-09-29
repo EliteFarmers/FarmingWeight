@@ -1,5 +1,6 @@
 import { FarmingArmorInfo, GearSlot } from './armor';
-import { Rarity, Stat } from './reforges';
+import { Rarity } from './reforges';
+import { Stat } from "./stats";
 import { Skill } from './skills';
 import { UpgradeReason } from './upgrades';
 

@@ -138,7 +138,7 @@ export class FarmingPlayer {
 			this.equipment = this.armorSet.equipmentPieces;
 			this.equipment.sort((a, b) => b.fortune - a.fortune);
 
-			this.armorSet.getFortuneBreakdown(true);
+			this.armorSet.setOptions(options);
 		} else if (options.armor[0] instanceof FarmingArmor) {
 			this.armor = (options.armor as FarmingArmor[]).sort((a, b) => b.potential - a.potential);
 			for (const a of this.armor) a.setOptions(options);

@@ -1,6 +1,6 @@
 import { Crop } from "../constants/crops";
 import { FarmingEnchant } from "../constants/enchants";
-import { Stat } from "../constants/reforges";
+import { Stat } from "../constants/stats";
 import { PlayerOptions } from "../player/player";
 
 export function getFortuneFromEnchant(level: number, enchant: FarmingEnchant, options?: PlayerOptions, crop?: Crop): number {

@@ -1,5 +1,6 @@
 import { Crop } from "../constants/crops";
-import { Rarity, Reforge, ReforgeTarget, Stat } from "../constants/reforges";
+import { Rarity, Reforge, ReforgeTarget } from "../constants/reforges";
+import { Stat } from "../constants/stats";
 import { FortuneSourceProgress, FortuneUpgrade, Upgrade } from "../constants/upgrades";
 import { PlayerOptions } from "../player/player";
 import { EliteItemDto } from "./item";

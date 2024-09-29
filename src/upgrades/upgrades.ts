@@ -1,5 +1,5 @@
 import { EnchantTierProcurement, FARMING_ENCHANTS } from "../constants/enchants";
-import { Stat } from "../constants/reforges";
+import { Stat } from "../constants/stats";
 import { FortuneSource, FortuneSourceProgress, FortuneUpgrade, FortuneUpgradeImprovement, Upgrade, UpgradeAction, UpgradeCategory, UpgradeReason } from "../constants/upgrades";
 import { GemRarity } from "../fortune/item";
 import { Upgradeable, UpgradeableInfo } from "../fortune/upgradable";

@@ -1,6 +1,7 @@
 import { UpgradeableInfo } from '../fortune/upgradable';
 import { Crop } from './crops';
-import { Rarity, ReforgeTarget, Stat } from './reforges';
+import { Rarity, ReforgeTarget } from './reforges';
+import { Stat } from "./stats";
 import { UpgradeReason } from './upgrades';
 
 export enum FarmingToolType {

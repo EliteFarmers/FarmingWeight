@@ -1,7 +1,8 @@
 import { ARMOR_INFO, ARMOR_SET_BONUS, ArmorSetBonus, FarmingArmorInfo, GearSlot } from '../constants/armor';
 import { Crop } from '../constants/crops';
 import { FARMING_ENCHANTS } from '../constants/enchants';
-import { REFORGES, Rarity, Reforge, ReforgeTarget, ReforgeTier, Stat } from '../constants/reforges';
+import { REFORGES, Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges';
+import { Stat } from "../constants/stats";
 import { Skill } from '../constants/skills';
 import { MATCHING_SPECIAL_CROP, SpecialCrop } from '../constants/specialcrops';
 import { calculateAverageSpecialCrops } from '../crops/special';
@@ -88,6 +89,17 @@ export class ArmorSet {
 		this.gloves = equipment.find((a) => a.slot === GearSlot.Gloves);
 
 		this.recalculateFamilies();
+	}
+
+	setOptions(options: PlayerOptions) {
+		for (const piece of this.pieces) {
+			piece.setOptions(options);
+		}
+		for (const piece of this.equipmentPieces) {
+			piece.setOptions(options);
+		}
+
+		this.getFortuneBreakdown(true);
 	}
 
 	getPiece(slot: GearSlot): FarmingArmor | FarmingEquipment | undefined {
