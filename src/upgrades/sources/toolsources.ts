@@ -1,15 +1,16 @@
+import { Crop } from "../../constants/crops";
 import { FARMING_ENCHANTS } from "../../constants/enchants";
 import { Rarity, REFORGES, ReforgeTarget } from "../../constants/reforges";
 import { Stat } from "../../constants/stats";
 import { FarmingToolType } from "../../constants/tools";
 import { FarmingTool } from "../../fortune/farmingtool";
 import { GemRarity } from "../../fortune/item";
-import { Upgradeable } from "../../fortune/upgradable";
 import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from "../../util/enchants";
 import { getPeridotFortune, getPeridotGemFortune } from "../../util/gems";
 
-export interface DynamicFortuneSource<T extends Upgradeable> {
+export interface DynamicFortuneSource<T> {
 	name: string;
+	crop?: Crop;
 	exists: (upgradable: T) => boolean;
 	max: (upgradable: T) => number;
 	current: (upgradable: T) => number;
@@ -46,9 +47,10 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		name: 'Reforge Stats',
 		exists: () => true,
 		max: (tool) => {
-			return tool.reforge?.name === 'Bountiful' 
-				? tool.reforge?.tiers?.[tool.info.maxRarity]?.stats[Stat.FarmingFortune] ?? 0
-				: REFORGES.blessed?.tiers[tool.info.maxRarity]?.stats[Stat.FarmingFortune] ?? 0;
+			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
+			return tool.reforge?.name === 'Blessed' 
+				? REFORGES.blessed?.tiers[last.maxRarity]?.stats[Stat.FarmingFortune] ?? 0
+				: REFORGES.bountiful?.tiers?.[last.maxRarity]?.stats[Stat.FarmingFortune] ?? 0;
 		},
 		current: (tool) => {
 			return tool.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;

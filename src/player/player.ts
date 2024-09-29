@@ -20,11 +20,12 @@ import { FarmingEquipment } from '../fortune/farmingequipment';
 import { TEMPORARY_FORTUNE, TemporaryFarmingFortune } from '../constants/tempfortune';
 import { createFarmingWeightCalculator, FarmingWeightInfo } from '../weight/weightcalc';
 import { Upgrade } from '../constants/upgrades';
-import { getFortune } from '../upgrades/upgrades';
+import { getFortune, getSourceProgress } from '../upgrades/upgrades';
 import { getFortuneProgress } from '../upgrades/progress';
+import { CROP_FORTUNE_SOURCES } from '../upgrades/sources/cropsources';
 
 export interface FortuneMissingFromAPI {
-	cropUpgrades?: Record<Crop, number>;
+	cropUpgrades?: Partial<Record<Crop, number>>;
 	gardenLevel?: number;
 	plotsUnlocked?: number;
 	uniqueVisitors?: number;
@@ -100,6 +101,7 @@ export class FarmingPlayer {
 	declare armorSet: ArmorSet;
 	declare equipment: FarmingEquipment[];
 	declare accessories: FarmingAccessory[];
+	declare activeAccessories: FarmingAccessory[];
 	declare pets: FarmingPet[];
 
 	declare selectedTool?: FarmingTool;
@@ -162,6 +164,8 @@ export class FarmingPlayer {
 		}
 
 		options.accessories ??= [];
+		this.activeAccessories = [];
+
 		if (options.accessories[0] instanceof FarmingAccessory) {
 			this.accessories = (options.accessories as FarmingAccessory[]).sort((a, b) => b.fortune - a.fortune);
 		} else {
@@ -262,6 +266,7 @@ export class FarmingPlayer {
 			if (accessory.info.family) {
 				if (!families.has(accessory.info.family)) {
 					families.set(accessory.info.family, accessory);
+					this.activeAccessories.push(accessory);
 				} else {
 					continue;
 				}
@@ -392,6 +397,10 @@ export class FarmingPlayer {
 			fortune: sum,
 			breakdown,
 		};
+	}
+
+	getCropProgress(crop: Crop) {
+		return getSourceProgress<{ crop: Crop, player: FarmingPlayer }>({ crop, player: this }, CROP_FORTUNE_SOURCES);
 	}
 
 	getWeightCalc(info?: FarmingWeightInfo) {

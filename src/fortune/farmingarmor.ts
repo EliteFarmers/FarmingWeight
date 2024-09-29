@@ -64,6 +64,16 @@ export class ArmorSet {
 			}
 		}
 
+		this.setArmor(armor);
+
+		if (equipment) {
+			this.setEquipment(equipment);
+		} else {
+			this.recalculateFamilies();
+		}
+	}
+
+	setArmor(armor: FarmingArmor[]) {
 		armor.sort((a, b) => b.potential - a.potential);
 		this.pieces = armor;
 
@@ -72,11 +82,7 @@ export class ArmorSet {
 		this.leggings = armor.find((a) => a.slot === GearSlot.Leggings);
 		this.boots = armor.find((a) => a.slot === GearSlot.Boots);
 
-		if (equipment) {
-			this.setEquipment(equipment);
-		} else {
-			this.recalculateFamilies();
-		}
+		this.recalculateFamilies();
 	}
 
 	setEquipment(equipment: FarmingEquipment[]) {
@@ -99,7 +105,8 @@ export class ArmorSet {
 			piece.setOptions(options);
 		}
 
-		this.getFortuneBreakdown(true);
+		this.setArmor(this.pieces);
+		this.setEquipment(this.equipmentPieces);
 	}
 
 	getPiece(slot: GearSlot): FarmingArmor | FarmingEquipment | undefined {

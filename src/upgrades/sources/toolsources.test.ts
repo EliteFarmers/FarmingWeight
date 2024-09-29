@@ -1,6 +1,6 @@
-import { expect, test } from "vitest";
-import { FarmingTool } from "../../fortune/farmingtool";
-import { Crop } from "../../constants/crops";
+import { expect, test } from 'vitest';
+import { FarmingTool } from '../../fortune/farmingtool';
+import { Crop } from '../../constants/crops';
 
 const netherwartHoe = {
 	id: 293,
@@ -71,12 +71,11 @@ const netherwartHoe = {
 	gems: { PERIDOT_0: 'PERFECT' },
 };
 
-
-test("Test tool fortune sources", () => {
+test('Test tool fortune sources', () => {
 	const tool = new FarmingTool(netherwartHoe, {
 		milestones: {
 			[Crop.NetherWart]: 12,
-		}
+		},
 	});
 
 	expect(tool.fortune).toBe(355);
@@ -144,7 +143,7 @@ test("Test tool fortune sources", () => {
 			fortune: 25,
 			maxFortune: 25,
 			progress: 1,
-		}
+		},
 	]);
 
 	expect(progress.reduce((acc, curr) => acc + curr.fortune, 0)).toBe(tool.fortune);
@@ -153,4 +152,103 @@ test("Test tool fortune sources", () => {
 	expect(tool.fortune).toBe(365);
 
 	expect(tool.getProgress().reduce((acc, curr) => acc + curr.fortune, 0)).toBe(tool.fortune);
+	expect(tool.getProgress().reduce((acc, curr) => acc + curr.maxFortune, 0)).toBe(485);
+});
+
+const t1WheatHoe = {
+	id: 291,
+	count: 1,
+	skyblockId: 'THEORETICAL_HOE_WHEAT_1',
+	uuid: '2b15e5f1-94e3-424e-a265-461ca617672b',
+	name: "§fEuclid's Wheat Hoe",
+	lore: [
+		'§7Wheat Fortune: §a+10',
+		' §8[§8☘§8]',
+		'',
+		'§7Gain §6+10☘ Wheat Fortune §7and §3+1☯',
+		'§3Farming Wisdom §7for wheat.',
+		'',
+		'§7Counter: §e0 Wheat',
+		'',
+		'§eReach 100k Counter for +1 Rarity!',
+		'',
+		'§eRight-click to view recipes!',
+		'',
+		'§7§8This item can be reforged!',
+		'§f§lCOMMON HOE',
+	],
+	enchantments: null,
+	attributes: { timestamp: '1722345370015' },
+};
+
+test('Tier 1 Wheat Hoe', () => {
+	const tool = new FarmingTool(t1WheatHoe);
+	expect(tool.fortune).toBe(10);
+
+	const progress = tool.getProgress();
+
+	expect(progress).toStrictEqual([
+		{
+			name: 'Base Stats',
+			fortune: 10,
+			maxFortune: 50,
+			progress: 1 / 5,
+		},
+		{
+			name: 'Reforge Stats',
+			fortune: 0,
+			maxFortune: 10,
+			progress: 0,
+		},
+		{
+			name: 'Gemstone Slots',
+			fortune: 0,
+			maxFortune: 30,
+			progress: 0,
+		},
+		{
+			name: 'Farming For Dummies',
+			fortune: 0,
+			maxFortune: 5,
+			progress: 0,
+		},
+		{
+			name: 'Logarithmic Counter',
+			fortune: 0,
+			maxFortune: 112,
+			progress: 0,
+		},
+		{
+			name: 'Collection Analysis',
+			fortune: 0,
+			maxFortune: 56,
+			progress: 0,
+		},
+		{
+			name: 'Harvesting',
+			fortune: 0,
+			maxFortune: 75,
+			progress: 0,
+		},
+		{
+			name: 'Cultivating',
+			fortune: 0,
+			maxFortune: 20,
+			progress: 0,
+		},
+		{
+			name: 'Dedication',
+			fortune: 0,
+			maxFortune: 92,
+			progress: 0,
+		},
+		{
+			name: 'Turbo-Wheat',
+			fortune: 0,
+			maxFortune: 25,
+			progress: 0,
+		},
+	]);
+
+	expect(progress.reduce((acc, curr) => acc + curr.maxFortune, 0)).toBe(475);
 });

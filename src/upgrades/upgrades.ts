@@ -1,5 +1,6 @@
 import { EnchantTierProcurement, FARMING_ENCHANTS } from "../constants/enchants";
 import { Stat } from "../constants/stats";
+import { FARMING_TOOLS, FarmingToolInfo } from "../constants/tools";
 import { FortuneSource, FortuneSourceProgress, FortuneUpgrade, FortuneUpgradeImprovement, Upgrade, UpgradeAction, UpgradeCategory, UpgradeReason } from "../constants/upgrades";
 import { GemRarity } from "../fortune/item";
 import { Upgradeable, UpgradeableInfo } from "../fortune/upgradable";
@@ -20,6 +21,26 @@ export function getUpgrades(upgradeable: Upgradeable): FortuneUpgrade[] {
 	].filter(u => u) as FortuneUpgrade[];
 }
 
+export function getLastToolUpgrade(tool: FarmingToolInfo): UpgradeableInfo | undefined {
+	const upgrade = tool.upgrade;
+	if (!upgrade) return undefined;
+
+	let last = upgrade;
+	let item = FARMING_TOOLS[upgrade.id];
+	if (!item) return undefined;
+
+	while (item?.upgrade) {
+		if (item.upgrade.reason === UpgradeReason.Situational) break;
+		last = item.upgrade;
+		item = FARMING_TOOLS[item.upgrade.id];
+	}
+
+	if (!item || last === upgrade) return undefined;
+
+	return item;
+}
+
+
 export function getLastItemUpgrade(upgradeable: Upgradeable, options: Partial<Record<string, UpgradeableInfo>>): { upgrade: Upgrade, info: UpgradeableInfo } | undefined {
 	const upgrade = upgradeable.getItemUpgrade();
 	if (!upgrade) return undefined;
@@ -39,11 +60,13 @@ export function getLastItemUpgrade(upgradeable: Upgradeable, options: Partial<Re
 	return { upgrade: last, info: item };
 }
 
-export function getSourceProgress<T extends Upgradeable>(upgradeable: T, sources: DynamicFortuneSource<T>[]): FortuneSourceProgress[] {
+export function getSourceProgress<T extends object>(upgradeable: T, sources: DynamicFortuneSource<T>[]): FortuneSourceProgress[] {
 	const result = [] as FortuneSourceProgress[];
 
 	// Ensure the item fortune is up to date
-	upgradeable.getFortune();
+	if ('getFortune' in upgradeable && typeof upgradeable.getFortune === 'function') {
+		upgradeable.getFortune();
+	}
 
 	for (const source of sources) {
 		if (!source.exists(upgradeable)) continue;

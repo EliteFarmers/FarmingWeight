@@ -7,7 +7,7 @@ import { getRarityFromLore } from '../util/itemstats';
 import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
 import { PlayerOptions, ZorroMode } from '../player/player';
-import { Upgradeable } from './upgradable';
+import { Upgradeable, UpgradeableInfo } from './upgradable';
 import { getLastItemUpgrade, getSourceProgress, getUpgrades } from '../upgrades/upgrades';
 import { getFortuneFromEnchant } from '../util/enchants';
 import { FortuneSourceProgress } from '../constants/upgrades';
@@ -208,6 +208,20 @@ export class FarmingEquipment implements Upgradeable {
 			.filter((item) => FarmingEquipment.isValid(item))
 			.map((item) => new FarmingEquipment(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
+	}
+
+	static fakeItem(info: UpgradeableInfo, options?: PlayerOptions): FarmingEquipment | undefined {
+		const fake: EliteItemDto = {
+			name: 'Fake Item',
+			skyblockId: info.skyblockId,
+			lore: [],
+			attributes: {},
+			enchantments: {},
+		};
+
+		if (!FarmingEquipment.isValid(fake)) return undefined;
+
+		return new FarmingEquipment(fake, options);
 	}
 }
 

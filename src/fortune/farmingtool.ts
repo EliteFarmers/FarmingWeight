@@ -8,7 +8,7 @@ import { getRarityFromLore, previousRarity } from '../util/itemstats';
 import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from '../player/player';
-import { Upgradeable } from './upgradable';
+import { Upgradeable, UpgradeableInfo } from './upgradable';
 import { getLastItemUpgrade, getSourceProgress, getUpgrades } from '../upgrades/upgrades';
 import { getFortuneFromEnchant } from '../util/enchants';
 import { FortuneSourceProgress } from '../constants/upgrades';
@@ -52,7 +52,7 @@ export class FarmingTool implements Upgradeable {
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
 		this.rebuildTool(item, options);
 	}
-
+	
 	getUpgrades() {
 		return getUpgrades(this);
 	}
@@ -269,5 +269,19 @@ export class FarmingTool implements Upgradeable {
 			.filter((item) => FarmingTool.isValid(item))
 			.map((item) => new FarmingTool(item, options))
 			.sort((a, b) => b.fortune - a.fortune);
+	}
+
+	static fakeItem(info: UpgradeableInfo, options?: PlayerOptions): FarmingTool | undefined {
+		const fake: EliteItemDto = {
+			name: 'Fake Item',
+			skyblockId: info.skyblockId,
+			lore: [],
+			attributes: {},
+			enchantments: {},
+		};
+
+		if (!FarmingTool.isValid(fake)) return undefined;
+
+		return new FarmingTool(fake, options);
 	}
 }

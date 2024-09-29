@@ -100,6 +100,7 @@ const t3hoeStats = {
 
 export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 	CACTUS_KNIFE: {
+		skyblockId: 'CACTUS_KNIFE',
 		crop: Crop.Cactus,
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
@@ -111,6 +112,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		wiki: 'https://wiki.hypixel.net/Cactus_Knife',
 	},
 	COCO_CHOPPER: {
+		skyblockId: 'COCO_CHOPPER',
 		crop: Crop.CocoaBeans,
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Axe,
@@ -125,6 +127,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		},
 	},
 	FUNGI_CUTTER: {
+		skyblockId: 'FUNGI_CUTTER',
 		crop: Crop.Mushroom,
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
@@ -140,6 +143,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 	},
 
 	MELON_DICER: {
+		skyblockId: 'MELON_DICER',
 		crop: Crop.Melon,
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Axe,
@@ -155,6 +159,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		wiki: 'https://wiki.hypixel.net/Melon_Dicer',
 	},
 	MELON_DICER_2: {
+		skyblockId: 'MELON_DICER_2',
 		crop: Crop.Melon,
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Axe,
@@ -170,6 +175,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		wiki: 'https://wiki.hypixel.net/Melon_Dicer_2.0',
 	},
 	MELON_DICER_3: {
+		skyblockId: 'MELON_DICER_3',
 		crop: Crop.Melon,
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Axe,
@@ -182,6 +188,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 	},
 
 	PUMPKIN_DICER: {
+		skyblockId: 'PUMPKIN_DICER',
 		crop: Crop.Pumpkin,
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Axe,
@@ -197,6 +204,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		wiki: 'https://wiki.hypixel.net/Pumpkin_Dicer',
 	},
 	PUMPKIN_DICER_2: {
+		skyblockId: 'PUMPKIN_DICER_2',
 		crop: Crop.Pumpkin,
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Axe,
@@ -212,6 +220,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		wiki: 'https://wiki.hypixel.net/Pumpkin_Dicer_2.0',
 	},
 	PUMPKIN_DICER_3: {
+		skyblockId: 'PUMPKIN_DICER_3',
 		crop: Crop.Pumpkin,
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Axe,
@@ -224,6 +233,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 	},
 
 	THEORETICAL_HOE_CARROT_1: {
+		skyblockId: 'THEORETICAL_HOE_CARROT_1',
 		crop: Crop.Carrot,
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
@@ -240,6 +250,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		stats: t1hoeStats,
 	},
 	THEORETICAL_HOE_CARROT_2: {
+		skyblockId: 'THEORETICAL_HOE_CARROT_2',
 		crop: Crop.Carrot,
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
@@ -256,6 +267,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		stats: t2hoeStats,
 	},
 	THEORETICAL_HOE_CARROT_3: {
+		skyblockId: 'THEORETICAL_HOE_CARROT_3',
 		crop: Crop.Carrot,
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Hoe,
@@ -269,6 +281,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 	},
 
 	THEORETICAL_HOE_WARTS_1: {
+		skyblockId: 'THEORETICAL_HOE_WARTS_1',
 		crop: Crop.NetherWart,
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
@@ -285,6 +298,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		stats: t1hoeStats,
 	},
 	THEORETICAL_HOE_WARTS_2: {
+		skyblockId: 'THEORETICAL_HOE_WARTS_2',
 		crop: Crop.NetherWart,
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
@@ -301,6 +315,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		stats: t2hoeStats,
 	},
 	THEORETICAL_HOE_WARTS_3: {
+		skyblockId: 'THEORETICAL_HOE_WARTS_3',
 		crop: Crop.NetherWart,
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Hoe,
@@ -314,6 +329,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 	},
 
 	THEORETICAL_HOE_POTATO_1: {
+		skyblockId: 'THEORETICAL_HOE_POTATO_1',
 		crop: Crop.Potato,
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
@@ -330,6 +346,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		stats: t1hoeStats,
 	},
 	THEORETICAL_HOE_POTATO_2: {
+		skyblockId: 'THEORETICAL_HOE_POTATO_2',
 		crop: Crop.Potato,
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
@@ -346,6 +363,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		stats: t2hoeStats,
 	},
 	THEORETICAL_HOE_POTATO_3: {
+		skyblockId: 'THEORETICAL_HOE_POTATO_3',
 		crop: Crop.Potato,
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Hoe,
@@ -359,6 +377,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 	},
 
 	THEORETICAL_HOE_CANE_1: {
+		skyblockId: 'THEORETICAL_HOE_CANE_1',
 		crop: Crop.SugarCane,
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
@@ -375,6 +394,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		stats: t1hoeStats,
 	},
 	THEORETICAL_HOE_CANE_2: {
+		skyblockId: 'THEORETICAL_HOE_CANE_2',
 		crop: Crop.SugarCane,
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
@@ -391,6 +411,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		stats: t2hoeStats,
 	},
 	THEORETICAL_HOE_CANE_3: {
+		skyblockId: 'THEORETICAL_HOE_CANE_3',
 		crop: Crop.SugarCane,
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Hoe,
@@ -404,6 +425,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 	},
 
 	THEORETICAL_HOE_WHEAT_1: {
+		skyblockId: 'THEORETICAL_HOE_WHEAT_1',
 		crop: Crop.Wheat,
 		maxRarity: Rarity.Epic,
 		reforgeType: ReforgeTarget.Hoe,
@@ -420,6 +442,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		stats: t1hoeStats,
 	},
 	THEORETICAL_HOE_WHEAT_2: {
+		skyblockId: 'THEORETICAL_HOE_WHEAT_2',
 		crop: Crop.Wheat,
 		maxRarity: Rarity.Legendary,
 		reforgeType: ReforgeTarget.Hoe,
@@ -436,6 +459,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		stats: t2hoeStats,
 	},
 	THEORETICAL_HOE_WHEAT_3: {
+		skyblockId: 'THEORETICAL_HOE_WHEAT_3',
 		crop: Crop.Wheat,
 		maxRarity: Rarity.Mythic,
 		reforgeType: ReforgeTarget.Hoe,

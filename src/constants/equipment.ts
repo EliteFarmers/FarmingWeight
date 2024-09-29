@@ -6,6 +6,7 @@ import { UpgradeReason } from './upgrades';
 
 export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 	LOTUS_BRACELET: {
+		skyblockId: 'LOTUS_BRACELET',
 		name: 'Lotus Bracelet',
 		wiki: 'https://wiki.hypixel.net/Lotus_Bracelet',
 		family: 'LOTUS',
@@ -20,6 +21,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		},
 	},
 	LOTUS_BELT: {
+		skyblockId: 'LOTUS_BELT',
 		name: 'Lotus Belt',
 		wiki: 'https://wiki.hypixel.net/Lotus_Belt',
 		family: 'LOTUS',
@@ -34,6 +36,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		},
 	},
 	LOTUS_NECKLACE: {
+		skyblockId: 'LOTUS_NECKLACE',
 		name: 'Lotus Necklace',
 		wiki: 'https://wiki.hypixel.net/Lotus_Necklace',
 		family: 'LOTUS',
@@ -48,6 +51,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		},
 	},
 	LOTUS_CLOAK: {
+		skyblockId: 'LOTUS_CLOAK',
 		name: 'Lotus Cloak',
 		wiki: 'https://wiki.hypixel.net/Lotus_Cloak',
 		upgrade: {
@@ -67,6 +71,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		},
 	},
 	ZORROS_CAPE: {
+		skyblockId: 'ZORROS_CAPE',
 		name: "Zorro's Cloak",
 		wiki: 'https://wiki.hypixel.net/Zorro%27s_Cape',
 		upgrade: {
@@ -85,6 +90,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		contestStatsMultiplier: 2
 	},
 	PEST_VEST: {
+		skyblockId: 'PEST_VEST',
 		name: 'Pest Vest',
 		wiki: 'https://wiki.hypixel.net/Pest_Vest',
 		slot: GearSlot.Cloak,

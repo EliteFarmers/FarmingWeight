@@ -35,6 +35,7 @@ export interface FarmingArmorInfo extends UpgradeableInfo {
 
 export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	FARMER_BOOTS: {
+		skyblockId: 'FARMER_BOOTS',
 		name: 'Farmer Boots',
 		wiki: 'https://wiki.hypixel.net/Farmer_Boots',
 		upgrade: {
@@ -57,6 +58,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	RANCHERS_BOOTS: {
+		skyblockId: 'RANCHERS_BOOTS',
 		name: "Rancher's Boots",
 		wiki: 'https://wiki.hypixel.net/Rancher%27s_Boots',
 		upgrade: {
@@ -80,6 +82,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	ENCHANTED_JACK_O_LANTERN: {
+		skyblockId: 'ENCHANTED_JACK_O_LANTERN',
 		name: 'Lantern Helmet',
 		wiki: 'https://wiki.hypixel.net/Lantern_Helmet',
 		upgrade: {
@@ -103,6 +106,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	FARM_ARMOR_HELMET: {
+		skyblockId: 'FARM_ARMOR_HELMET',
 		name: 'Farm Armor Helmet',
 		wiki: 'https://wiki.hypixel.net/Farm_Armor',
 		upgrade: {
@@ -123,6 +127,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	FARM_ARMOR_CHESTPLATE: {
+		skyblockId: 'FARM_ARMOR_CHESTPLATE',
 		name: 'Farm Armor Chestplate',
 		wiki: 'https://wiki.hypixel.net/Farm_Armor',
 		upgrade: {
@@ -143,6 +148,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	FARM_ARMOR_LEGGINGS: {
+		skyblockId: 'FARM_ARMOR_LEGGINGS',
 		name: 'Farm Armor Leggings',
 		wiki: 'https://wiki.hypixel.net/Farm_Armor',
 		upgrade: {
@@ -163,6 +169,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	FARM_ARMOR_BOOTS: {
+		skyblockId: 'FARM_ARMOR_BOOTS',
 		name: 'Farm Armor Boots',
 		wiki: 'https://wiki.hypixel.net/Farm_Armor',
 		upgrade: {
@@ -183,6 +190,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	RABBIT_HELMET: {
+		skyblockId: 'RABBIT_HELMET',
 		name: 'Rabbit Helmet',
 		wiki: 'https://wiki.hypixel.net/Rabbit_Armor',
 		upgrade: {
@@ -203,6 +211,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	RABBIT_CHESTPLATE: {
+		skyblockId: 'RABBIT_CHESTPLATE',
 		name: 'Rabbit Chestplate',
 		wiki: 'https://wiki.hypixel.net/Rabbit_Armor',
 		upgrade: {
@@ -223,6 +232,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	RABBIT_LEGGINGS: {
+		skyblockId: 'RABBIT_LEGGINGS',
 		name: 'Rabbit Leggings',
 		wiki: 'https://wiki.hypixel.net/Rabbit_Armor',
 		upgrade: {
@@ -243,6 +253,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	RABBIT_BOOTS: {
+		skyblockId: 'RABBIT_BOOTS',
 		name: 'Rabbit Boots',
 		wiki: 'https://wiki.hypixel.net/Rabbit_Armor',
 		upgrade: {
@@ -263,6 +274,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	MELON_HELMET: {
+		skyblockId: 'MELON_HELMET',
 		name: 'Melon Helmet',
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
 		upgrade: {
@@ -281,6 +293,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	MELON_CHESTPLATE: {
+		skyblockId: 'MELON_CHESTPLATE',
 		name: 'Melon Chestplate',
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
 		upgrade: {
@@ -299,6 +312,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	MELON_LEGGINGS: {
+		skyblockId: 'MELON_LEGGINGS',
 		name: 'Melon Leggings',
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
 		upgrade: {
@@ -317,6 +331,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	MELON_BOOTS: {
+		skyblockId: 'MELON_BOOTS',
 		name: 'Melon Boots',
 		wiki: 'https://wiki.hypixel.net/Melon_Armor',
 		upgrade: {
@@ -335,6 +350,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	CROPIE_HELMET: {
+		skyblockId: 'CROPIE_HELMET',
 		name: 'Cropie Helmet',
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
 		upgrade: {
@@ -356,6 +372,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	CROPIE_CHESTPLATE: {
+		skyblockId: 'CROPIE_CHESTPLATE',
 		name: 'Cropie Chestplate',
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
 		upgrade: {
@@ -377,6 +394,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	CROPIE_LEGGINGS: {
+		skyblockId: 'CROPIE_LEGGINGS',
 		name: 'Cropie Leggings',
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
 		upgrade: {
@@ -398,6 +416,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	CROPIE_BOOTS: {
+		skyblockId: 'CROPIE_BOOTS',
 		name: 'Cropie Boots',
 		wiki: 'https://wiki.hypixel.net/Cropie_Armor',
 		upgrade: {
@@ -419,6 +438,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	SQUASH_HELMET: {
+		skyblockId: 'SQUASH_HELMET',
 		name: 'Squash Helmet',
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
 		upgrade: {
@@ -440,6 +460,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	SQUASH_CHESTPLATE: {
+		skyblockId: 'SQUASH_CHESTPLATE',
 		name: 'Squash Chestplate',
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
 		upgrade: {
@@ -461,6 +482,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	SQUASH_LEGGINGS: {
+		skyblockId: 'SQUASH_LEGGINGS',
 		name: 'Squash Leggings',
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
 		upgrade: {
@@ -482,6 +504,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	SQUASH_BOOTS: {
+		skyblockId: 'SQUASH_BOOTS',
 		name: 'Squash Boots',
 		wiki: 'https://wiki.hypixel.net/Squash_Armor',
 		upgrade: {
@@ -503,6 +526,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	FERMENTO_HELMET: {
+		skyblockId: 'FERMENTO_HELMET',
 		name: 'Fermento Helmet',
 		wiki: 'https://wiki.hypixel.net/Fermento_Armor',
 		family: 'FERMENTO',
@@ -520,6 +544,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	FERMENTO_CHESTPLATE: {
+		skyblockId: 'FERMENTO_CHESTPLATE',
 		name: 'Fermento Chestplate',
 		wiki: 'https://wiki.hypixel.net/Fermento_Armor',
 		family: 'FERMENTO',
@@ -537,6 +562,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	FERMENTO_LEGGINGS: {
+		skyblockId: 'FERMENTO_LEGGINGS',
 		name: 'Fermento Leggings',
 		wiki: 'https://wiki.hypixel.net/Fermento_Armor',
 		family: 'FERMENTO',
@@ -554,6 +580,7 @@ export const ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		},
 	},
 	FERMENTO_BOOTS: {
+		skyblockId: 'FERMENTO_BOOTS',
 		name: 'Fermento Boots',
 		wiki: 'https://wiki.hypixel.net/Fermento_Armor',
 		upgrade: {

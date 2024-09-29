@@ -2,11 +2,12 @@ import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../constants/acc
 import { Rarity } from '../constants/reforges';
 import { Stat } from "../constants/stats";
 import { FortuneSourceProgress } from '../constants/upgrades';
+import { PlayerOptions } from '../player/player';
 import { getLastItemUpgrade, getUpgrades } from '../upgrades/upgrades';
 import { getPeridotFortune } from '../util/gems';
 import { getRarityFromLore } from '../util/itemstats';
 import { EliteItemDto } from './item';
-import { Upgradeable } from './upgradable';
+import { Upgradeable, UpgradeableInfo } from './upgradable';
 
 export class FarmingAccessory implements Upgradeable {
 	public declare readonly item: EliteItemDto;
@@ -18,8 +19,11 @@ export class FarmingAccessory implements Upgradeable {
 	public declare fortune: number;
 	public declare fortuneBreakdown: Record<string, number>;
 
-	constructor(item: EliteItemDto) {
+	public declare options?: PlayerOptions;
+
+	constructor(item: EliteItemDto, options?: PlayerOptions) {
 		this.item = item;
+		this.options = options;
 
 		const info = FARMING_ACCESSORIES_INFO[item.skyblockId as keyof typeof FARMING_ACCESSORIES_INFO];
 		if (!info) {
@@ -85,5 +89,19 @@ export class FarmingAccessory implements Upgradeable {
 			.filter((item) => FarmingAccessory.isValid(item))
 			.map((item) => new FarmingAccessory(item))
 			.sort((a, b) => b.fortune - a.fortune);
+	}
+
+	static fakeItem(info: UpgradeableInfo, options?: PlayerOptions): FarmingAccessory | undefined {
+		const fake: EliteItemDto = {
+			name: 'Fake Item',
+			skyblockId: info.skyblockId,
+			lore: [],
+			attributes: {},
+			enchantments: {},
+		};
+
+		if (!FarmingAccessory.isValid(fake)) return undefined;
+
+		return new FarmingAccessory(fake, options);
 	}
 }
