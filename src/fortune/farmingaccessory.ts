@@ -1,16 +1,15 @@
 import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../items/accessories';
 import { Rarity } from '../constants/reforges';
 import { Stat } from "../constants/stats";
-import { FortuneSourceProgress, FortuneUpgrade, Upgrade } from '../constants/upgrades';
+import { FortuneSourceProgress } from '../constants/upgrades';
 import { PlayerOptions } from '../player/player';
 import { ACCESSORY_FORTUNE_SOURCES } from '../upgrades/sources/accessorysources';
-import { getLastItemUpgradeableTo, getItemUpgrades, getSourceProgress } from '../upgrades/upgrades';
+import { getSourceProgress } from '../upgrades/upgrades';
 import { getPeridotFortune } from '../util/gems';
-import { getRarityFromLore } from '../util/itemstats';
 import { EliteItemDto } from './item';
-import { Upgradeable, UpgradeableInfo } from './upgradable';
+import { UpgradeableBase, UpgradeableInfo } from './upgradeable';
 
-export class FarmingAccessory implements Upgradeable {
+export class FarmingAccessory extends UpgradeableBase {
 	public declare readonly item: EliteItemDto;
 	public declare readonly info: FarmingAccessoryInfo;
 
@@ -23,34 +22,8 @@ export class FarmingAccessory implements Upgradeable {
 	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
-		this.item = item;
-		this.options = options;
-
-		const info = FARMING_ACCESSORIES_INFO[item.skyblockId as keyof typeof FARMING_ACCESSORIES_INFO];
-		if (!info) {
-			throw new Error(`Unknown accessory: ${item.name} (${item.skyblockId})`);
-		}
-		this.info = info;
-
-		if (item.lore) {
-			this.rarity = getRarityFromLore(item.lore);
-		}
-
-		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
-
+		super({ item, options, items: FARMING_ACCESSORIES_INFO });
 		this.getFortune();
-	}
-
-	getUpgrades(): FortuneUpgrade[] {
-		return getItemUpgrades(this);
-	}
-
-	getItemUpgrade() {
-		return this.info.upgrade;
-	}
-
-	getLastItemUpgrade(): { upgrade: Upgrade, info: UpgradeableInfo } | undefined {
-		return getLastItemUpgradeableTo(this, FARMING_ACCESSORIES_INFO);
 	}
 
 	getProgress(zereod = false): FortuneSourceProgress[] {

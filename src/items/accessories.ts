@@ -1,4 +1,4 @@
-import { UpgradeableInfo } from '../fortune/upgradable';
+import { UpgradeableInfo } from '../fortune/upgradeable';
 import { Crop } from '../constants/crops';
 import { Rarity } from '../constants/reforges';
 import { Stat } from "../constants/stats";

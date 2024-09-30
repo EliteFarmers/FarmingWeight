@@ -1,68 +1,42 @@
 import { FarmingArmorInfo } from '../items/armor';
 import { FARMING_ENCHANTS } from '../constants/enchants';
 import { EQUIPMENT_INFO } from '../items/equipment';
-import { REFORGES, Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges';
-import { Stat } from "../constants/stats";
-import { getRarityFromLore } from '../util/itemstats';
+import { Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges';
+import { Stat } from '../constants/stats';
 import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
 import { PlayerOptions, ZorroMode } from '../player/player';
-import { Upgradeable, UpgradeableInfo } from './upgradable';
-import { getLastItemUpgradeableTo, getSourceProgress, getItemUpgrades } from '../upgrades/upgrades';
+import { UpgradeableBase, UpgradeableInfo } from './upgradeable';
+import { getSourceProgress } from '../upgrades/upgrades';
 import { getFortuneFromEnchant } from '../util/enchants';
 import { FortuneSourceProgress } from '../constants/upgrades';
 import { FarmingArmor } from './farmingarmor';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources';
 
-export class FarmingEquipment implements Upgradeable {
-	public readonly item: EliteItemDto;
-	public readonly info: FarmingArmorInfo;
-	public readonly type = ReforgeTarget.Equipment;
+export class FarmingEquipment extends UpgradeableBase {
+	public declare item: EliteItemDto;
+	public declare info: FarmingArmorInfo;
+
+	public get type() { 
+		return ReforgeTarget.Equipment; 
+	}
 
 	public get slot() {
 		return this.info.slot;
 	}
 
-	public declare readonly rarity: Rarity;
-	public declare readonly reforge: Reforge | undefined;
-	public declare readonly reforgeStats: ReforgeTier | undefined;
-	public declare readonly recombobulated: boolean;
+	public declare rarity: Rarity;
+	public declare reforge: Reforge | undefined;
+	public declare reforgeStats: ReforgeTier | undefined;
+	public declare recombobulated: boolean;
 
 	public declare fortune: number;
 	public declare fortuneBreakdown: Record<string, number>;
 	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
-		this.options = options;
-		this.item = item;
-
-		const info = EQUIPMENT_INFO[item.skyblockId as keyof typeof EQUIPMENT_INFO];
-		if (!info) {
-			throw new Error(`Unknown equipment: ${item.name} (${item.skyblockId})`);
-		}
-		this.info = info;
-
-		if (item.lore) {
-			this.rarity = getRarityFromLore(item.lore);
-		}
-
-		this.reforge = REFORGES[item.attributes?.modifier ?? ''] ?? undefined;
-		this.reforgeStats = this.reforge?.tiers?.[this.rarity];
-		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
-
+		super({ item, options, items: EQUIPMENT_INFO });
 		this.getFortune();
-	}
-
-	getUpgrades() {
-		return getItemUpgrades(this);
-	}
-
-	getItemUpgrade() {
-		return this.info.upgrade;
-	}
-
-	getLastItemUpgrade() {
-		return getLastItemUpgradeableTo(this, EQUIPMENT_INFO);
 	}
 
 	getProgress(zereod = false): FortuneSourceProgress[] {

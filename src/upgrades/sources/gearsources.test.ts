@@ -66,12 +66,14 @@ test('Almost maxed fermento fortune sources', () => {
 	expect(upgrades).toHaveLength(4);
 
 	const progress = item.getProgress();
-	
+
 	// These are outside of the scope of this test
 	progress.forEach((piece) => {
 		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
 	});
-	
+
 	expect(progress).toStrictEqual([
 		{
 			name: 'Base Stats',
@@ -133,10 +135,12 @@ test('Melon boots fortune sources', () => {
 	expect(item.fortuneBreakdown['Base Stats']).toBe(15);
 
 	const progress = item.getProgress();
-	
+
 	// These are outside of the scope of this test
 	progress.forEach((piece) => {
 		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
 	});
 
 	expect(progress).toStrictEqual([
@@ -218,7 +222,7 @@ const lotusNecklace = {
 
 test('Lotus necklace fortune sources', () => {
 	const necklace = new FarmingEquipment(lotusNecklace, {
-		uniqueVisitors: 82
+		uniqueVisitors: 82,
 	});
 
 	expect(necklace.fortune).toBe(52.5);
@@ -228,6 +232,8 @@ test('Lotus necklace fortune sources', () => {
 	// These are outside of the scope of this test
 	progress.forEach((piece) => {
 		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
 	});
 
 	expect(progress.reduce((acc, curr) => acc + curr.fortune, 0)).toBe(necklace.fortune);
@@ -257,5 +263,81 @@ test('Lotus necklace fortune sources', () => {
 			maxFortune: 84 * 0.25,
 			ratio: 82 / 84,
 		},
-	]);	
+	]);
+});
+
+const maxLotusBracelet = {
+	id: 397,
+	count: 1,
+	skyblockId: 'LOTUS_BRACELET',
+	uuid: '4e13528f-d1d2-455e-90b2-d1552932be74',
+	name: '§5Rooted Lotus Bracelet',
+	lore: [
+		'§7Health: §a+21 §9(+11)',
+		'§7Farming Fortune: §a+41 §9(+15)',
+		'',
+		'§9Green Thumb V',
+		'§7Grants §60.25☘ Farming Fortune §7per',
+		'§7unique visitor served.',
+		'',
+		'§6Piece Bonus: Salesperson',
+		'§7Complete §aGarden Visitor Offers §7to',
+		'§7gain §6☘ Farming Fortune§7.',
+		'',
+		'§7Piece Bonus: §6+15☘',
+		'§a§lMAXED OUT! NICE!',
+		'',
+		'§7Garden Visitors Served: §c17,803',
+		'',
+		'§8§l* §8Co-op Soulbound §8§l*',
+		'§5§l§ka§r §5§lEPIC BRACELET §5§l§ka',
+	],
+	enchantments: { green_thumb: 5 },
+	attributes: { modifier: 'rooted', timestamp: '1688158680000', donated_museum: 'True', rarity_upgrades: '1' },
+};
+
+test('Maxed lotus bracelet fortune sources', () => {
+	const bracelet = new FarmingEquipment(maxLotusBracelet, {
+		uniqueVisitors: 84,
+	});
+
+	expect(bracelet.fortune).toBe(56);
+
+	const progress = bracelet.getProgress();
+
+	// These are outside of the scope of this test
+	progress.forEach((piece) => {
+		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
+	});
+
+	expect(progress.reduce((acc, curr) => acc + curr.fortune, 0)).toBe(bracelet.fortune);
+
+	expect(progress).toStrictEqual([
+		{
+			name: 'Base Stats',
+			fortune: 5,
+			maxFortune: 5,
+			ratio: 1,
+		},
+		{
+			name: 'Reforge Stats',
+			fortune: 15,
+			maxFortune: 15,
+			ratio: 1,
+		},
+		{
+			name: 'Salesperson Ability',
+			fortune: 15,
+			maxFortune: 15,
+			ratio: 1,
+		},
+		{
+			name: 'Green Thumb',
+			fortune: 84 * 0.25,
+			maxFortune: 84 * 0.25,
+			ratio: 1,
+		},
+	]);
 });

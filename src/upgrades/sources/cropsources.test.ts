@@ -55,7 +55,9 @@ test('Wheat fortune test', () => {
 	progress.forEach((piece) => {
 		delete piece.item;
 		delete piece.maxItem;
-delete piece.wiki;
+		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
 	});
 
 	expect(progress).toStrictEqual([
@@ -104,7 +106,9 @@ test('Potato fortune test', () => {
 	progress.forEach((piece) => {
 		delete piece.item;
 		delete piece.maxItem;
-delete piece.wiki;
+		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
 	});
 
 	expect(progress).toStrictEqual([
@@ -141,7 +145,9 @@ test('Nether Wart fortune test', () => {
 	progress.forEach((piece) => {
 		delete piece.item;
 		delete piece.maxItem;
-delete piece.wiki;
+		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
 	});
 
 	expect(progress).toStrictEqual([
@@ -184,7 +190,9 @@ test('Carrot fortune test', () => {
 	progress.forEach((piece) => {
 		delete piece.item;
 		delete piece.maxItem;
-delete piece.wiki;
+		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
 	});
 
 	expect(progress).toStrictEqual([
@@ -230,7 +238,9 @@ test('Melon fortune test', () => {
 	progress.forEach((piece) => {
 		delete piece.item;
 		delete piece.maxItem;
-delete piece.wiki;
+		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
 	});
 
 	expect(progress).toStrictEqual([

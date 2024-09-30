@@ -4,7 +4,7 @@ import { ReforgeTarget } from "../../constants/reforges";
 import { Stat } from "../../constants/stats";
 import { ArmorSet, FarmingArmor } from "../../fortune/farmingarmor";
 import { FarmingEquipment } from "../../fortune/farmingequipment";
-import { UpgradeableInfo } from "../../fortune/upgradable";
+import { UpgradeableInfo } from "../../fortune/upgradeable";
 import { DynamicFortuneSource } from "./toolsources";
 
 export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
@@ -50,13 +50,15 @@ export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 
 			return fake?.getProgress(true) ?? [];
 		},
-		item: (set) => set.getPiece(slot as GearSlot)?.item,
-		maxItem: () => {
-			const item = info.target === ReforgeTarget.Armor
-				? FarmingArmor.fakeItem(ARMOR_INFO[info.startingItem] as UpgradeableInfo)
-				: FarmingEquipment.fakeItem(EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo);
+		info: (set) => {
+			const piece = set.getPiece(slot as GearSlot);
 
-			return (item?.getLastItemUpgrade() ?? item)?.info;
-		}
+			return {
+				item: piece?.item,
+				info: piece?.info,
+				nextInfo: piece?.getNextItemUpgrade()?.info,
+				maxInfo: piece?.getLastItemUpgrade()?.info
+			}
+		},
 	}))
 ];

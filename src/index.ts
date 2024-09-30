@@ -4,7 +4,7 @@ export * from './fortune/farmingpet.js';
 export * from './fortune/farmingaccessory.js';
 export * from './fortune/farmingequipment.js';
 export * from './fortune/item.js';
-export * from './fortune/upgradable.js';
+export * from './fortune/upgradeable.js';
 export * from './weight/weightcalc.js';
 export * from './player/player.js';
 

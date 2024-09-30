@@ -6,7 +6,7 @@ import { FarmingToolType } from "../../items/tools";
 import { FortuneSourceProgress } from "../../constants/upgrades";
 import { FarmingTool } from "../../fortune/farmingtool";
 import { EliteItemDto, GemRarity } from "../../fortune/item";
-import { UpgradeableInfo } from "../../fortune/upgradable";
+import { UpgradeableInfo } from "../../fortune/upgradeable";
 import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from "../../util/enchants";
 import { getPeridotFortune, getPeridotGemFortune } from "../../util/gems";
 
@@ -18,8 +18,12 @@ export interface DynamicFortuneSource<T> {
 	max: (source: T) => number;
 	current: (source: T) => number;
 	progress?: (source: T) => FortuneSourceProgress[];
-	item?: (source: T) => EliteItemDto | undefined;
-	maxItem?: (source: T) => UpgradeableInfo | undefined;
+	info?: (source: T) => {
+		item?: EliteItemDto;
+		info?: UpgradeableInfo;
+		nextInfo?: UpgradeableInfo;
+		maxInfo?: UpgradeableInfo;
+	};
 }
 
 export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [

@@ -1,4 +1,4 @@
-import { UpgradeableInfo } from '../fortune/upgradable';
+import { UpgradeableInfo } from '../fortune/upgradeable';
 import { Rarity, ReforgeTarget } from '../constants/reforges';
 import { Stat } from '../constants/stats';
 import { Skill } from '../constants/skills';

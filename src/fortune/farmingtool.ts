@@ -8,17 +8,18 @@ import { getRarityFromLore, previousRarity } from '../util/itemstats';
 import { extractNumberFromLine } from '../util/lore';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from '../player/player';
-import { Upgradeable, UpgradeableInfo } from './upgradable';
-import { getLastItemUpgradeableTo, getSourceProgress, getItemUpgrades } from '../upgrades/upgrades';
+import { UpgradeableBase, UpgradeableInfo } from './upgradeable';
+import { getSourceProgress } from '../upgrades/upgrades';
 import { getFortuneFromEnchant } from '../util/enchants';
-import { FortuneSourceProgress, FortuneUpgrade, Upgrade } from '../constants/upgrades';
+import { FortuneSourceProgress } from '../constants/upgrades';
 import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources';
 
-export class FarmingTool implements Upgradeable {
+export class FarmingTool extends UpgradeableBase {
 	public declare item: EliteItemDto;
 	public declare crop: Crop;
 	public declare info: FarmingToolInfo;
-	public get type() {
+
+	public override get type() {
 		return this.info.reforgeType;
 	}
 	
@@ -50,19 +51,8 @@ export class FarmingTool implements Upgradeable {
 	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
+		super({ item, options, items: FARMING_TOOLS });
 		this.rebuildTool(item, options);
-	}
-	
-	getUpgrades(): FortuneUpgrade[] {
-		return getItemUpgrades(this);
-	}
-
-	getItemUpgrade() {
-		return this.info.upgrade;
-	}
-
-	getLastItemUpgrade(): { upgrade: Upgrade, info: UpgradeableInfo } | undefined {
-		return getLastItemUpgradeableTo(this, FARMING_TOOLS);
 	}
 
 	getProgress(zeroed = false): FortuneSourceProgress[] {

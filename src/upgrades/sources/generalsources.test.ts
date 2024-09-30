@@ -17,6 +17,8 @@ test("General fortune sources", () => {
 	// These are outside of the scope of this test
 	progress.forEach((piece) => {
 		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
 	});
 
 	expect(progress).toStrictEqual([

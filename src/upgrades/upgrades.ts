@@ -3,7 +3,7 @@ import { Stat } from "../constants/stats";
 import { FARMING_TOOLS, FarmingToolInfo } from "../items/tools";
 import { FortuneSource, FortuneSourceProgress, FortuneUpgrade, FortuneUpgradeImprovement, Upgrade, UpgradeAction, UpgradeCategory, UpgradeReason } from "../constants/upgrades";
 import { GemRarity } from "../fortune/item";
-import { Upgradeable, UpgradeableInfo } from "../fortune/upgradable";
+import { Upgradeable, UpgradeableInfo } from "../fortune/upgradeable";
 import { getFortuneFromEnchant } from "../util/enchants";
 import { getGemRarityName, getNextGemRarity, getPeridotFortune, getPeridotGemFortune, getPeridotGems } from "../util/gems";
 import { nextRarity } from "../util/itemstats";
@@ -38,6 +38,16 @@ export function getLastToolUpgrade(tool: FarmingToolInfo): UpgradeableInfo | und
 	if (!item || last === upgrade) return undefined;
 
 	return item;
+}
+
+export function getNextItemUpgradeableTo(upgradeable: Upgradeable, options: Partial<Record<string, UpgradeableInfo>>): { upgrade: Upgrade, info: UpgradeableInfo } | undefined {
+	const upgrade = upgradeable.getItemUpgrade();
+	if (!upgrade) return undefined;
+
+	const next = options[upgrade.id];
+	if (!next) return undefined;
+
+	return { upgrade, info: next };
 }
 
 
@@ -88,25 +98,12 @@ export function getSourceProgress<T extends object>(upgradeable: T, sources: Dyn
 			}
 		}
 
-		if (source.item) {
-			const item = source.item(upgradeable);
-			if (item) {
-				progress.item = item;
-			}
-		}
-
-		if (source.maxItem) {
-			const maxItem = source.maxItem(upgradeable);
-			if (maxItem) {
-				progress.maxItem = maxItem;
-			}
-		}
-
-		if (source.wiki) {
-			const wiki = source.wiki(upgradeable);
-			if (wiki) {
-				progress.wiki = wiki;
-			}
+		if (source.info) {
+			const { item, info, maxInfo, nextInfo } = source.info(upgradeable);
+			if (item) progress.item = item;
+			if (info) progress.info = info;
+			if (maxInfo) progress.maxItem = maxInfo;
+			if (nextInfo) progress.nextInfo = nextInfo;
 		}
 
 		result.push(progress);

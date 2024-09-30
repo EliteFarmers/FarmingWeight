@@ -83,10 +83,12 @@ test('Test tool fortune sources', () => {
 	expect(tool.counter).toBe(1102505308);
 
 	const progress = tool.getProgress();
-	
+
 	// These are outside of the scope of this test
 	progress.forEach((piece) => {
 		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
 	});
 
 	expect(progress).toStrictEqual([
@@ -196,6 +198,8 @@ test('Tier 1 Wheat Hoe', () => {
 	// These are outside of the scope of this test
 	progress.forEach((piece) => {
 		delete piece.wiki;
+		delete piece.nextInfo;
+		delete piece.info;
 	});
 
 	expect(progress).toStrictEqual([

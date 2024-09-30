@@ -1,5 +1,5 @@
 import { FortuneSource, FortuneSourceProgress } from "../constants/upgrades";
-import { Upgradeable } from "../fortune/upgradable";
+import { Upgradeable } from "../fortune/upgradeable";
 import { getFortune } from "./upgrades";
 
 

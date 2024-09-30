@@ -1,17 +1,16 @@
 import { ARMOR_INFO, ARMOR_SET_BONUS, ArmorSetBonus, FarmingArmorInfo, GEAR_SLOTS, GearSlot } from '../items/armor';
 import { Crop } from '../constants/crops';
 import { FARMING_ENCHANTS } from '../constants/enchants';
-import { REFORGES, Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges';
+import { Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges';
 import { Stat } from "../constants/stats";
 import { Skill } from '../constants/skills';
 import { MATCHING_SPECIAL_CROP, SpecialCrop } from '../constants/specialcrops';
 import { calculateAverageSpecialCrops } from '../crops/special';
 import { getPeridotFortune } from '../util/gems';
-import { getRarityFromLore } from '../util/itemstats';
 import { FarmingEquipment } from './farmingequipment';
 import { EliteItemDto } from './item';
 import { PlayerOptions } from '../player/player';
-import { Upgradeable, UpgradeableInfo } from './upgradable';
+import { UpgradeableBase, UpgradeableInfo } from './upgradeable';
 import { getLastItemUpgradeableTo, getSourceProgress, getItemUpgrades } from '../upgrades/upgrades';
 import { getFortuneFromEnchant } from '../util/enchants';
 import { FortuneSourceProgress } from '../constants/upgrades';
@@ -312,10 +311,10 @@ export class ArmorSet {
 	}
 }
 
-export class FarmingArmor implements Upgradeable {
+export class FarmingArmor extends UpgradeableBase {
 	public declare readonly item: EliteItemDto;
 	public declare readonly info: FarmingArmorInfo;
-	public readonly type = ReforgeTarget.Armor;
+	public get type() { return ReforgeTarget.Armor }
 
 	// Backwards compatibility
 	public get armor(): FarmingArmorInfo { return this.info; }
@@ -342,23 +341,7 @@ export class FarmingArmor implements Upgradeable {
 	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
-		this.options = options;
-		this.item = item;
-		const armor = ARMOR_INFO[item.skyblockId as keyof typeof ARMOR_INFO];
-
-		if (!armor) {
-			throw new Error(`Unknown farming armor: ${item.name} (${item.skyblockId})`);
-		}
-		this.info = armor;
-
-		if (item.lore) {
-			this.rarity = getRarityFromLore(item.lore);
-		}
-
-		this.reforge = REFORGES[item.attributes?.modifier ?? ''] ?? undefined;
-		this.reforgeStats = this.reforge?.tiers?.[this.rarity];
-		this.recombobulated = this.item.attributes?.rarity_upgrades === '1';
-
+		super({ item, options, items: ARMOR_INFO });
 		this.getFortune();
 	}
 

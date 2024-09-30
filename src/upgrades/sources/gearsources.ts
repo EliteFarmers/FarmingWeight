@@ -36,8 +36,8 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 				? REFORGES.rooted?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0
 				: REFORGES.mossy?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0;
 		},
-		current: (tool) => {
-			return tool.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
+		current: (gear) => {
+			return gear.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
 		}
 	},
 	{
@@ -61,7 +61,7 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		exists: (gear) => gear.type === ReforgeTarget.Equipment && gear.info.family === 'LOTUS',
 		max: () => 15,
 		current: (gear) => {
-			if (gear.type !== ReforgeTarget.Equipment) return 0;
+			if (gear instanceof FarmingArmor) return 0;
 			return gear.getPieceBonus();
 		}
 	},
