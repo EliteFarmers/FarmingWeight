@@ -1,6 +1,6 @@
 import { EnchantTierProcurement, FARMING_ENCHANTS } from "../constants/enchants";
 import { Stat } from "../constants/stats";
-import { FARMING_TOOLS, FarmingToolInfo } from "../constants/tools";
+import { FARMING_TOOLS, FarmingToolInfo } from "../items/tools";
 import { FortuneSource, FortuneSourceProgress, FortuneUpgrade, FortuneUpgradeImprovement, Upgrade, UpgradeAction, UpgradeCategory, UpgradeReason } from "../constants/upgrades";
 import { GemRarity } from "../fortune/item";
 import { Upgradeable, UpgradeableInfo } from "../fortune/upgradable";
@@ -102,8 +102,11 @@ export function getSourceProgress<T extends object>(upgradeable: T, sources: Dyn
 			}
 		}
 
-		if ('wiki' in source && typeof source.wiki === 'string') {
-			progress.wiki = source.wiki;
+		if (source.wiki) {
+			const wiki = source.wiki(upgradeable);
+			if (wiki) {
+				progress.wiki = wiki;
+			}
 		}
 
 		result.push(progress);

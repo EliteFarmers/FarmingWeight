@@ -1,7 +1,7 @@
 import { Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests';
 import { fortuneFromPestBestiary } from '../util/pests';
-import { FarmingPetType } from '../constants/pets';
+import { FarmingPetType } from '../items/pets';
 import {
 	ANITA_FORTUNE_UPGRADE,
 	COMMUNITY_CENTER_UPGRADE,

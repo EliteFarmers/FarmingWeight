@@ -1,9 +1,9 @@
 import { EliteItemDto } from "../fortune/item";
 import { UpgradeableInfo } from "../fortune/upgradable";
-import type { GearSlot } from "./armor";
+import type { GearSlot } from "../items/armor";
 import { Crop } from "./crops";
 import { Stat } from "./stats";
-import type { FARMING_TOOLS } from "./tools";
+import type { FARMING_TOOLS } from "../items/tools";
 
 export enum UpgradeReason {
 	NextTier = 'next', // Standard upgrade

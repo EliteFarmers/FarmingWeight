@@ -13,6 +13,11 @@ test("General fortune sources", () => {
 	});
 
 	const progress = player.getProgress();
+	
+	// These are outside of the scope of this test
+	progress.forEach((piece) => {
+		delete piece.wiki;
+	});
 
 	expect(progress).toStrictEqual([
 		{

@@ -1,4 +1,4 @@
-import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../constants/accessories';
+import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../items/accessories';
 import { Rarity } from '../constants/reforges';
 import { Stat } from "../constants/stats";
 import { FortuneSourceProgress, FortuneUpgrade, Upgrade } from '../constants/upgrades';

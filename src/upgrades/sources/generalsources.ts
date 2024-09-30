@@ -6,6 +6,7 @@ import { DynamicFortuneSource } from "./toolsources";
 export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	{
 		name: FARMING_LEVEL.name,
+		wiki: () => FARMING_LEVEL.wiki,
 		exists: () => true,
 		max: () => FARMING_LEVEL.maxLevel * FARMING_LEVEL.fortunePerLevel,
 		current: (player) => {
@@ -14,6 +15,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: PEST_BESTIARY_SOURCE.name,
+		wiki: () => PEST_BESTIARY_SOURCE.wiki,
 		exists: () => true,
 		max: () => PEST_BESTIARY_SOURCE.maxLevel * PEST_BESTIARY_SOURCE.fortunePerLevel,
 		current: (player) => {
@@ -22,6 +24,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: ANITA_FORTUNE_UPGRADE.name,
+		wiki: () => ANITA_FORTUNE_UPGRADE.wiki,
 		exists: () => true,
 		max: () => ANITA_FORTUNE_UPGRADE.maxLevel * ANITA_FORTUNE_UPGRADE.fortunePerLevel,
 		current: (player) => {
@@ -30,6 +33,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: UNLOCKED_PLOTS.name,
+		wiki: () => UNLOCKED_PLOTS.wiki,
 		exists: () => true,
 		max: () => UNLOCKED_PLOTS.maxLevel * UNLOCKED_PLOTS.fortunePerLevel,
 		current: (player) => {
@@ -38,6 +42,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: COMMUNITY_CENTER_UPGRADE.name,
+		wiki: () => COMMUNITY_CENTER_UPGRADE.wiki,
 		exists: () => true,
 		max: () => COMMUNITY_CENTER_UPGRADE.maxLevel * COMMUNITY_CENTER_UPGRADE.fortunePerLevel,
 		current: (player) => {
@@ -46,6 +51,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	}, 
 	{
 		name: REFINED_TRUFFLE_SOURCE.name,
+		wiki: () => REFINED_TRUFFLE_SOURCE.wiki,
 		exists: () => true,
 		max: () => REFINED_TRUFFLE_SOURCE.maxLevel * REFINED_TRUFFLE_SOURCE.fortunePerLevel,
 		current: (player) => {

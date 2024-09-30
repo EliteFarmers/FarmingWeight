@@ -8,6 +8,7 @@ import { DynamicFortuneSource } from "./toolsources";
 export const ACCESSORY_FORTUNE_SOURCES: DynamicFortuneSource<FarmingAccessory>[] = [
 	{
 		name: 'Base Stats',
+		wiki: (accessory) => accessory.info.wiki, 
 		exists: (accessory) => {
 			return (accessory.getLastItemUpgrade() ?? accessory)?.info?.baseStats?.[Stat.FarmingFortune] !== undefined
 		},
@@ -20,6 +21,7 @@ export const ACCESSORY_FORTUNE_SOURCES: DynamicFortuneSource<FarmingAccessory>[]
 	},
 	{
 		name: 'Gemstone Slots',
+		wiki: () => 'https://wiki.hypixel.net/Gemstone#Gemstone_Slots', 
 		exists: (accessory) => {
 			const last = (accessory.getLastItemUpgrade() ?? accessory)?.info;
 			return last?.gemSlots?.peridot !== undefined

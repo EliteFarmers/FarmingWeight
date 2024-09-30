@@ -1,4 +1,4 @@
-import { ARMOR_INFO, ARMOR_SET_BONUS, ArmorSetBonus, FarmingArmorInfo, GEAR_SLOTS, GearSlot } from '../constants/armor';
+import { ARMOR_INFO, ARMOR_SET_BONUS, ArmorSetBonus, FarmingArmorInfo, GEAR_SLOTS, GearSlot } from '../items/armor';
 import { Crop } from '../constants/crops';
 import { FARMING_ENCHANTS } from '../constants/enchants';
 import { REFORGES, Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges';
@@ -17,7 +17,7 @@ import { getFortuneFromEnchant } from '../util/enchants';
 import { FortuneSourceProgress } from '../constants/upgrades';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources';
 import { ARMOR_SET_FORTUNE_SOURCES } from '../upgrades/sources/armorsetsources';
-import { EQUIPMENT_INFO } from '../constants/equipment';
+import { EQUIPMENT_INFO } from '../items/equipment';
 
 export interface ActiveArmorSetBonus {
 	count: number;

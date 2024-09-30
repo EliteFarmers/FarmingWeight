@@ -1,9 +1,9 @@
 import { UpgradeableInfo } from '../fortune/upgradable';
-import { Crop } from './crops';
-import { Rarity } from './reforges';
-import { Stat } from "./stats";
-import { Skill } from './skills';
-import { UpgradeReason } from './upgrades';
+import { Crop } from '../constants/crops';
+import { Rarity } from '../constants/reforges';
+import { Stat } from "../constants/stats";
+import { Skill } from '../constants/skills';
+import { UpgradeReason } from '../constants/upgrades';
 
 export interface FarmingAccessoryInfo extends UpgradeableInfo {
 	name: string;

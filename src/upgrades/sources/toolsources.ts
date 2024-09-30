@@ -2,7 +2,7 @@ import { Crop } from "../../constants/crops";
 import { FARMING_ENCHANTS } from "../../constants/enchants";
 import { Rarity, REFORGES, ReforgeTarget } from "../../constants/reforges";
 import { Stat } from "../../constants/stats";
-import { FarmingToolType } from "../../constants/tools";
+import { FarmingToolType } from "../../items/tools";
 import { FortuneSourceProgress } from "../../constants/upgrades";
 import { FarmingTool } from "../../fortune/farmingtool";
 import { EliteItemDto, GemRarity } from "../../fortune/item";
@@ -13,6 +13,7 @@ import { getPeridotFortune, getPeridotGemFortune } from "../../util/gems";
 export interface DynamicFortuneSource<T> {
 	name: string;
 	crop?: Crop;
+	wiki?: (source: T) => string | undefined;
 	exists: (source: T) => boolean;
 	max: (source: T) => number;
 	current: (source: T) => number;
@@ -50,6 +51,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	},
 	{
 		name: 'Reforge Stats',
+		wiki: () => REFORGES?.bountiful?.wiki,
 		exists: () => true,
 		max: (tool) => {
 			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
@@ -63,6 +65,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	},
 	{
 		name: 'Gemstone Slots',
+		wiki: () => 'https://wiki.hypixel.net/Gemstone#Gemstone_Slots',
 		exists: (tool) => {
 			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
 			return last?.gemSlots?.peridot !== undefined
@@ -77,6 +80,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	},
 	{
 		name: 'Farming For Dummies',
+		wiki: () => 'https://wiki.hypixel.net/Farming_For_Dummies',
 		exists: () => true,
 		max: () => 5,
 		current: (tool) => {
@@ -85,6 +89,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	},
 	{
 		name: 'Logarithmic Counter',
+		wiki: (tool) => tool.info.wiki,
 		exists: (tool) => tool.info.type === FarmingToolType.MathematicalHoe,
 		max: () => 16 * 7, // 10 billion counter
 		current: (tool) => {
@@ -94,6 +99,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	},
 	{
 		name: 'Collection Analysis',
+		wiki: (tool) => tool.info.wiki,
 		exists: (tool) => tool.info.type === FarmingToolType.MathematicalHoe,
 		max: () => 8 * 7, // 10 billion collection
 		current: (tool) => tool.collAnalysis ?? 0
@@ -102,6 +108,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		.filter(([, enchant]) => enchant.appliesTo.includes(ReforgeTarget.Hoe) || enchant.appliesTo.includes(ReforgeTarget.Axe))
 		.map(([id, enchant]) => ({
 			name: enchant.name,
+			wiki: () => enchant.wiki,
 			exists: (tool) => enchant.appliesTo.includes(tool.type) && (!enchant.cropSpecific || enchant.cropSpecific === tool.crop),
 			max: (tool) => getMaxFortuneFromEnchant(enchant, tool.options, tool.crop),
 			current: (tool) => getFortuneFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, tool.options, tool.crop)

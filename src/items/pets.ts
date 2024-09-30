@@ -1,7 +1,7 @@
 import { PlayerOptions } from '../player/player';
-import { Rarity, RarityRecord } from './reforges';
-import { Stat, StatsRecord } from "./stats";
-import { Skill } from './skills';
+import { Rarity, RarityRecord } from '../constants/reforges';
+import { Stat, StatsRecord } from "../constants/stats";
+import { Skill } from '../constants/skills';
 import { unlockedPestBestiaryTiers } from '../util/pests';
 import type { FarmingPet } from '../fortune/farmingpet';
 

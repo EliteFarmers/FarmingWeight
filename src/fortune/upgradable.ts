@@ -6,6 +6,7 @@ import { PlayerOptions } from "../player/player";
 import { EliteItemDto } from "./item";
 
 export interface UpgradeableInfo {
+	name: string;
 	skyblockId: string;
 	upgrade?: Upgrade;
 	wiki?: string;

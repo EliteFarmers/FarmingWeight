@@ -25,8 +25,13 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 	{
 		name: 'Reforge Stats',
 		exists: () => true,
+		wiki: (gear) => {
+			return gear.type === ReforgeTarget.Equipment
+				? REFORGES?.rooted?.wiki
+				: REFORGES?.mossy?.wiki;
+		},
 		max: (gear) => {
-			const maxRarity = gear.getLastItemUpgrade()?.info.maxRarity ?? gear.info.maxRarity;
+			const maxRarity = (gear.getLastItemUpgrade()?.info.maxRarity ?? gear.info.maxRarity) as Rarity;
 			return gear.type === ReforgeTarget.Equipment 
 				? REFORGES.rooted?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0
 				: REFORGES.mossy?.tiers[maxRarity]?.stats[Stat.FarmingFortune] ?? 0;
@@ -37,6 +42,7 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 	},
 	{
 		name: 'Gemstone Slots',
+		wiki: () => 'https://wiki.hypixel.net/Gemstone#Gemstone_Slots',
 		exists: (gear) => {
 			const last = (gear.getLastItemUpgrade() ?? gear)?.info;
 			return last?.gemSlots?.peridot !== undefined
@@ -51,6 +57,7 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 	},
 	{
 		name: 'Salesperson Ability',
+		wiki: (gear) => gear.info.wiki,
 		exists: (gear) => gear.type === ReforgeTarget.Equipment && gear.info.family === 'LOTUS',
 		max: () => 15,
 		current: (gear) => {
@@ -60,6 +67,7 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 	},
 	{
 		name: 'Farming Level',
+		wiki: (gear) => gear.info.wiki,
 		exists: (gear) => gear.type === ReforgeTarget.Armor && gear.info.perLevelStats?.skill === Skill.Farming,
 		max: (gear) => {
 			const last = (gear.getLastItemUpgrade() ?? gear)?.info;
@@ -75,6 +83,7 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		.filter(([, enchant]) => enchant.appliesTo.includes(ReforgeTarget.Armor) || enchant.appliesTo.includes(ReforgeTarget.Equipment))
 		.map(([id, enchant]) => ({
 			name: enchant.name,
+			wiki: () => enchant.wiki,
 			exists: (gear) => enchant.appliesTo.includes(gear.type),
 			max: (gear) => getMaxFortuneFromEnchant(enchant, gear.options),
 			current: (gear) => getFortuneFromEnchant(gear.item.enchantments?.[id] ?? 0, enchant, gear.options),				

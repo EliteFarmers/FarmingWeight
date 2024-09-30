@@ -60,6 +60,7 @@ test('Armor set bonus', () => {
 		delete piece.progress;
 		delete piece.item;
 		delete piece.maxItem;
+delete piece.wiki;
 	});
 
 	expect(progress).toStrictEqual([

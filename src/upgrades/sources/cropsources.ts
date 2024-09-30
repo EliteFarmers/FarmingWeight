@@ -1,8 +1,8 @@
-import { FARMING_ACCESSORIES_INFO } from "../../constants/accessories";
+import { FARMING_ACCESSORIES_INFO } from "../../items/accessories";
 import { Crop, CROP_INFO, EXPORTABLE_CROP_FORTUNE } from "../../constants/crops";
 import { GARDEN_CROP_UPGRADES } from "../../constants/specific";
 import { Stat } from "../../constants/stats";
-import { FARMING_TOOLS, FarmingToolInfo } from "../../constants/tools";
+import { FARMING_TOOLS, FarmingToolInfo } from "../../items/tools";
 import { FarmingTool } from "../../fortune/farmingtool";
 import { FarmingPlayer } from "../../player/player";
 import { DynamicFortuneSource } from "./toolsources";
@@ -11,6 +11,9 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 	{
 		name: 'Farming Tool',
 		exists: () => true,
+		wiki: ({ player, crop }) => {
+			return player.getBestTool(crop)?.info.wiki ?? FARMING_TOOLS[CROP_INFO[crop].startingTool]?.wiki;
+		},
 		max: ({ crop }) => {
 			const tool = FARMING_TOOLS[CROP_INFO[crop].startingTool];
 			if (!tool) return 0;
@@ -44,6 +47,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 	},
 	{
 		name: 'Exportable Crop',
+		wiki: () => 'https://wiki.hypixel.net/Carrolyn',
 		exists: ({ crop }) => CROP_INFO[crop].exportable === true,
 		max: () => EXPORTABLE_CROP_FORTUNE,
 		current: ({ player, crop }) => {
@@ -53,6 +57,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 	{
 		name: 'Garden Crop Upgrade',
 		exists: () => true,
+		wiki: () => GARDEN_CROP_UPGRADES.wiki,
 		max: () => GARDEN_CROP_UPGRADES.fortunePerLevel * GARDEN_CROP_UPGRADES.maxLevel,
 		current: ({ player, crop }) => {
 			return (player.options.cropUpgrades?.[crop] ?? 0) * GARDEN_CROP_UPGRADES.fortunePerLevel;
@@ -61,6 +66,10 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 	{
 		name: 'Fermento Artifact Family',
 		exists: () => true,
+		wiki: ({ player }) => {
+			const highest = player.activeAccessories.find(a => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family);
+			return highest?.info.wiki ?? FARMING_ACCESSORIES_INFO.CROPIE_TALISMAN?.wiki;
+		},
 		max: () => FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.baseStats?.[Stat.FarmingFortune] ?? 0,
 		current: ({ player, crop }) => {
 			const highest = player.activeAccessories.find(a => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family);

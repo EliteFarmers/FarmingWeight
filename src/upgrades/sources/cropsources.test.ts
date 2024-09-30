@@ -3,7 +3,7 @@ import { FarmingPlayer } from '../../player/player';
 import { Crop, CROP_INFO } from '../../constants/crops';
 import { EliteItemDto } from '../../fortune/item';
 import { FarmingTool } from '../../fortune/farmingtool';
-import { FARMING_TOOLS, FarmingToolInfo } from '../../constants/tools';
+import { FARMING_TOOLS, FarmingToolInfo } from '../../items/tools';
 
 const fermentoArtifact: EliteItemDto = {
 	id: 397,
@@ -55,6 +55,7 @@ test('Wheat fortune test', () => {
 	progress.forEach((piece) => {
 		delete piece.item;
 		delete piece.maxItem;
+delete piece.wiki;
 	});
 
 	expect(progress).toStrictEqual([
@@ -103,6 +104,7 @@ test('Potato fortune test', () => {
 	progress.forEach((piece) => {
 		delete piece.item;
 		delete piece.maxItem;
+delete piece.wiki;
 	});
 
 	expect(progress).toStrictEqual([
@@ -139,6 +141,7 @@ test('Nether Wart fortune test', () => {
 	progress.forEach((piece) => {
 		delete piece.item;
 		delete piece.maxItem;
+delete piece.wiki;
 	});
 
 	expect(progress).toStrictEqual([
@@ -181,6 +184,7 @@ test('Carrot fortune test', () => {
 	progress.forEach((piece) => {
 		delete piece.item;
 		delete piece.maxItem;
+delete piece.wiki;
 	});
 
 	expect(progress).toStrictEqual([
@@ -226,6 +230,7 @@ test('Melon fortune test', () => {
 	progress.forEach((piece) => {
 		delete piece.item;
 		delete piece.maxItem;
+delete piece.wiki;
 	});
 
 	expect(progress).toStrictEqual([

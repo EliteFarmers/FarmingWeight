@@ -6,7 +6,7 @@ import {
 	FarmingPetType,
 	FarmingPets,
 	PET_LEVELS,
-} from '../constants/pets';
+} from '../items/pets';
 import { Rarity } from '../constants/reforges';
 import { getStatValue, Stat } from "../constants/stats";
 import { getRarityFromLore } from '../util/itemstats';

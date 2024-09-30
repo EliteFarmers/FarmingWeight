@@ -66,6 +66,12 @@ test('Almost maxed fermento fortune sources', () => {
 	expect(upgrades).toHaveLength(4);
 
 	const progress = item.getProgress();
+	
+	// These are outside of the scope of this test
+	progress.forEach((piece) => {
+		delete piece.wiki;
+	});
+	
 	expect(progress).toStrictEqual([
 		{
 			name: 'Base Stats',
@@ -127,6 +133,12 @@ test('Melon boots fortune sources', () => {
 	expect(item.fortuneBreakdown['Base Stats']).toBe(15);
 
 	const progress = item.getProgress();
+	
+	// These are outside of the scope of this test
+	progress.forEach((piece) => {
+		delete piece.wiki;
+	});
+
 	expect(progress).toStrictEqual([
 		{
 			name: 'Base Stats',
@@ -212,6 +224,11 @@ test('Lotus necklace fortune sources', () => {
 	expect(necklace.fortune).toBe(52.5);
 
 	const progress = necklace.getProgress();
+
+	// These are outside of the scope of this test
+	progress.forEach((piece) => {
+		delete piece.wiki;
+	});
 
 	expect(progress.reduce((acc, curr) => acc + curr.fortune, 0)).toBe(necklace.fortune);
 
