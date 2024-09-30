@@ -417,6 +417,10 @@ export class FarmingPlayer {
 			...info,
 		});
 	}
+
+	getBestTool(crop: Crop) {
+		return this.tools.find((t) => t.crop === crop);
+	}
 }
 
 export interface JacobFarmingContest {

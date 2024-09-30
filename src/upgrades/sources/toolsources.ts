@@ -3,6 +3,7 @@ import { FARMING_ENCHANTS } from "../../constants/enchants";
 import { Rarity, REFORGES, ReforgeTarget } from "../../constants/reforges";
 import { Stat } from "../../constants/stats";
 import { FarmingToolType } from "../../constants/tools";
+import { FortuneSourceProgress } from "../../constants/upgrades";
 import { FarmingTool } from "../../fortune/farmingtool";
 import { GemRarity } from "../../fortune/item";
 import { getFortuneFromEnchant, getMaxFortuneFromEnchant } from "../../util/enchants";
@@ -14,6 +15,7 @@ export interface DynamicFortuneSource<T> {
 	exists: (upgradable: T) => boolean;
 	max: (upgradable: T) => number;
 	current: (upgradable: T) => number;
+	progress?: (upgradable: T) => FortuneSourceProgress[];
 }
 
 export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [

@@ -60,51 +60,51 @@ test('Armor set bonus', () => {
 			name: 'Armor Set Bonus',
 			fortune: 0,
 			maxFortune: 75,
-			progress: 0,
+			ratio: 0,
 		}, {
 			name: 'Helmet',
 			fortune: 85,
 			maxFortune: 85,
-			progress: 1,
+			ratio: 1,
 		}, {
 			name: 'Chestplate',
 			fortune: 0,
 			maxFortune: 90,
-			progress: 0,
+			ratio: 0,
 		}, {
 			name: 'Leggings',
 			fortune: 0,
 			maxFortune: 90,
-			progress: 0,
+			ratio: 0,
 		}, {
 			name: 'Boots',
 			fortune: 0,
 			maxFortune: 85,
-			progress: 0,
+			ratio: 0,
 		},
 		{
 			name: 'Necklace',
 			fortune: 0,
 			maxFortune: 56,
-			progress: 0,
+			ratio: 0,
 		},
 		{
 			name: 'Cloak',
 			fortune: 0,
 			maxFortune: 56,
-			progress: 0,
+			ratio: 0,
 		},
 		{
 			name: 'Belt',
 			fortune: 0,
 			maxFortune: 56,
-			progress: 0,
+			ratio: 0,
 		},
 		{
 			name: 'Gloves',
 			fortune: 0,
 			maxFortune: 56,
-			progress: 0,
+			ratio: 0,
 		}
 	]);
 });

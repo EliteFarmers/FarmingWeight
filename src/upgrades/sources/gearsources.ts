@@ -1,5 +1,6 @@
 import { FARMING_ENCHANTS } from "../../constants/enchants";
 import { Rarity, REFORGES, ReforgeTarget } from "../../constants/reforges";
+import { Skill } from "../../constants/skills";
 import { Stat } from "../../constants/stats";
 import { FarmingArmor } from "../../fortune/farmingarmor";
 import { FarmingEquipment } from "../../fortune/farmingequipment";
@@ -55,6 +56,19 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		current: (gear) => {
 			if (gear.type !== ReforgeTarget.Equipment) return 0;
 			return gear.getPieceBonus();
+		}
+	},
+	{
+		name: 'Farming Level',
+		exists: (gear) => gear.type === ReforgeTarget.Armor && gear.info.perLevelStats?.skill === Skill.Farming,
+		max: (gear) => {
+			const last = (gear.getLastItemUpgrade() ?? gear)?.info;
+			return 'perLevelStats' in last && last.perLevelStats?.skill === Skill.Farming
+				? (last?.perLevelStats?.stats[Stat.FarmingFortune] ?? 0) * 60
+				: (gear.info?.perLevelStats?.stats[Stat.FarmingFortune] ?? 0) * 60;
+		},
+		current: (gear) => {
+			return (gear.info.perLevelStats?.stats[Stat.FarmingFortune] ?? 0) * (gear.options?.farmingLevel ?? 0);
 		}
 	},
 	...Object.entries(FARMING_ENCHANTS)

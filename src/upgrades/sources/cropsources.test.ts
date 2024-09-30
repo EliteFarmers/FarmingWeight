@@ -56,25 +56,25 @@ test('Wheat fortune test', () => {
 			name: 'Farming Tool',
 			fortune: 0,
 			maxFortune: 475,
-			progress: 0,
+			ratio: 0,
 		},
 		{
 			name: 'Exportable Crop',
 			fortune: 12,
 			maxFortune: 12,
-			progress: 1,
+			ratio: 1,
 		},
 		{
 			name: 'Garden Crop Upgrade',
 			fortune: 5,
 			maxFortune: 45,
-			progress: 5 / 45,
+			ratio: 5 / 45,
 		},
 		{
 			name: 'Fermento Artifact Family',
 			fortune: 30,
 			maxFortune: 30,
-			progress: 1,
+			ratio: 1,
 		},
 	]);
 });
@@ -97,19 +97,19 @@ test('Potato fortune test', () => {
 			name: 'Farming Tool',
 			fortune: 0,
 			maxFortune: 475,
-			progress: 0,
+			ratio: 0,
 		},
 		{
 			name: 'Garden Crop Upgrade',
 			fortune: 45,
 			maxFortune: 45,
-			progress: 1,
+			ratio: 1,
 		},
 		{
 			name: 'Fermento Artifact Family',
 			fortune: 20,
 			maxFortune: 30,
-			progress: 20 / 30,
+			ratio: 20 / 30,
 		},
 	]);
 });
@@ -126,19 +126,19 @@ test('Nether Wart fortune test', () => {
 			name: 'Farming Tool',
 			fortune: 0,
 			maxFortune: 475,
-			progress: 0,
+			ratio: 0,
 		},
 		{
 			name: 'Garden Crop Upgrade',
 			fortune: 0,
 			maxFortune: 45,
-			progress: 0,
+			ratio: 0,
 		},
 		{
 			name: 'Fermento Artifact Family',
 			fortune: 0,
 			maxFortune: 30,
-			progress: 0,
+			ratio: 0,
 		},
 	]);
 });
@@ -161,7 +161,7 @@ test('Carrot fortune test', () => {
 			name: 'Farming Tool',
 			fortune: 25,
 			maxFortune: 475,
-			progress: 25 / 475,
+			ratio: 25 / 475,
 		},
 		{
 			name: 'Exportable Crop',
@@ -173,13 +173,13 @@ test('Carrot fortune test', () => {
 			name: 'Garden Crop Upgrade',
 			fortune: 0,
 			maxFortune: 45,
-			progress: 0,
+			ratio: 0,
 		},
 		{
 			name: 'Fermento Artifact Family',
 			fortune: 10,
 			maxFortune: 30,
-			progress: 10 / 30,
+			ratio: 10 / 30,
 		},
 	]);
 });
@@ -199,19 +199,19 @@ test('Melon fortune test', () => {
 			name: 'Farming Tool',
 			fortune: 0,
 			maxFortune: 257,
-			progress: 0,
+			ratio: 0,
 		},
 		{
 			name: 'Garden Crop Upgrade',
 			fortune: 15,
 			maxFortune: 45,
-			progress: 15 / 45,
+			ratio: 15 / 45,
 		},
 		{
 			name: 'Fermento Artifact Family',
 			fortune: 0,
 			maxFortune: 30,
-			progress: 0,
+			ratio: 0,
 		},
 	]);
 });

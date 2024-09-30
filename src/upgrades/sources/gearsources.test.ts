@@ -71,25 +71,25 @@ test('Almost maxed fermento fortune sources', () => {
 			name: 'Base Stats',
 			fortune: 30,
 			maxFortune: 30,
-			progress: 1,
+			ratio: 1,
 		},
 		{
 			name: 'Reforge Stats',
 			fortune: 25,
 			maxFortune: 30,
-			progress: 25 / 30,
+			ratio: 25 / 30,
 		},
 		{
 			name: 'Gemstone Slots',
 			fortune: 11,
 			maxFortune: 20,
-			progress: 11 / 20,
+			ratio: 11 / 20,
 		},
 		{
 			name: 'Pesterminator',
 			fortune: 3,
 			maxFortune: 5,
-			progress: 3 / 5,
+			ratio: 3 / 5,
 		},
 	]);
 });
@@ -132,25 +132,25 @@ test('Melon boots fortune sources', () => {
 			name: 'Base Stats',
 			fortune: 15,
 			maxFortune: 30,
-			progress: 0.5,
+			ratio: 0.5,
 		},
 		{
 			name: 'Reforge Stats',
 			fortune: 0,
 			maxFortune: 30,
-			progress: 0,
+			ratio: 0,
 		},
 		{
 			name: 'Gemstone Slots',
 			fortune: 0,
 			maxFortune: 20,
-			progress: 0,
+			ratio: 0,
 		},
 		{
 			name: 'Pesterminator',
 			fortune: 0,
 			maxFortune: 5,
-			progress: 0,
+			ratio: 0,
 		},
 	]);
 
@@ -168,10 +168,10 @@ test('Same maxed armor fortune sources', () => {
 
 	for (let i = 0; i < helmetProgress.length; i++) {
 		helmetProgress[i].fortune = 0;
-		helmetProgress[i].progress = 0;
+		helmetProgress[i].ratio = 0;
 
 		bootsProgress[i].fortune = 0;
-		bootsProgress[i].progress = 0;
+		bootsProgress[i].ratio = 0;
 	}
 
 	expect(helmetProgress).toStrictEqual(bootsProgress);
@@ -220,25 +220,25 @@ test('Lotus necklace fortune sources', () => {
 			name: 'Base Stats',
 			fortune: 5,
 			maxFortune: 5,
-			progress: 1,
+			ratio: 1,
 		},
 		{
 			name: 'Reforge Stats',
 			fortune: 15,
 			maxFortune: 15,
-			progress: 1,
+			ratio: 1,
 		},
 		{
 			name: 'Salesperson Ability',
 			fortune: 12,
 			maxFortune: 15,
-			progress: 0.8,
+			ratio: 0.8,
 		},
 		{
 			name: 'Green Thumb',
 			fortune: 82 * 0.25,
 			maxFortune: 84 * 0.25,
-			progress: 82 / 84,
+			ratio: 82 / 84,
 		},
 	]);	
 });

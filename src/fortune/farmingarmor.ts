@@ -1,4 +1,4 @@
-import { ARMOR_INFO, ARMOR_SET_BONUS, ArmorSetBonus, FarmingArmorInfo, GearSlot } from '../constants/armor';
+import { ARMOR_INFO, ARMOR_SET_BONUS, ArmorSetBonus, FarmingArmorInfo, GEAR_SLOTS, GearSlot } from '../constants/armor';
 import { Crop } from '../constants/crops';
 import { FARMING_ENCHANTS } from '../constants/enchants';
 import { REFORGES, Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges';
@@ -17,6 +17,7 @@ import { getFortuneFromEnchant } from '../util/enchants';
 import { FortuneSourceProgress } from '../constants/upgrades';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources';
 import { ARMOR_SET_FORTUNE_SOURCES } from '../upgrades/sources/armorsetsources';
+import { EQUIPMENT_INFO } from '../constants/equipment';
 
 export interface ActiveArmorSetBonus {
 	count: number;
@@ -270,6 +271,17 @@ export class ArmorSet {
 
 	getProgress() {
 		return getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES);
+	}
+
+	getPieceProgress(slot: GearSlot) {
+		let piece = this.getPiece(slot);
+		if (!piece) {
+			piece = GEAR_SLOTS[slot].target === ReforgeTarget.Armor
+				? FarmingArmor.fakeItem(ARMOR_INFO[GEAR_SLOTS[slot].startingItem] as UpgradeableInfo)
+				: FarmingEquipment.fakeItem(EQUIPMENT_INFO[GEAR_SLOTS[slot].startingItem] as UpgradeableInfo);
+		}
+
+		return piece?.getProgress() ?? [];
 	}
 
 	get slots(): Record<GearSlot, FarmingArmor | FarmingEquipment | undefined> {

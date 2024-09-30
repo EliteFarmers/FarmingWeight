@@ -10,7 +10,7 @@ export function getFortuneProgress(level: number | null | undefined, source: For
 		fortunePerLevel: source.fortunePerLevel,
 		wiki: source.wiki,
 		fortune: getFortune(level, source),
-		progress: Math.min((level ?? 0) / source.maxLevel, 1),
+		ratio: Math.min((level ?? 0) / source.maxLevel, 1),
 		maxFortune: source.maxLevel * source.fortunePerLevel,
 		upgrades: []
 	};
@@ -23,7 +23,7 @@ export function getItemProgress(item: Upgradeable): FortuneSourceProgress {
 	return {
 		name: item.item.name ?? item.item.skyblockId ?? 'Unknown Item',
 		fortune: item.fortune,
-		progress: 0,
+		ratio: 0,
 		maxLevel: 0,
 		fortunePerLevel: 0,
 		maxFortune: 0,

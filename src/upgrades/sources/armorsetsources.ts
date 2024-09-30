@@ -27,7 +27,8 @@ export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 				: FarmingEquipment.fakeItem(EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo);
 
 			const progress = item?.getProgress();
-			return progress?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
+			const maxed = progress?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
+			return maxed;
 		},
 		current: (set) => {
 			const item = set.getPiece(slot as GearSlot);

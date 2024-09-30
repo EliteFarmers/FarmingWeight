@@ -2,7 +2,7 @@ import { FARMING_ACCESSORIES_INFO } from "../../constants/accessories";
 import { Crop, CROP_INFO, EXPORTABLE_CROP_FORTUNE } from "../../constants/crops";
 import { GARDEN_CROP_UPGRADES } from "../../constants/specific";
 import { Stat } from "../../constants/stats";
-import { FARMING_TOOLS } from "../../constants/tools";
+import { FARMING_TOOLS, FarmingToolInfo } from "../../constants/tools";
 import { FarmingTool } from "../../fortune/farmingtool";
 import { FarmingPlayer } from "../../player/player";
 import { DynamicFortuneSource } from "./toolsources";
@@ -21,7 +21,14 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 			const tool = player.tools.find(t => t.crop === crop);
 			const progress = tool?.getProgress();
 			return progress?.reduce((acc, p) => acc + p.fortune, 0) ?? 0;
-		}
+		},
+		progress: ({ player, crop }) => {
+			const tool = player.getBestTool(crop);
+			if (tool) return tool.getProgress();
+			
+			const fake = FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[crop].startingTool] as FarmingToolInfo);
+			return fake?.getProgress() ?? [];
+		},
 	},
 	{
 		name: 'Exportable Crop',

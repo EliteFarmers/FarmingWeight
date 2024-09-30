@@ -27,12 +27,13 @@ export interface FortuneSource {
 export interface FortuneSourceProgress {
 	name: string;
 	fortune: number;
-	progress: number;
+	ratio: number;
 	maxLevel?: number;
 	fortunePerLevel?: number;
 	maxFortune: number;
 	wiki?: string;
 	upgrades?: FortuneUpgrade[];
+	progress?: FortuneSourceProgress[]; 
 }
 
 export interface UpgradeCost {

@@ -74,12 +74,18 @@ export function getSourceProgress<T extends object>(upgradeable: T, sources: Dyn
 		const max = source.max(upgradeable);
 		const current = source.current(upgradeable);
 
-		result.push({
+		const progress = {
 			name: source.name,
 			fortune: current,
 			maxFortune: max,
-			progress: current / max,
-		});
+			ratio: current / max,
+		} as FortuneSourceProgress;
+
+		if (source.progress) {
+			progress.progress = source.progress(upgradeable);
+		}
+
+		result.push(progress);
 	}
 
 	return result;
