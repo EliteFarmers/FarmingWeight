@@ -77,6 +77,6 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 			name: enchant.name,
 			exists: (gear) => enchant.appliesTo.includes(gear.type),
 			max: (gear) => getMaxFortuneFromEnchant(enchant, gear.options),
-			current: (gear) => getFortuneFromEnchant(gear.item.enchantments?.[id] ?? 0, enchant, gear.options)
+			current: (gear) => getFortuneFromEnchant(gear.item.enchantments?.[id] ?? 0, enchant, gear.options),				
 		}) as DynamicFortuneSource<FarmingArmor | FarmingEquipment>)
 ];

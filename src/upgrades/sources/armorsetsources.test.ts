@@ -55,6 +55,13 @@ test('Armor set bonus', () => {
 
 	const progress = player.armorSet.getProgress();
 
+	// These are outside of the scope of this test
+	progress.forEach((piece) => {
+		delete piece.progress;
+		delete piece.item;
+		delete piece.maxItem;
+	});
+
 	expect(progress).toStrictEqual([
 		{
 			name: 'Armor Set Bonus',

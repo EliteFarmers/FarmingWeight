@@ -269,8 +269,8 @@ export class ArmorSet {
 		return calculateAverageSpecialCrops(blocksBroken, crop, count);
 	}
 
-	getProgress() {
-		return getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES);
+	getProgress(zeroed = false) {
+		return getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, zeroed);
 	}
 
 	getPieceProgress(slot: GearSlot) {
@@ -279,9 +279,10 @@ export class ArmorSet {
 			piece = GEAR_SLOTS[slot].target === ReforgeTarget.Armor
 				? FarmingArmor.fakeItem(ARMOR_INFO[GEAR_SLOTS[slot].startingItem] as UpgradeableInfo)
 				: FarmingEquipment.fakeItem(EQUIPMENT_INFO[GEAR_SLOTS[slot].startingItem] as UpgradeableInfo);
+			return piece?.getProgress(true) ?? [];
 		}
 
-		return piece?.getProgress() ?? [];
+		return piece.getProgress() ?? [];
 	}
 
 	get slots(): Record<GearSlot, FarmingArmor | FarmingEquipment | undefined> {
@@ -431,8 +432,8 @@ export class FarmingArmor implements Upgradeable {
 		return getLastItemUpgradeableTo(this, ARMOR_INFO);
 	}
 
-	getProgress(): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES);
+	getProgress(zeroed = false): FortuneSourceProgress[] {
+		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zeroed);
 	}
 
 	static isValid(item: EliteItemDto): boolean {

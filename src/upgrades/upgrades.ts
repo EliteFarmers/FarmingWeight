@@ -60,7 +60,7 @@ export function getLastItemUpgradeableTo(upgradeable: Upgradeable, options: Part
 	return { upgrade: last, info: item };
 }
 
-export function getSourceProgress<T extends object>(upgradeable: T, sources: DynamicFortuneSource<T>[]): FortuneSourceProgress[] {
+export function getSourceProgress<T extends object>(upgradeable: T, sources: DynamicFortuneSource<T>[], zeroed = false): FortuneSourceProgress[] {
 	const result = [] as FortuneSourceProgress[];
 
 	// Ensure the item fortune is up to date
@@ -72,17 +72,38 @@ export function getSourceProgress<T extends object>(upgradeable: T, sources: Dyn
 		if (!source.exists(upgradeable)) continue;
 
 		const max = source.max(upgradeable);
-		const current = source.current(upgradeable);
+		const current = zeroed ? 0 : source.current(upgradeable);
 
 		const progress = {
 			name: source.name,
 			fortune: current,
 			maxFortune: max,
-			ratio: current / max,
+			ratio: Math.min(current / max, 1),
 		} as FortuneSourceProgress;
 
 		if (source.progress) {
-			progress.progress = source.progress(upgradeable);
+			const p = source.progress(upgradeable);
+			if (p) {
+				progress.progress = p;
+			}
+		}
+
+		if (source.item) {
+			const item = source.item(upgradeable);
+			if (item) {
+				progress.item = item;
+			}
+		}
+
+		if (source.maxItem) {
+			const maxItem = source.maxItem(upgradeable);
+			if (maxItem) {
+				progress.maxItem = maxItem;
+			}
+		}
+
+		if ('wiki' in source && typeof source.wiki === 'string') {
+			progress.wiki = source.wiki;
 		}
 
 		result.push(progress);

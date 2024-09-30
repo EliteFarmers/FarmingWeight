@@ -34,5 +34,5 @@ export interface Upgradeable {
 	getUpgrades(): FortuneUpgrade[];
 	getItemUpgrade(): Upgrade | undefined;
 	getLastItemUpgrade(): { upgrade: Upgrade, info: UpgradeableInfo } | undefined;
-	getProgress(): FortuneSourceProgress[];
+	getProgress(zeroed: boolean): FortuneSourceProgress[];
 }

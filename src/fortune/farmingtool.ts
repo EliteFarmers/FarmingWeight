@@ -65,8 +65,8 @@ export class FarmingTool implements Upgradeable {
 		return getLastItemUpgradeableTo(this, FARMING_TOOLS);
 	}
 
-	getProgress(): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES);
+	getProgress(zeroed = false): FortuneSourceProgress[] {
+		return getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, zeroed);
 	}
 
 	setOptions(options: PlayerOptions) {

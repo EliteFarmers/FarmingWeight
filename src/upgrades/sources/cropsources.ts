@@ -18,7 +18,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 			return progress?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
 		},
 		current: ({ player, crop }) => {
-			const tool = player.tools.find(t => t.crop === crop);
+			const tool = player.getBestTool(crop);
 			const progress = tool?.getProgress();
 			return progress?.reduce((acc, p) => acc + p.fortune, 0) ?? 0;
 		},
@@ -27,8 +27,20 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 			if (tool) return tool.getProgress();
 			
 			const fake = FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[crop].startingTool] as FarmingToolInfo);
-			return fake?.getProgress() ?? [];
+			return fake?.getProgress(true) ?? [];
 		},
+		item: ({ player, crop }) => {
+			const tool = player.selectedTool?.crop === crop 
+				? player.selectedTool 
+				: player.getBestTool(crop);
+			return tool?.item;
+		},
+		maxItem: ({ crop }) => {
+			const startingTool = FARMING_TOOLS[CROP_INFO[crop].startingTool];
+			if (!startingTool) return;
+			const tool = FarmingTool.fakeItem(startingTool);
+			return (tool?.getLastItemUpgrade() ?? tool)?.info;
+		}
 	},
 	{
 		name: 'Exportable Crop',
@@ -59,6 +71,12 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 			}
 
 			return highest.info.baseStats?.[Stat.FarmingFortune] ?? 0;
+		},
+		item: ({ player }) => {
+			return player.activeAccessories.find(a => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family)?.item;
+		},
+		maxItem: () => {
+			return FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT;
 		}
 	}
 ];

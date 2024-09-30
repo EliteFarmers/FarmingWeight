@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { FarmingPlayer } from '../../player/player';
-import { Crop } from '../../constants/crops';
+import { Crop, CROP_INFO } from '../../constants/crops';
 import { EliteItemDto } from '../../fortune/item';
 import { FarmingTool } from '../../fortune/farmingtool';
 import { FARMING_TOOLS, FarmingToolInfo } from '../../constants/tools';
@@ -51,12 +51,19 @@ test('Wheat fortune test', () => {
 
 	const progress = player.getCropProgress(Crop.Wheat);
 
+	// These are outside of the scope of this test
+	progress.forEach((piece) => {
+		delete piece.item;
+		delete piece.maxItem;
+	});
+
 	expect(progress).toStrictEqual([
 		{
 			name: 'Farming Tool',
 			fortune: 0,
 			maxFortune: 475,
 			ratio: 0,
+			progress: FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[Crop.Wheat].startingTool] as FarmingToolInfo)?.getProgress(true)
 		},
 		{
 			name: 'Exportable Crop',
@@ -92,12 +99,19 @@ test('Potato fortune test', () => {
 
 	const progress = player.getCropProgress(Crop.Potato);
 
+	// These are outside of the scope of this test
+	progress.forEach((piece) => {
+		delete piece.item;
+		delete piece.maxItem;
+	});
+
 	expect(progress).toStrictEqual([
 		{
 			name: 'Farming Tool',
 			fortune: 0,
 			maxFortune: 475,
 			ratio: 0,
+			progress: FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[Crop.Potato].startingTool] as FarmingToolInfo)?.getProgress(true)
 		},
 		{
 			name: 'Garden Crop Upgrade',
@@ -121,12 +135,19 @@ test('Nether Wart fortune test', () => {
 
 	const progress = player.getCropProgress(Crop.NetherWart);
 
+	// These are outside of the scope of this test
+	progress.forEach((piece) => {
+		delete piece.item;
+		delete piece.maxItem;
+	});
+
 	expect(progress).toStrictEqual([
 		{
 			name: 'Farming Tool',
 			fortune: 0,
 			maxFortune: 475,
 			ratio: 0,
+			progress: FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[Crop.NetherWart].startingTool] as FarmingToolInfo)?.getProgress(true)
 		},
 		{
 			name: 'Garden Crop Upgrade',
@@ -156,18 +177,25 @@ test('Carrot fortune test', () => {
 
 	const progress = player.getCropProgress(Crop.Carrot);
 
+	// These are outside of the scope of this test
+	progress.forEach((piece) => {
+		delete piece.item;
+		delete piece.maxItem;
+	});
+
 	expect(progress).toStrictEqual([
 		{
 			name: 'Farming Tool',
 			fortune: 25,
 			maxFortune: 475,
 			ratio: 25 / 475,
+			progress: FarmingTool.fakeItem(FARMING_TOOLS['THEORETICAL_HOE_CARROT_2'] as FarmingToolInfo)?.getProgress()
 		},
 		{
 			name: 'Exportable Crop',
 			fortune: 12,
 			maxFortune: 12,
-			progress: 1
+			ratio: 1,
 		},
 		{
 			name: 'Garden Crop Upgrade',
@@ -194,12 +222,19 @@ test('Melon fortune test', () => {
 
 	const progress = player.getCropProgress(Crop.Melon);
 
+	// These are outside of the scope of this test
+	progress.forEach((piece) => {
+		delete piece.item;
+		delete piece.maxItem;
+	});
+
 	expect(progress).toStrictEqual([
 		{
 			name: 'Farming Tool',
 			fortune: 0,
 			maxFortune: 257,
 			ratio: 0,
+			progress: FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[Crop.Melon].startingTool] as FarmingToolInfo)?.getProgress(true)
 		},
 		{
 			name: 'Garden Crop Upgrade',

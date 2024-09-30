@@ -3,7 +3,8 @@ import { Rarity } from '../constants/reforges';
 import { Stat } from "../constants/stats";
 import { FortuneSourceProgress, FortuneUpgrade, Upgrade } from '../constants/upgrades';
 import { PlayerOptions } from '../player/player';
-import { getLastItemUpgradeableTo, getItemUpgrades } from '../upgrades/upgrades';
+import { ACCESSORY_FORTUNE_SOURCES } from '../upgrades/sources/accessorysources';
+import { getLastItemUpgradeableTo, getItemUpgrades, getSourceProgress } from '../upgrades/upgrades';
 import { getPeridotFortune } from '../util/gems';
 import { getRarityFromLore } from '../util/itemstats';
 import { EliteItemDto } from './item';
@@ -52,8 +53,8 @@ export class FarmingAccessory implements Upgradeable {
 		return getLastItemUpgradeableTo(this, FARMING_ACCESSORIES_INFO);
 	}
 
-	getProgress(): FortuneSourceProgress[] {
-		return [];
+	getProgress(zereod = false): FortuneSourceProgress[] {
+		return getSourceProgress<FarmingAccessory>(this, ACCESSORY_FORTUNE_SOURCES, zereod);
 	}
 
 	getFortune() {

@@ -65,8 +65,8 @@ export class FarmingEquipment implements Upgradeable {
 		return getLastItemUpgradeableTo(this, EQUIPMENT_INFO);
 	}
 
-	getProgress(): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES);
+	getProgress(zereod = false): FortuneSourceProgress[] {
+		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zereod);
 	}
 
 	setOptions(options: PlayerOptions) {

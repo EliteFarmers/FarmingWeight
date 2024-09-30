@@ -1,3 +1,5 @@
+import { EliteItemDto } from "../fortune/item";
+import { UpgradeableInfo } from "../fortune/upgradable";
 import type { GearSlot } from "./armor";
 import { Crop } from "./crops";
 import { Stat } from "./stats";
@@ -33,7 +35,9 @@ export interface FortuneSourceProgress {
 	maxFortune: number;
 	wiki?: string;
 	upgrades?: FortuneUpgrade[];
-	progress?: FortuneSourceProgress[]; 
+	progress?: FortuneSourceProgress[];
+	item?: EliteItemDto;
+	maxItem?: UpgradeableInfo;
 }
 
 export interface UpgradeCost {
