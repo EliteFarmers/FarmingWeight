@@ -50,7 +50,6 @@ export function getNextItemUpgradeableTo(upgradeable: Upgradeable, options: Part
 	return { upgrade, info: next };
 }
 
-
 export function getLastItemUpgradeableTo(upgradeable: Upgradeable, options: Partial<Record<string, UpgradeableInfo>>): { upgrade: Upgrade, info: UpgradeableInfo } | undefined {
 	const upgrade = upgradeable.getItemUpgrade();
 	if (!upgrade) return undefined;
@@ -104,6 +103,11 @@ export function getSourceProgress<T extends object>(upgradeable: T, sources: Dyn
 			if (info) progress.info = info;
 			if (maxInfo) progress.maxInfo = maxInfo;
 			if (nextInfo) progress.nextInfo = nextInfo;
+		}
+
+		if (source.wiki) {
+			const wiki = source.wiki(upgradeable);
+			if (wiki) progress.wiki = wiki;
 		}
 
 		result.push(progress);

@@ -51,13 +51,18 @@ export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 			return fake?.getProgress(true) ?? [];
 		},
 		info: (set) => {
-			const piece = set.getPiece(slot as GearSlot);
+			const piece = set.getPiece(slot as GearSlot)
+			const fake = !piece 
+				? info.target === ReforgeTarget.Armor
+					? FarmingArmor.fakeItem(ARMOR_INFO[info.startingItem] as UpgradeableInfo)
+					: FarmingEquipment.fakeItem(EQUIPMENT_INFO[info.startingItem] as UpgradeableInfo)
+				: undefined;
 
 			return {
 				item: piece?.item,
 				info: piece?.info,
-				nextInfo: piece?.getNextItemUpgrade()?.info,
-				maxInfo: piece?.getLastItemUpgrade()?.info
+				nextInfo: fake ? fake.info : piece?.getNextItemUpgrade()?.info,
+				maxInfo: (fake ? fake : piece)?.getLastItemUpgrade()?.info
 			}
 		},
 	}))

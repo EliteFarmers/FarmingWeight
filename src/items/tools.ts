@@ -246,7 +246,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 1,
 		},
 		name: 'Gauss Carrot Hoe',
-		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe',
+		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe#Common_',
 		stats: t1hoeStats,
 	},
 	THEORETICAL_HOE_CARROT_2: {
@@ -263,7 +263,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 2,
 		},
 		name: 'Gauss Carrot Hoe',
-		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe',
+		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe#Uncommon_',
 		stats: t2hoeStats,
 	},
 	THEORETICAL_HOE_CARROT_3: {
@@ -276,7 +276,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 3,
 		},
 		name: 'Gauss Carrot Hoe',
-		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe',
+		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe#Rare_',
 		stats: t3hoeStats,
 	},
 
@@ -294,7 +294,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 1,
 		},
 		name: 'Newton Nether Warts Hoe',
-		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe',
+		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe#Common_',
 		stats: t1hoeStats,
 	},
 	THEORETICAL_HOE_WARTS_2: {
@@ -311,7 +311,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 2,
 		},
 		name: 'Newton Nether Warts Hoe',
-		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe',
+		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe#Uncommon_',
 		stats: t2hoeStats,
 	},
 	THEORETICAL_HOE_WARTS_3: {
@@ -324,7 +324,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 3,
 		},
 		name: 'Newton Nether Warts Hoe',
-		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe',
+		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe#Rare_',
 		stats: t3hoeStats,
 	},
 
@@ -342,7 +342,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 1,
 		},
 		name: 'Pythagorean Potato Hoe',
-		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe',
+		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe#Common_',
 		stats: t1hoeStats,
 	},
 	THEORETICAL_HOE_POTATO_2: {
@@ -359,7 +359,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 2,
 		},
 		name: 'Pythagorean Potato Hoe',
-		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe',
+		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe#Uncommon_',
 		stats: t2hoeStats,
 	},
 	THEORETICAL_HOE_POTATO_3: {
@@ -372,7 +372,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 3,
 		},
 		name: 'Pythagorean Potato Hoe',
-		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe',
+		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe#Rare_',
 		stats: t3hoeStats,
 	},
 
@@ -390,7 +390,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 1,
 		},
 		name: 'Turing Sugar Cane Hoe',
-		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe',
+		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe#Common_',
 		stats: t1hoeStats,
 	},
 	THEORETICAL_HOE_CANE_2: {
@@ -407,7 +407,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 2,
 		},
 		name: 'Turing Sugar Cane Hoe',
-		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe',
+		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe#Uncommon_',
 		stats: t2hoeStats,
 	},
 	THEORETICAL_HOE_CANE_3: {
@@ -420,7 +420,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 3,
 		},
 		name: 'Turing Sugar Cane Hoe',
-		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe',
+		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe#Rare_',
 		stats: t3hoeStats,
 	},
 
@@ -438,7 +438,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 1,
 		},
 		name: "Euclid's Wheat Hoe",
-		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe',
+		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe#Common_',
 		stats: t1hoeStats,
 	},
 	THEORETICAL_HOE_WHEAT_2: {
@@ -455,7 +455,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 2,
 		},
 		name: "Euclid's Wheat Hoe",
-		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe',
+		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe#Uncommon_',
 		stats: t2hoeStats,
 	},
 	THEORETICAL_HOE_WHEAT_3: {
@@ -468,7 +468,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 			peridot: 3,
 		},
 		name: "Euclid's Wheat Hoe",
-		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe',
+		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe#Rare_',
 		stats: t3hoeStats,
 	},
 };

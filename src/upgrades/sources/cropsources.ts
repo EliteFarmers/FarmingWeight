@@ -35,12 +35,15 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 		info: ({ player, crop }) => {
 			const tool = player.selectedTool?.crop === crop 
 				? player.selectedTool 
-				: player.getBestTool(crop);
+				: player.getBestTool(crop)
+			
+			const fake = !tool ? FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[crop].startingTool] as FarmingToolInfo) : undefined;
+
 			return {
 				item: tool?.item,
 				info: tool?.info,
-				nextInfo: tool?.getNextItemUpgrade()?.info,
-				maxInfo: tool?.getLastItemUpgrade()?.info
+				nextInfo: fake ? fake.info : tool?.getNextItemUpgrade()?.info,
+				maxInfo: (fake ? fake : tool)?.getLastItemUpgrade()?.info
 			}
 		},
 	},

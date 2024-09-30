@@ -57,7 +57,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		upgrade: {
 			id: 'ZORROS_CAPE',
 			reason: UpgradeReason.Situational,
-			why: 'A maxed Zorro\'s Cloak provides significantly more fortune during a Jacob\'s contest, but slightly less outside of one.',
+			why: 'A maxed Zorro\'s Cape provides significantly more fortune during a Jacob\'s contest, but slightly less outside of one.',
 		},
 		family: 'LOTUS',
 		slot: GearSlot.Cloak,
@@ -72,7 +72,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 	},
 	ZORROS_CAPE: {
 		skyblockId: 'ZORROS_CAPE',
-		name: "Zorro's Cloak",
+		name: "Zorro's Cape",
 		wiki: 'https://wiki.hypixel.net/Zorro%27s_Cape',
 		upgrade: {
 			id: 'LOTUS_CLOAK',
