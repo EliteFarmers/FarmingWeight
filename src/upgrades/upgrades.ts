@@ -102,7 +102,7 @@ export function getSourceProgress<T extends object>(upgradeable: T, sources: Dyn
 			const { item, info, maxInfo, nextInfo } = source.info(upgradeable);
 			if (item) progress.item = item;
 			if (info) progress.info = info;
-			if (maxInfo) progress.maxItem = maxInfo;
+			if (maxInfo) progress.maxInfo = maxInfo;
 			if (nextInfo) progress.nextInfo = nextInfo;
 		}
 

@@ -54,7 +54,7 @@ test('Wheat fortune test', () => {
 	// These are outside of the scope of this test
 	progress.forEach((piece) => {
 		delete piece.item;
-		delete piece.maxItem;
+		delete piece.maxInfo;
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
@@ -105,7 +105,7 @@ test('Potato fortune test', () => {
 	// These are outside of the scope of this test
 	progress.forEach((piece) => {
 		delete piece.item;
-		delete piece.maxItem;
+		delete piece.maxInfo;
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
@@ -144,7 +144,7 @@ test('Nether Wart fortune test', () => {
 	// These are outside of the scope of this test
 	progress.forEach((piece) => {
 		delete piece.item;
-		delete piece.maxItem;
+		delete piece.maxInfo;
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
@@ -189,7 +189,7 @@ test('Carrot fortune test', () => {
 	// These are outside of the scope of this test
 	progress.forEach((piece) => {
 		delete piece.item;
-		delete piece.maxItem;
+		delete piece.maxInfo;
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
@@ -237,7 +237,7 @@ test('Melon fortune test', () => {
 	// These are outside of the scope of this test
 	progress.forEach((piece) => {
 		delete piece.item;
-		delete piece.maxItem;
+		delete piece.maxInfo;
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;

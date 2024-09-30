@@ -59,7 +59,7 @@ test('Armor set bonus', () => {
 	progress.forEach((piece) => {
 		delete piece.progress;
 		delete piece.item;
-		delete piece.maxItem;
+		delete piece.maxInfo;
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;

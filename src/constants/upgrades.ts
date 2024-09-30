@@ -39,7 +39,7 @@ export interface FortuneSourceProgress {
 	item?: EliteItemDto;
 	info?: UpgradeableInfo;
 	nextInfo?: UpgradeableInfo;
-	maxItem?: UpgradeableInfo;
+	maxInfo?: UpgradeableInfo;
 }
 
 export interface UpgradeCost {
