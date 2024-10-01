@@ -110,21 +110,21 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 				[Stat.FarmingFortune]: {
 					name: 'Busy Buzz Buzz',
 					value: 0.2,
-					type: FarmingPetStatType.Ability,
+					type: FarmingPetStatType.Base,
 				},
 			},
 			[Rarity.Epic]: {
 				[Stat.FarmingFortune]: {
 					name: 'Busy Buzz Buzz',
 					value: 0.3,
-					type: FarmingPetStatType.Ability,
+					type: FarmingPetStatType.Base,
 				},
 			},
 			[Rarity.Legendary]: {
 				[Stat.FarmingFortune]: {
 					name: 'Busy Buzz Buzz',
 					value: 0.3,
-					type: FarmingPetStatType.Ability,
+					type: FarmingPetStatType.Base,
 				},
 			},
 		},
@@ -204,7 +204,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 					value: 0.4,
 					type: FarmingPetStatType.Ability,
 				},
-				// An option to check if this fortune is present doesn't exist yet
+				// An option to check if this fortune is present (when a plot is sprayed) doesn't exist yet
 				[Stat.FarmingFortune]: {
 					name: 'Repungent Aroma',
 					calculated: () => 100,
@@ -249,7 +249,7 @@ export const FARMING_PETS: Record<FarmingPets, FarmingPetInfo> = {
 export interface FarmingPetItemInfo {
 	name: string;
 	wiki: string;
-	stats?: StatsRecord;
+	stats?: StatsRecord<PlayerOptions>;
 	skillReq?: Partial<Record<Skill, number>>;
 }
 

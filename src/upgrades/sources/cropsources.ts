@@ -12,7 +12,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 		name: 'Farming Tool',
 		exists: () => true,
 		wiki: ({ player, crop }) => {
-			return player.getBestTool(crop)?.info.wiki ?? FARMING_TOOLS[CROP_INFO[crop].startingTool]?.wiki;
+			return player.getSelectedCropTool(crop)?.info.wiki ?? FARMING_TOOLS[CROP_INFO[crop].startingTool]?.wiki;
 		},
 		max: ({ crop }) => {
 			const tool = FARMING_TOOLS[CROP_INFO[crop].startingTool];
@@ -21,12 +21,12 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 			return progress?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
 		},
 		current: ({ player, crop }) => {
-			const tool = player.getBestTool(crop);
+			const tool = player.getSelectedCropTool(crop);
 			const progress = tool?.getProgress();
 			return progress?.reduce((acc, p) => acc + p.fortune, 0) ?? 0;
 		},
 		progress: ({ player, crop }) => {
-			const tool = player.getBestTool(crop);
+			const tool = player.getSelectedCropTool(crop);
 			if (tool) return tool.getProgress();
 			
 			const fake = FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[crop].startingTool] as FarmingToolInfo);
@@ -35,7 +35,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 		info: ({ player, crop }) => {
 			const tool = player.selectedTool?.crop === crop 
 				? player.selectedTool 
-				: player.getBestTool(crop)
+				: player.getSelectedCropTool(crop)
 			
 			const fake = !tool ? FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[crop].startingTool] as FarmingToolInfo) : undefined;
 
@@ -49,6 +49,7 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 	},
 	{
 		name: 'Exportable Crop',
+		api: false,
 		wiki: () => 'https://wiki.hypixel.net/Carrolyn',
 		exists: ({ crop }) => CROP_INFO[crop].exportable === true,
 		max: () => EXPORTABLE_CROP_FORTUNE,
@@ -85,12 +86,12 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 		},
 		info: ({ player }) => {
 			const highest = player.activeAccessories.find(a => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family);
-
+			const first = !highest ? FARMING_ACCESSORIES_INFO.CROPIE_TALISMAN : undefined;
 			return {
 				item: highest?.item,
 				info: highest?.info,
-				nextInfo: highest?.getNextItemUpgrade()?.info,
-				maxInfo: highest?.getLastItemUpgrade()?.info
+				nextInfo: first ?? highest?.getNextItemUpgrade()?.info,
+				maxInfo: highest?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT
 			};
 		},
 	}

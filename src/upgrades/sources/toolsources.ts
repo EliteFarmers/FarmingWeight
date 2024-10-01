@@ -1,7 +1,7 @@
 import { Crop } from "../../constants/crops";
 import { FARMING_ENCHANTS } from "../../constants/enchants";
 import { Rarity, REFORGES, ReforgeTarget } from "../../constants/reforges";
-import { Stat } from "../../constants/stats";
+import { getStatValue, Stat } from "../../constants/stats";
 import { FarmingToolType } from "../../items/tools";
 import { FortuneSourceProgress } from "../../constants/upgrades";
 import { FarmingTool } from "../../fortune/farmingtool";
@@ -13,6 +13,7 @@ import { getPeridotFortune, getPeridotGemFortune } from "../../util/gems";
 export interface DynamicFortuneSource<T> {
 	name: string;
 	crop?: Crop;
+	api?: boolean;
 	wiki?: (source: T) => string | undefined;
 	exists: (source: T) => boolean;
 	max: (source: T) => number;
@@ -47,16 +48,25 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		},
 		max: (tool) => {
 			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
-			return last?.stats?.[last.maxRarity]?.[Stat.FarmingFortune] ?? 0;
+			return getStatValue(last?.stats?.[last.maxRarity]?.[Stat.FarmingFortune], tool.options);
 		},
 		current: (tool) => {
-			return tool.info.stats?.[tool.rarity]?.[Stat.FarmingFortune] ?? 0;
+			return getStatValue(tool.info.stats?.[tool.rarity]?.[Stat.FarmingFortune], tool.options);
+		}
+	},
+	{
+		name: 'Item Ability',
+		exists: (tool) => tool.info.computedStats !== undefined,
+		// Temporary set to max of 110 for deadaalus axe
+		max: () => 110,
+		current: (tool) => {
+			return tool.getCalculatedStats()[Stat.FarmingFortune] ?? 0;
 		}
 	},
 	{
 		name: 'Reforge Stats',
 		wiki: () => REFORGES?.bountiful?.wiki,
-		exists: () => true,
+		exists: (tool) => tool.type !== ReforgeTarget.Sword,
 		max: (tool) => {
 			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
 			return tool.reforge?.name === 'Blessed' 
@@ -85,7 +95,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	{
 		name: 'Farming For Dummies',
 		wiki: () => 'https://wiki.hypixel.net/Farming_For_Dummies',
-		exists: () => true,
+		exists: (tool) => tool.type !== ReforgeTarget.Sword,
 		max: () => 5,
 		current: (tool) => {
 			return +(tool.item.attributes?.farming_for_dummies_count ?? 0);
@@ -109,7 +119,6 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 		current: (tool) => tool.collAnalysis ?? 0
 	},
 	...Object.entries(FARMING_ENCHANTS)
-		.filter(([, enchant]) => enchant.appliesTo.includes(ReforgeTarget.Hoe) || enchant.appliesTo.includes(ReforgeTarget.Axe))
 		.map(([id, enchant]) => ({
 			name: enchant.name,
 			wiki: () => enchant.wiki,

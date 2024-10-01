@@ -62,6 +62,6 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		gemSlots: {
 			peridot: 1,
 		},
-		maxRarity: Rarity.Legendary,
+		maxRarity: Rarity.Mythic,
 	},
 };

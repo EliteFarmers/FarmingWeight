@@ -40,6 +40,7 @@ export interface FortuneSourceProgress {
 	info?: UpgradeableInfo;
 	nextInfo?: UpgradeableInfo;
 	maxInfo?: UpgradeableInfo;
+	api?: boolean;
 }
 
 export interface UpgradeCost {

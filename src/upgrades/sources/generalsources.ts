@@ -1,4 +1,6 @@
 import { ANITA_FORTUNE_UPGRADE, COMMUNITY_CENTER_UPGRADE, FARMING_LEVEL, PEST_BESTIARY_SOURCE, REFINED_TRUFFLE_SOURCE, UNLOCKED_PLOTS } from "../../constants/specific";
+import { FarmingAccessory } from "../../fortune/farmingaccessory";
+import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from "../../items/accessories";
 import { FarmingPlayer } from "../../player/player";
 import { unlockedPestBestiaryTiers } from "../../util/pests";
 import { DynamicFortuneSource } from "./toolsources";
@@ -42,6 +44,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	},
 	{
 		name: COMMUNITY_CENTER_UPGRADE.name,
+		api: false,
 		wiki: () => COMMUNITY_CENTER_UPGRADE.wiki,
 		exists: () => true,
 		max: () => COMMUNITY_CENTER_UPGRADE.maxLevel * COMMUNITY_CENTER_UPGRADE.fortunePerLevel,
@@ -56,6 +59,30 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		max: () => REFINED_TRUFFLE_SOURCE.maxLevel * REFINED_TRUFFLE_SOURCE.fortunePerLevel,
 		current: (player) => {
 			return (player.options.refinedTruffles ?? 0) * REFINED_TRUFFLE_SOURCE.fortunePerLevel;
+		}
+	},
+	{
+		name: 'Relic of Power',
+		exists: () => true,
+		wiki: () => FARMING_ACCESSORIES_INFO.POWER_RELIC?.wiki,
+		max: () => {
+			const accessory = FarmingAccessory.fakeItem(FARMING_ACCESSORIES_INFO.POWER_RELIC as FarmingAccessoryInfo);
+			return accessory?.getProgress()?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
+		},
+		current: (player) => {
+			const accessory = player.accessories.find(a => a.info.skyblockId === 'POWER_RELIC');
+			return accessory?.fortune ?? 0;
+		},
+		info: (player) => {
+			const accessory = player.accessories.find(a => a.info.skyblockId === 'POWER_RELIC');
+			const fake = !accessory ? FarmingAccessory.fakeItem(FARMING_ACCESSORIES_INFO.POWER_RELIC as FarmingAccessoryInfo) : undefined;
+
+			return {
+				item: accessory?.item,
+				info: accessory?.info,
+				nextInfo: fake ? fake.info : accessory?.getNextItemUpgrade()?.info,
+				maxInfo: (fake ? fake : accessory)?.getLastItemUpgrade()?.info
+			}
 		}
 	}
 ];

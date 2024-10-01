@@ -29,8 +29,7 @@ export function getLastToolUpgrade(tool: FarmingToolInfo): UpgradeableInfo | und
 	let item = FARMING_TOOLS[upgrade.id];
 	if (!item) return undefined;
 
-	while (item?.upgrade) {
-		if (item.upgrade.reason === UpgradeReason.Situational) break;
+	while (item?.upgrade && item.upgrade.reason !== UpgradeReason.Situational) {
 		last = item.upgrade;
 		item = FARMING_TOOLS[item.upgrade.id];
 	}
@@ -52,14 +51,13 @@ export function getNextItemUpgradeableTo(upgradeable: Upgradeable, options: Part
 
 export function getLastItemUpgradeableTo(upgradeable: Upgradeable, options: Partial<Record<string, UpgradeableInfo>>): { upgrade: Upgrade, info: UpgradeableInfo } | undefined {
 	const upgrade = upgradeable.getItemUpgrade();
-	if (!upgrade) return undefined;
+	if (!upgrade || upgrade.reason === UpgradeReason.Situational) return undefined;
 
 	let last = upgrade;
 	let item = options[upgrade.id];
 	if (!item) return undefined;
 
-	while (item?.upgrade) {
-		if (item.upgrade.reason === UpgradeReason.Situational) break;
+	while (item?.upgrade && item.upgrade.reason !== UpgradeReason.Situational) {
 		last = item.upgrade;
 		item = options[item.upgrade.id];
 	}
@@ -108,6 +106,10 @@ export function getSourceProgress<T extends object>(upgradeable: T, sources: Dyn
 		if (source.wiki) {
 			const wiki = source.wiki(upgradeable);
 			if (wiki) progress.wiki = wiki;
+		}
+
+		if (source.api === false) {
+			progress.api = false;
 		}
 
 		result.push(progress);

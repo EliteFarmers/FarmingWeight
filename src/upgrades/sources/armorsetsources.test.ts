@@ -67,29 +67,33 @@ test('Armor set bonus', () => {
 
 	expect(progress).toStrictEqual([
 		{
-			name: 'Armor Set Bonus',
-			fortune: 0,
-			maxFortune: 75,
-			ratio: 0,
-		}, {
 			name: 'Helmet',
 			fortune: 85,
 			maxFortune: 85,
 			ratio: 1,
-		}, {
+		}, 
+		{
 			name: 'Chestplate',
 			fortune: 0,
 			maxFortune: 90,
 			ratio: 0,
-		}, {
+		}, 
+		{
 			name: 'Leggings',
 			fortune: 0,
 			maxFortune: 90,
 			ratio: 0,
-		}, {
+		}, 
+		{
 			name: 'Boots',
 			fortune: 0,
 			maxFortune: 85,
+			ratio: 0,
+		},
+		{
+			name: 'Armor Set Bonus',
+			fortune: 0,
+			maxFortune: 75,
 			ratio: 0,
 		},
 		{

@@ -8,95 +8,168 @@ export enum FarmingToolType {
 	Other = 'Other',
 	Dicer = 'Dicer',
 	MathematicalHoe = 'Mathematical Hoe',
+	None = 'None',
 }
 
 export interface FarmingToolInfo extends UpgradeableInfo {
-	crop: Crop;
+	crop?: Crop;
 	name: string;
-	type: FarmingToolType;
+	type: FarmingToolType | ReforgeTarget;
 	reforgeType: ReforgeTarget;
 }
 
 const t1hoeStats = {
 	[Rarity.Common]: {
-		[Stat.FarmingFortune]: 10,
-		[Stat.FarmingWisdom]: 1,
+		[Stat.FarmingFortune]: {
+			value: 10,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 1,
+		},
 	},
 	[Rarity.Uncommon]: {
-		[Stat.FarmingFortune]: 10,
-		[Stat.FarmingWisdom]: 2,
+		[Stat.FarmingFortune]: { 
+			value: 10,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 2,
+		},
 	},
 	[Rarity.Rare]: {
-		[Stat.FarmingFortune]: 10,
-		[Stat.FarmingWisdom]: 3,
+		[Stat.FarmingFortune]: { 
+			value: 10,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 3,
+		},
 	},
 	[Rarity.Epic]: {
-		[Stat.FarmingFortune]: 10,
-		[Stat.FarmingWisdom]: 5,
+		[Stat.FarmingFortune]: { 
+			value: 10,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 5,
+		},
 	},
 	[Rarity.Legendary]: {
-		[Stat.FarmingFortune]: 10,
-		[Stat.FarmingWisdom]: 8,
+		[Stat.FarmingFortune]: { 
+			value: 10,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 8,
+		},
 	},
 	[Rarity.Mythic]: {
-		[Stat.FarmingFortune]: 10,
-		[Stat.FarmingWisdom]: 12,
+		[Stat.FarmingFortune]: { 
+			value: 10,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 12,
+		},
 	},
-} as const;
+} as UpgradeableInfo['stats'];
 
 const t2hoeStats = {
 	[Rarity.Common]: {
-		[Stat.FarmingFortune]: 25,
-		[Stat.FarmingWisdom]: 1,
+		[Stat.FarmingFortune]: { 
+			value: 25,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 1,
+		},
 	},
 	[Rarity.Uncommon]: {
-		[Stat.FarmingFortune]: 25,
-		[Stat.FarmingWisdom]: 2,
+		[Stat.FarmingFortune]: { 
+			value: 25,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 2,
+		},
 	},
 	[Rarity.Rare]: {
-		[Stat.FarmingFortune]: 25,
-		[Stat.FarmingWisdom]: 3,
+		[Stat.FarmingFortune]: { 
+			value: 25,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 3,
+		},
 	},
 	[Rarity.Epic]: {
-		[Stat.FarmingFortune]: 25,
-		[Stat.FarmingWisdom]: 5,
+		[Stat.FarmingFortune]: { 
+			value: 25,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 5,
+		},
 	},
 	[Rarity.Legendary]: {
-		[Stat.FarmingFortune]: 25,
-		[Stat.FarmingWisdom]: 8,
+		[Stat.FarmingFortune]: { 
+			value: 25,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 8,
+		},
 	},
 	[Rarity.Mythic]: {
-		[Stat.FarmingFortune]: 25,
-		[Stat.FarmingWisdom]: 12,
+		[Stat.FarmingFortune]: { 
+			value: 25,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 12,
+		},
 	},
-} as const;
+} as UpgradeableInfo['stats'];
 
 const t3hoeStats = {
 	[Rarity.Common]: {
-		[Stat.FarmingFortune]: 50,
-		[Stat.FarmingWisdom]: 1,
+		[Stat.FarmingFortune]: { 
+			value: 50,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 1,
+		},
 	},
 	[Rarity.Uncommon]: {
-		[Stat.FarmingFortune]: 50,
-		[Stat.FarmingWisdom]: 2,
+		[Stat.FarmingFortune]: { 
+			value: 50,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 2,
+		},
 	},
 	[Rarity.Rare]: {
-		[Stat.FarmingFortune]: 50,
-		[Stat.FarmingWisdom]: 3,
+		[Stat.FarmingFortune]: { 
+			value: 50,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 3,
+		},
 	},
 	[Rarity.Epic]: {
-		[Stat.FarmingFortune]: 50,
-		[Stat.FarmingWisdom]: 5,
+		[Stat.FarmingFortune]: { 
+			value: 50,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 5,
+		},
 	},
 	[Rarity.Legendary]: {
-		[Stat.FarmingFortune]: 50,
-		[Stat.FarmingWisdom]: 8,
+		[Stat.FarmingFortune]: { 
+			value: 50,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 8,
+		},
 	},
 	[Rarity.Mythic]: {
-		[Stat.FarmingFortune]: 50,
-		[Stat.FarmingWisdom]: 12,
+		[Stat.FarmingFortune]: { 
+			value: 50,
+		},
+		[Stat.FarmingWisdom]: {
+			value: 12,
+		},
 	},
-} as const;
+} as UpgradeableInfo['stats'];
 
 export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 	CACTUS_KNIFE: {
@@ -137,6 +210,11 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		},
 		name: 'Fungi Cutter',
 		wiki: 'https://wiki.hypixel.net/Fungi_Cutter',
+		upgrade: {
+			id: 'DAEDALUS_AXE',
+			reason: UpgradeReason.Situational,
+			why: 'Paired with the Chimera enchantment, a Daedalus Axe provides more fortune than a Fungi Cutter.',
+		},
 		baseStats: {
 			[Stat.FarmingFortune]: 30,
 		},
@@ -470,6 +548,40 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		name: "Euclid's Wheat Hoe",
 		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe#Rare_',
 		stats: t3hoeStats,
+	},
+
+	DAEDALUS_AXE: {
+		skyblockId: 'DAEDALUS_AXE',
+		crop: Crop.Mushroom, // No specific crop for this, but best for mushrooms
+		maxRarity: Rarity.Mythic,
+		reforgeType: ReforgeTarget.Sword,
+		type: FarmingToolType.None,
+		upgrade: {
+			id: 'STARRED_DAEDALUS_AXE',
+			reason: UpgradeReason.NextTier,
+		},
+		name: 'Daedalus Axe',
+		wiki: 'https://wiki.hypixel.net/Daedalus_Axe',
+		computedStats: (opt) => opt.selectedPet?.getChimeraAffectedStats(1) ?? {},
+	},
+	STARRED_DAEDALUS_AXE: {
+		skyblockId: 'STARRED_DAEDALUS_AXE',
+		crop: Crop.Mushroom, // No specific crop for this, but best for mushrooms
+		maxRarity: Rarity.Mythic,
+		reforgeType: ReforgeTarget.Sword,
+		type: ReforgeTarget.Sword,
+		name: '⚚ Daedalus Axe',
+		wiki: 'https://wiki.hypixel.net/Daedalus_Axe#Upgraded__',
+		computedStats: (opt) => opt.selectedPet?.getChimeraAffectedStats(1) ?? {},
+	},
+
+	HOE_OF_NO_TILLING: {
+		skyblockId: 'HOE_OF_NO_TILLING',
+		maxRarity: Rarity.Rare,
+		reforgeType: ReforgeTarget.Hoe,
+		type: FarmingToolType.Other,
+		name: 'Hoe of No Tilling',
+		wiki: 'https://wiki.hypixel.net/Hoe_of_No_Tilling',
 	},
 };
 

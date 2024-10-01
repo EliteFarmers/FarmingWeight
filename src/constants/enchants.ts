@@ -1,4 +1,4 @@
-import { PlayerOptions } from '../player/player';
+import { FarmingPlayer, PlayerOptions } from '../player/player';
 import { Crop } from './crops';
 import { CROP_MILESTONES, GARDEN_VISITORS } from './garden';
 import { ReforgeTarget } from './reforges';
@@ -12,6 +12,7 @@ export enum EnchantTierProcurement {
 
 export interface FarmingEnchantTier {
 	stats?: Partial<Record<Stat, number>>;
+	computedStats?: (opt: FarmingPlayer) => Partial<Record<Stat, number>>;
 	computed?: Partial<Record<Stat, (opt: PlayerOptions) => number>>;
 	cropComputed?: Partial<Record<Stat, (crop: Crop, opt?: PlayerOptions) => number>>;
 	procurement?: EnchantTierProcurement;
@@ -25,6 +26,7 @@ export interface FarmingEnchant {
 	maxLevel: number;
 	cropSpecific?: Crop;
 	levels: Record<number, FarmingEnchantTier>;
+	computedLevels?: (opt: PlayerOptions) => Record<number, FarmingEnchantTier>;
 	maxStats?: Partial<Record<Stat, number>>;
 	levelRequirement?: number;
 }
@@ -344,6 +346,41 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		maxStats: {
 			[Stat.FarmingFortune]: 0.25 * Object.keys(GARDEN_VISITORS).length,
 		},
+	},
+	ultimate_chimera: {
+		name: 'Chimera',
+		appliesTo: [ReforgeTarget.Sword],
+		wiki: 'https://wiki.hypixel.net/Chimera_Enchantment',
+		levelRequirement: 31,
+		minLevel: 1,
+		maxLevel: 5,
+		levels: {
+			1: {},
+			2: {},
+			3: {},
+			4: {},
+			5: {},
+		},
+		computedLevels: (opt) => {
+			const pet = opt.selectedPet;
+			return {
+				1: {
+					stats: pet?.getChimeraAffectedStats(0.2) ?? {}
+				},
+				2: {
+					stats: pet?.getChimeraAffectedStats(0.4) ?? {}
+				},
+				3: {
+					stats: pet?.getChimeraAffectedStats(0.6) ?? {}
+				},
+				4: {
+					stats: pet?.getChimeraAffectedStats(0.8) ?? {}
+				},
+				5: {
+					stats: pet?.getChimeraAffectedStats(1) ?? {}
+				},
+			}
+		}
 	},
 	turbo_cactus: {
 		name: 'Turbo-Cacti',

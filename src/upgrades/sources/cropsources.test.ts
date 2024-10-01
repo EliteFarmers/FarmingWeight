@@ -70,6 +70,7 @@ test('Wheat fortune test', () => {
 		},
 		{
 			name: 'Exportable Crop',
+			api: false,
 			fortune: 12,
 			maxFortune: 12,
 			ratio: 1,
@@ -208,6 +209,7 @@ test('Carrot fortune test', () => {
 			fortune: 12,
 			maxFortune: 12,
 			ratio: 1,
+			api: false,
 		},
 		{
 			name: 'Garden Crop Upgrade',

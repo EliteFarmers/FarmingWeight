@@ -39,6 +39,7 @@ export enum ReforgeTarget {
 	Axe = 'Axe',
 	Armor = 'Armor',
 	Equipment = 'Equipment',
+	Sword = 'Sword',
 }
 
 export interface ReforgeTier {

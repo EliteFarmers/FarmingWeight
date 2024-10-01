@@ -1,4 +1,4 @@
-import { ARMOR_INFO, ARMOR_SET_BONUS, GEAR_SLOTS, GearSlot } from "../../items/armor";
+import { ARMOR_INFO, ARMOR_SET_BONUS, GEAR_SLOTS, GearSlot, GearSlotInfo } from "../../items/armor";
 import { EQUIPMENT_INFO } from "../../items/equipment";
 import { ReforgeTarget } from "../../constants/reforges";
 import { Stat } from "../../constants/stats";
@@ -8,6 +8,9 @@ import { UpgradeableInfo } from "../../fortune/upgradeable";
 import { DynamicFortuneSource } from "./toolsources";
 
 export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
+	...Object.entries(GEAR_SLOTS)
+		.filter(([, info ]) => info.target === ReforgeTarget.Armor)
+		.map<DynamicFortuneSource<ArmorSet>>(gearslot),
 	{
 		name: 'Armor Set Bonus',
 		exists: () => true,
@@ -17,7 +20,13 @@ export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 			return acc + (bonus.bonus.stats[bonus.count]?.[Stat.FarmingFortune] ?? 0);
 		}, 0)
 	},
-	...Object.entries(GEAR_SLOTS).map<DynamicFortuneSource<ArmorSet>>(([ slot, info ]) => ({
+	...Object.entries(GEAR_SLOTS)
+		.filter(([, info ]) => info.target === ReforgeTarget.Equipment)
+		.map<DynamicFortuneSource<ArmorSet>>(gearslot),
+];
+
+function gearslot([ slot, info ]: [ string, GearSlotInfo ]): DynamicFortuneSource<ArmorSet> {
+	return {
 		name: slot,
 		exists: () => true,
 		wiki: (set) => {
@@ -65,5 +74,5 @@ export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 				maxInfo: (fake ? fake : piece)?.getLastItemUpgrade()?.info
 			}
 		},
-	}))
-];
+	};
+}

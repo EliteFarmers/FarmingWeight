@@ -1,6 +1,6 @@
 import { Crop } from "../constants/crops";
-import { Rarity, Reforge, REFORGES, ReforgeTarget, ReforgeTier } from "../constants/reforges";
-import { Stat } from "../constants/stats";
+import { Rarity, RarityRecord, Reforge, REFORGES, ReforgeTarget, ReforgeTier } from "../constants/reforges";
+import { Stat, StatsRecord } from "../constants/stats";
 import { FortuneSourceProgress, FortuneUpgrade, Upgrade } from "../constants/upgrades";
 import { PlayerOptions } from "../player/player";
 import { getItemUpgrades, getLastItemUpgradeableTo, getNextItemUpgradeableTo } from "../upgrades/upgrades";
@@ -16,8 +16,9 @@ export interface UpgradeableInfo {
 		peridot: number;
 	};
 	maxRarity: Rarity;
-	stats?: Partial<Record<Rarity, Partial<Record<Stat, number>>>>;
+	stats?: RarityRecord<StatsRecord>;
 	baseStats?: Partial<Record<Stat, number>>;
+	computedStats?: (opt: PlayerOptions) => Partial<Record<Stat, number>>;
 }
 
 export interface Upgradeable {
@@ -95,6 +96,11 @@ export class UpgradeableBase implements Upgradeable {
 
 	getFortune(): number {
 		return this.fortune;
+	}
+
+	getCalculatedStats(): Partial<Record<Stat, number>> {
+		if (!this.info.computedStats || !this.options) return {};
+		return this.info.computedStats?.(this.options) ?? {};
 	}
 
 	getUpgrades(): FortuneUpgrade[] {

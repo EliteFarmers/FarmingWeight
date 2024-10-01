@@ -46,7 +46,7 @@ export type StatValueCompound<T, C = PlayerOptions> = StatValueFlat<T, C> & Stat
 export type StatsRecord<T = unknown, C = PlayerOptions> = Partial<Record<Stat, StatValue<T, C>>>;
 
 export interface StatValueBase<T, C = PlayerOptions> {
-	name: string;
+	name?: string;
 	exists?: (opt: C) => boolean;
 	type?: T;
 }

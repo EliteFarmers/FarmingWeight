@@ -1,7 +1,7 @@
 import { Crop } from '../constants/crops';
 import { FARMING_ENCHANTS } from '../constants/enchants';
 import { REFORGES, Rarity, Reforge, ReforgeTier } from '../constants/reforges';
-import { Stat } from "../constants/stats";
+import { getStatValue, Stat } from "../constants/stats";
 import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../items/tools';
 import { getPeridotFortune } from '../util/gems';
 import { getRarityFromLore, previousRarity } from '../util/itemstats';
@@ -16,7 +16,7 @@ import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources';
 
 export class FarmingTool extends UpgradeableBase {
 	public declare item: EliteItemDto;
-	public declare crop: Crop;
+	public declare crop?: Crop;
 	public declare info: FarmingToolInfo;
 
 	public override get type() {
@@ -138,9 +138,16 @@ export class FarmingTool extends UpgradeableBase {
 			sum += base;
 		}
 
+		// Computed stats
+		const computed = this.getCalculatedStats()?.[Stat.FarmingFortune] ?? 0;
+		if (computed > 0) {
+			this.fortuneBreakdown['Item Ability'] = computed;
+			sum += computed;
+		}
+
 		// Tool rarity stats
 		const baseRarity = this.recombobulated ? previousRarity(this.rarity) : this.rarity;
-		const rarityStats = this.tool.stats?.[baseRarity]?.[Stat.FarmingFortune] ?? 0;
+		const rarityStats = getStatValue(this.tool.stats?.[baseRarity]?.[Stat.FarmingFortune]);
 
 		if (rarityStats > 0) {
 			this.fortuneBreakdown['Tool Stats'] = rarityStats;
@@ -226,7 +233,12 @@ export class FarmingTool extends UpgradeableBase {
 		return false;
 	}
 
+	supportsCultivating(): boolean {
+		return FARMING_ENCHANTS.cultivating?.appliesTo.includes(this.type) ?? false;
+	}
+
 	isMissingDedication() {
+		if (!this.crop) return false;
 		return this.item?.enchantments?.dedication && (this.options?.milestones?.[this.crop] ?? 0) <= 0;
 	}
 

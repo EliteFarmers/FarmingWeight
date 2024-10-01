@@ -51,9 +51,16 @@ test("General fortune sources", () => {
 			fortune: 50,
 			maxFortune: 50,
 			ratio: 1,
+			api: false,
 		},
 		{
 			name: 'Refined Dark Cacao Truffle',
+			fortune: 0,
+			maxFortune: 5,
+			ratio: 0,
+		},
+		{
+			name: 'Relic of Power',
 			fortune: 0,
 			maxFortune: 5,
 			ratio: 0,

@@ -267,6 +267,7 @@ export class FarmingPlayer {
 
 		// Accessories, only count highest fortune from each family
 		const families = new Map<string, FarmingAccessory>();
+		this.activeAccessories = [];
 		for (const accessory of this.accessories.filter((a) => a.fortune > 0).sort((a, b) => b.fortune - a.fortune)) {
 			if (accessory.info.family) {
 				if (!families.has(accessory.info.family)) {
@@ -420,6 +421,10 @@ export class FarmingPlayer {
 
 	getBestTool(crop: Crop) {
 		return this.tools.find((t) => t.crop === crop);
+	}
+
+	getSelectedCropTool(crop: Crop) {
+		return this.selectedTool?.crop === crop ? this.selectedTool : this.getBestTool(crop);
 	}
 }
 
