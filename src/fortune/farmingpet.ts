@@ -35,6 +35,11 @@ export class FarmingPet {
 		this.options = options;
 		this.pet = pet;
 
+		if (!this.pet.uuid) {
+			// Generate a UUID for the pet
+			this.pet.uuid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+		}
+
 		this.info = FARMING_PETS[pet.type as keyof typeof FARMING_PETS];
 		if (!this.info) {
 			throw new Error(`Invalid farming pet type: ${pet.type}`);
