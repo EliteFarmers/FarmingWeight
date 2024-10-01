@@ -220,8 +220,8 @@ test('Daedalus Axe Test', () => {
 		{
 			name: 'Item Ability',
 			fortune: 110,
-			maxFortune: 110,
-			ratio: 1,
+			maxFortune: 170,
+			ratio: 110 / 170,
 		},
 		{
 			name: 'Chimera',

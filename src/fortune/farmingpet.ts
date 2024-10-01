@@ -8,7 +8,7 @@ import {
 	FarmingPets,
 	PET_LEVELS,
 } from '../items/pets';
-import { Rarity } from '../constants/reforges';
+import { Rarity, RARITY_COLORS } from '../constants/reforges';
 import { getStatValue, Stat } from "../constants/stats";
 import { getRarityFromLore } from '../util/itemstats';
 import { EliteItemDto } from './item';
@@ -114,6 +114,10 @@ export class FarmingPet {
 		this.breakdown = breakdown;
 		this.fortune = fortune;
 		return fortune;
+	}
+
+	getFormattedName() {
+		return '[' + this.level + '] ' + RARITY_COLORS[this.rarity] + this.info.name;
 	}
 
 	getChimeraAffectedStats(multiplier: number): Record<Stat, number> {

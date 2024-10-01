@@ -212,7 +212,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		wiki: 'https://wiki.hypixel.net/Fungi_Cutter',
 		upgrade: {
 			id: 'DAEDALUS_AXE',
-			reason: UpgradeReason.Situational,
+			reason: UpgradeReason.DeadEnd,
 			why: 'Paired with the Chimera enchantment, a Daedalus Axe provides more fortune than a Fungi Cutter.',
 		},
 		baseStats: {

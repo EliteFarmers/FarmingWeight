@@ -49,3 +49,11 @@ export const REFINED_TRUFFLE_SOURCE: FortuneSource = {
 	maxLevel: 5,
 	wiki: 'https://wiki.hypixel.net/Refined_Dark_Cacao_Truffle'
 };
+
+export const COCOA_FORTUNE_UPGRADE: FortuneSource = {
+	name: 'Cocoa Fortune Upgrade',
+	cropSpecific: true,
+	fortunePerLevel: 1,
+	maxLevel: 25,
+	wiki: 'https://wiki.hypixel.net/Chocolate_Factory#Chocolate_Shop'
+};

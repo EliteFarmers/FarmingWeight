@@ -87,6 +87,12 @@ test('Wheat fortune test', () => {
 			maxFortune: 30,
 			ratio: 1,
 		},
+		{
+			name: 'Personal Best',
+			fortune: 0,
+			maxFortune: 100,
+			ratio: 0,
+		}
 	]);
 });
 
@@ -132,6 +138,12 @@ test('Potato fortune test', () => {
 			maxFortune: 30,
 			ratio: 20 / 30,
 		},
+		{
+			name: 'Personal Best',
+			fortune: 0,
+			maxFortune: 100,
+			ratio: 0,
+		}
 	]);
 });
 
@@ -171,6 +183,12 @@ test('Nether Wart fortune test', () => {
 			maxFortune: 30,
 			ratio: 0,
 		},
+		{
+			name: 'Personal Best',
+			fortune: 0,
+			maxFortune: 100,
+			ratio: 0,
+		}
 	]);
 });
 
@@ -223,6 +241,12 @@ test('Carrot fortune test', () => {
 			maxFortune: 30,
 			ratio: 10 / 30,
 		},
+		{
+			name: 'Personal Best',
+			fortune: 0,
+			maxFortune: 100,
+			ratio: 0,
+		}
 	]);
 });
 
@@ -265,5 +289,11 @@ test('Melon fortune test', () => {
 			maxFortune: 30,
 			ratio: 0,
 		},
+		{
+			name: 'Personal Best',
+			fortune: 0,
+			maxFortune: 100,
+			ratio: 0,
+		}
 	]);
 });

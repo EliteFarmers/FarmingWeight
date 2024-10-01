@@ -77,7 +77,7 @@ export const EQUIPMENT_INFO: Partial<Record<string, FarmingArmorInfo>> = {
 		upgrade: {
 			id: 'LOTUS_CLOAK',
 			reason: UpgradeReason.Situational,
-			why: 'A maxed Zorro\'s Cape provides significantly more fortune during a Jacob\'s contest, but slightly less outside of one compared to a maxed Lotus Cloak.',
+			why: 'A maxed Lotus Cloak provides slightly more fortune outside of a Jacob\'s contest, but significantly less fortune during one compared to a maxed Zorro\'s Cape.',
 		},
 		slot: GearSlot.Cloak,
 		maxRarity: Rarity.Mythic,

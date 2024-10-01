@@ -9,6 +9,7 @@ import {
 	FARMING_LEVEL,
 	UNLOCKED_PLOTS,
 	PEST_BESTIARY_SOURCE,
+	COCOA_FORTUNE_UPGRADE,
 } from '../constants/specific';
 import { getCropDisplayName, getItemIdFromCrop } from '../util/names';
 import { FarmingAccessory } from '../fortune/farmingaccessory';
@@ -34,6 +35,7 @@ export interface FortuneMissingFromAPI {
 	milestones?: Partial<Record<Crop, number>>;
 	exportableCrops?: Partial<Record<Crop, boolean>>;
 	refinedTruffles?: number;
+	cocoaFortuneUpgrade?: number;
 
 	temporaryFortune?: TemporaryFarmingFortune;
 }
@@ -111,16 +113,6 @@ export class FarmingPlayer {
 	constructor(options: PlayerOptions) {
 		this.options = options;
 
-		options.tools ??= [];
-		if (options.tools[0] instanceof FarmingTool) {
-			this.tools = options.tools as FarmingTool[];
-			for (const tool of this.tools) tool.setOptions(options);
-		} else {
-			this.tools = FarmingTool.fromArray(options.tools as EliteItemDto[], options);
-		}
-
-		this.selectedTool = this.options.selectedTool ?? this.tools[0];
-
 		options.pets ??= [];
 		if (options.pets[0] instanceof FarmingPet) {
 			this.pets = (options.pets as FarmingPet[]).sort((a, b) => b.fortune - a.fortune);
@@ -130,6 +122,17 @@ export class FarmingPlayer {
 		}
 
 		this.selectedPet = this.options.selectedPet;
+
+		options.tools ??= [];
+		if (options.tools[0] instanceof FarmingTool) {
+			this.tools = options.tools as FarmingTool[];
+			for (const tool of this.tools) tool.setOptions(options);
+			this.tools.sort((a, b) => b.fortune - a.fortune);
+		} else {
+			this.tools = FarmingTool.fromArray(options.tools as EliteItemDto[], options);
+		}
+
+		this.selectedTool = this.options.selectedTool ?? this.tools[0];
 
 		options.armor ??= [];
 		if (options.armor instanceof ArmorSet) {
@@ -397,6 +400,14 @@ export class FarmingPlayer {
 
 			breakdown[extra.name ?? 'Extra Fortune'] = extra.fortune;
 			sum += extra.fortune;
+		}
+
+		if (crop === Crop.CocoaBeans) {
+			const upgrade = getFortune(this.options.cocoaFortuneUpgrade, COCOA_FORTUNE_UPGRADE);
+			if (upgrade > 0) {
+				breakdown['Cocoa Fortune Upgrade'] = upgrade;
+				sum += upgrade;
+			}
 		}
 
 		return {

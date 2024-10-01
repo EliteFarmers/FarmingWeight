@@ -1,11 +1,13 @@
 import { FARMING_ACCESSORIES_INFO } from "../../items/accessories";
 import { Crop, CROP_INFO, EXPORTABLE_CROP_FORTUNE } from "../../constants/crops";
-import { GARDEN_CROP_UPGRADES } from "../../constants/specific";
+import { COCOA_FORTUNE_UPGRADE, GARDEN_CROP_UPGRADES } from "../../constants/specific";
 import { Stat } from "../../constants/stats";
 import { FARMING_TOOLS, FarmingToolInfo } from "../../items/tools";
 import { FarmingTool } from "../../fortune/farmingtool";
 import { FarmingPlayer } from "../../player/player";
 import { DynamicFortuneSource } from "./toolsources";
+import { fortuneFromPersonalBestContest } from "../../constants/personalbests";
+import { getCropDisplayName, getItemIdFromCrop } from "../../util/names";
 
 export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer, crop: Crop }>[] = [
 	{
@@ -58,12 +60,21 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 		}
 	},
 	{
-		name: 'Garden Crop Upgrade',
+		name: GARDEN_CROP_UPGRADES.name,
 		exists: () => true,
 		wiki: () => GARDEN_CROP_UPGRADES.wiki,
 		max: () => GARDEN_CROP_UPGRADES.fortunePerLevel * GARDEN_CROP_UPGRADES.maxLevel,
 		current: ({ player, crop }) => {
 			return (player.options.cropUpgrades?.[crop] ?? 0) * GARDEN_CROP_UPGRADES.fortunePerLevel;
+		}
+	},
+	{
+		name: COCOA_FORTUNE_UPGRADE.name,
+		exists: ({ crop }) => crop === Crop.CocoaBeans,
+		wiki: () => COCOA_FORTUNE_UPGRADE.wiki,
+		max: () => COCOA_FORTUNE_UPGRADE.fortunePerLevel * COCOA_FORTUNE_UPGRADE.maxLevel,
+		current: ({ player }) => {
+			return (player.options.cocoaFortuneUpgrade ?? 0) * COCOA_FORTUNE_UPGRADE.fortunePerLevel;
 		}
 	},
 	{
@@ -94,5 +105,17 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer,
 				maxInfo: highest?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT
 			};
 		},
+	},
+	{
+		name: 'Personal Best',
+		exists: () => true,
+		wiki: () => 'https://wiki.hypixel.net/Anita#Personal_Bests',
+		max: () => 100,
+		current: ({ player, crop }) => {
+			const personalBest =
+				player.options.personalBests?.[getItemIdFromCrop(crop)] ??
+				player.options.personalBests?.[getCropDisplayName(crop).replace(/ /g, '')];
+			return fortuneFromPersonalBestContest(crop, personalBest ?? 0);
+		}
 	}
 ];

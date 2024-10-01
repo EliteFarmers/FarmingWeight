@@ -57,8 +57,8 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	{
 		name: 'Item Ability',
 		exists: (tool) => tool.info.computedStats !== undefined,
-		// Temporary set to max of 110 for deadaalus axe
-		max: () => 110,
+		// Temporary set to max of 170 for deadaalus axe
+		max: () => 170,
 		current: (tool) => {
 			return tool.getCalculatedStats()[Stat.FarmingFortune] ?? 0;
 		}
