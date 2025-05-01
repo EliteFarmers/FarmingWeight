@@ -1,8 +1,14 @@
+import { ComposterUpgrade } from '../constants/composter.js';
 import { Crop } from '../constants/crops.js';
 import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
+import { SpecialCrop } from '../constants/specialcrops.js';
 
 export function getCropDisplayName(crop: Crop) {
 	return cropDisplayNames[crop] ?? 'Unknown Crop';
+}
+
+export function getSpecialCropDisplayName(crop: SpecialCrop) {
+	return specialCropToName[crop] ?? 'Unknown Special Crop';
 }
 
 export function getCropFromName(name: string) {
@@ -128,4 +134,11 @@ const itemIdsToCrop: Record<Crop, string> = {
 	[Crop.SugarCane]: 'SUGAR_CANE',
 	[Crop.Wheat]: 'WHEAT',
 	[Crop.Seeds]: 'SEEDS',
+};
+
+const specialCropToName: Record<SpecialCrop, string> = {
+	[SpecialCrop.Cropie]: 'Cropie',
+	[SpecialCrop.Squash]: 'Squash',
+	[SpecialCrop.Fermento]: 'Fermento',
+	[SpecialCrop.CondensedFermento]: 'Condensed Fermento',
 };

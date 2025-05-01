@@ -4,6 +4,7 @@ export enum SpecialCrop {
 	Cropie = 'Cropie',
 	Squash = 'Squash',
 	Fermento = 'Fermento',
+	CondensedFermento = 'CondensedFermento',
 }
 
 export const SPECIAL_CROP_INFO = {
@@ -21,6 +22,11 @@ export const SPECIAL_CROP_INFO = {
 		name: 'Fermento',
 		npc: 250_000,
 		rates: [0.00005, 0.00005, 0.00006, 0.00007],
+	},
+	[SpecialCrop.CondensedFermento]: {
+		name: 'Condensed Fermento',
+		npc: 2_250_000,
+		rates: [0, 0, 0, 0],
 	},
 };
 
