@@ -11,6 +11,10 @@ export function getSpecialCropDisplayName(crop: SpecialCrop) {
 	return specialCropToName[crop] ?? 'Unknown Special Crop';
 }
 
+export function getComposterUpgradeDisplayName(upgrade: ComposterUpgrade) {
+	return upgradeTypeToName[upgrade] ?? 'Unknown Upgrade';
+}
+
 export function getCropFromName(name: string) {
 	const fromDisplay = displayNamesToCrop[name];
 	if (fromDisplay) return fromDisplay;
@@ -141,4 +145,12 @@ const specialCropToName: Record<SpecialCrop, string> = {
 	[SpecialCrop.Squash]: 'Squash',
 	[SpecialCrop.Fermento]: 'Fermento',
 	[SpecialCrop.CondensedFermento]: 'Condensed Fermento',
+};
+
+const upgradeTypeToName: Record<ComposterUpgrade, string> = {
+	[ComposterUpgrade.COMPOSTER_SPEED]: 'Composter Speed',
+	[ComposterUpgrade.MULTI_DROP]: 'Multi Drop',
+	[ComposterUpgrade.FUEL_CAP]: 'Fuel Cap',
+	[ComposterUpgrade.ORGANIC_MATTER_CAP]: 'Organic Matter Cap',
+	[ComposterUpgrade.COST_REDUCTION]: 'Cost Reduction',
 };
