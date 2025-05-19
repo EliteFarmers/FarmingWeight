@@ -120,16 +120,16 @@ export const PEST_TO_NAME: Record<Pest, string> = {
 };
 
 export const NAME_TO_PEST: Record<string, Pest> = {
-	'Mite': Pest.Mite,
-	'Cricket': Pest.Cricket,
-	'Moth': Pest.Moth,
-	'Earthworm': Pest.Worm,
-	'Slug': Pest.Slug,
-	'Beetle': Pest.Beetle,
-	'Locust': Pest.Locust,
-	'Rat': Pest.Rat,
-	'Mosquito': Pest.Mosquito,
-	'Fly': Pest.Fly,
+	Mite: Pest.Mite,
+	Cricket: Pest.Cricket,
+	Moth: Pest.Moth,
+	Earthworm: Pest.Worm,
+	Slug: Pest.Slug,
+	Beetle: Pest.Beetle,
+	Locust: Pest.Locust,
+	Rat: Pest.Rat,
+	Mosquito: Pest.Mosquito,
+	Fly: Pest.Fly,
 	'Field Mouse': Pest.Mouse,
 };
 

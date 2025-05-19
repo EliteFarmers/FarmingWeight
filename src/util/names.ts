@@ -1,8 +1,19 @@
 import { COMPOSTER_UPGRADE_TYPE_TO_NAME, ComposterUpgrade } from '../constants/composter.js';
-import { Crop, CROP_TO_ELITE_CROP, CROP_TO_MINION, CROP_TO_NAME, CROP_TO_PROPER_CROP, CROP_UNICODE_EMOJIS, FULL_NAME_TO_CROP, CROP_ID_TO_CROP, PROPER_CROP_TO_CROP, SHORT_NAME_TO_CROP } from '../constants/crops.js';
-import { CROP_TO_PEST, NAME_TO_PEST, Pest, PEST_TO_CROP, PEST_TO_NAME } from '../constants/pests.js';
+import {
+	CROP_ID_TO_CROP,
+	CROP_TO_ELITE_CROP,
+	CROP_TO_MINION,
+	CROP_TO_NAME,
+	CROP_TO_PROPER_CROP,
+	CROP_UNICODE_EMOJIS,
+	Crop,
+	FULL_NAME_TO_CROP,
+	PROPER_CROP_TO_CROP,
+	SHORT_NAME_TO_CROP,
+} from '../constants/crops.js';
+import { CROP_TO_PEST, NAME_TO_PEST, PEST_TO_CROP, PEST_TO_NAME, Pest } from '../constants/pests.js';
 import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
-import { SpecialCrop, SPECIAL_CROP_TO_NAME } from '../constants/specialcrops.js';
+import { SPECIAL_CROP_TO_NAME, SpecialCrop } from '../constants/specialcrops.js';
 
 export function getCropDisplayName(crop: Crop) {
 	return CROP_TO_PROPER_CROP[crop] ?? 'Unknown Crop';
