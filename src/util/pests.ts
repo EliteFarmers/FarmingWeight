@@ -10,8 +10,9 @@ import {
 } from '../constants/pests.js';
 
 export function fortuneFromPests(pests: number): number {
-	return pests * 4;
+	return Math.min(200, Math.max(0, pests * 5));
 }
+
 
 export function unlockedPestBestiaryTiers(bestiaryKills: Record<string, number>): number {
 	let reachedBrackets = 0;
