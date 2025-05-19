@@ -239,6 +239,6 @@ export const PEST_COLLECTION_ADJUSTMENTS: Omit<Record<Pest, Record<number, numbe
 	},
 };
 
-export const MAX_PEST_EXCHANGE = 200;
+export const MAX_PEST_EXCHANGE = 40;
 
 export const PEST_EXCHANGE_FORTUNE_PER_PEST = 5;

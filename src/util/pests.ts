@@ -12,7 +12,9 @@ import {
 } from '../constants/pests.js';
 
 export function fortuneFromPests(pests: number): number {
-	return Math.min(MAX_PEST_EXCHANGE, Math.max(0, pests * PEST_EXCHANGE_FORTUNE_PER_PEST));
+	pests = Math.min(MAX_PEST_EXCHANGE, Math.max(0, pests));
+
+	return pests * PEST_EXCHANGE_FORTUNE_PER_PEST;
 }
 
 export function unlockedPestBestiaryTiers(bestiaryKills: Record<string, number>): number {
