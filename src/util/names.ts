@@ -1,156 +1,90 @@
-import { ComposterUpgrade } from '../constants/composter.js';
-import { Crop } from '../constants/crops.js';
+import { COMPOSTER_UPGRADE_TYPE_TO_NAME, ComposterUpgrade } from '../constants/composter.js';
+import { Crop, CROP_TO_ELITE_CROP, CROP_TO_MINION, CROP_TO_NAME, CROP_TO_PROPER_CROP, CROP_UNICODE_EMOJIS, FULL_NAME_TO_CROP, CROP_ID_TO_CROP, PROPER_CROP_TO_CROP, SHORT_NAME_TO_CROP } from '../constants/crops.js';
+import { CROP_TO_PEST, NAME_TO_PEST, Pest, PEST_TO_CROP, PEST_TO_NAME } from '../constants/pests.js';
 import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
-import { SpecialCrop } from '../constants/specialcrops.js';
+import { SpecialCrop, SPECIAL_CROP_TO_NAME } from '../constants/specialcrops.js';
 
 export function getCropDisplayName(crop: Crop) {
-	return cropDisplayNames[crop] ?? 'Unknown Crop';
+	return CROP_TO_PROPER_CROP[crop] ?? 'Unknown Crop';
 }
 
 export function getSpecialCropDisplayName(crop: SpecialCrop) {
-	return specialCropToName[crop] ?? 'Unknown Special Crop';
+	return SPECIAL_CROP_TO_NAME[crop] ?? 'Unknown Special Crop';
 }
 
 export function getComposterUpgradeDisplayName(upgrade: ComposterUpgrade) {
-	return upgradeTypeToName[upgrade] ?? 'Unknown Upgrade';
+	return COMPOSTER_UPGRADE_TYPE_TO_NAME[upgrade] ?? 'Unknown Upgrade';
 }
 
 export function getCropFromName(name: string) {
-	const fromDisplay = displayNamesToCrop[name];
+	const fromDisplay = PROPER_CROP_TO_CROP[name];
 	if (fromDisplay) return fromDisplay;
 
-	const fromShort = shortNamesToCrop[name];
+	const fromShort = SHORT_NAME_TO_CROP[name];
 	if (fromShort) return fromShort;
 
-	const fromFull = fullNamesToCrop[name.toLowerCase().replace(/ /g, '')];
+	// this covers ELITE_CROP_TO_CROP
+	const fromFull = FULL_NAME_TO_CROP[name.toLowerCase().replace(/ /g, '')];
 	if (fromFull) return fromFull;
 
-	return getCropFromItemId(name);
+	// this covers API_CROP_TO_CROP_NAME
+	const fromId = CROP_ID_TO_CROP[name];
+	if (fromId) return fromId;
+
+	return Crop.Wheat;
 }
 
-export function getCropFromItemId(itemId: string) {
-	return cropItemIds[itemId];
+export function getProperCropFromCrop(crop: Crop) {
+	return CROP_TO_PROPER_CROP[crop];
+}
+
+export function getCropEmojiFromCrop(crop: Crop) {
+	return CROP_UNICODE_EMOJIS[crop];
+}
+
+export function getEliteCropFromCrop(crop: Crop) {
+	return CROP_TO_ELITE_CROP[crop];
+}
+
+export function getPestFromCrop(crop: Crop) {
+	return CROP_TO_PEST[crop];
+}
+
+export function getMinionFromCrop(crop: Crop) {
+	return CROP_TO_MINION[crop] ?? 'WHEAT';
+}
+
+export function getItemIdFromCrop(crop: Crop) {
+	return CROP_TO_NAME[crop];
+}
+
+export function getPestFromName(name: string) {
+	const fromDisplay = NAME_TO_PEST[name];
+	if (fromDisplay) return fromDisplay;
+
+	return Pest.Fly;
+}
+
+export function getCropFromPest(pest: Pest) {
+	return PEST_TO_CROP[pest] ?? Crop.Wheat;
+}
+
+export function getPestNameFromPest(pest: Pest) {
+	return PEST_TO_NAME[pest];
 }
 
 export function getCropFromContestKey(contestKey: string) {
 	const split = contestKey.split(':');
-	if (!split.length) return undefined;
+	if (!split.length) return Crop.Wheat;
 
 	const crop = split.at(-1);
-	if (!crop) return undefined;
+	if (!crop) return Crop.Wheat;
 
 	if (crop === '3') return Crop.CocoaBeans;
 
-	return cropItemIds[crop];
-}
-
-export function getItemIdFromCrop(crop: Crop) {
-	return itemIdsToCrop[crop];
+	return CROP_ID_TO_CROP[crop] ?? Crop.Wheat;
 }
 
 export function getRarityColor(rarity: Rarity) {
 	return RARITY_COLORS[rarity];
 }
-
-const cropDisplayNames: Record<Crop, string> = {
-	[Crop.Cactus]: 'Cactus',
-	[Crop.Carrot]: 'Carrot',
-	[Crop.CocoaBeans]: 'Cocoa Beans',
-	[Crop.Melon]: 'Melon',
-	[Crop.Mushroom]: 'Mushroom',
-	[Crop.NetherWart]: 'Nether Wart',
-	[Crop.Potato]: 'Potato',
-	[Crop.Pumpkin]: 'Pumpkin',
-	[Crop.SugarCane]: 'Sugar Cane',
-	[Crop.Wheat]: 'Wheat',
-	[Crop.Seeds]: 'Seeds',
-};
-
-const displayNamesToCrop: Record<string, Crop> = {
-	Cactus: Crop.Cactus,
-	Carrot: Crop.Carrot,
-	'Cocoa Beans': Crop.CocoaBeans,
-	Melon: Crop.Melon,
-	Mushroom: Crop.Mushroom,
-	'Nether Wart': Crop.NetherWart,
-	Potato: Crop.Potato,
-	Pumpkin: Crop.Pumpkin,
-	'Sugar Cane': Crop.SugarCane,
-	Wheat: Crop.Wheat,
-	Seeds: Crop.Seeds,
-};
-
-const shortNamesToCrop: Record<string, Crop> = {
-	cactus: Crop.Cactus,
-	carrot: Crop.Carrot,
-	cocoa: Crop.CocoaBeans,
-	melon: Crop.Melon,
-	mushroom: Crop.Mushroom,
-	wart: Crop.NetherWart,
-	potato: Crop.Potato,
-	pumpkin: Crop.Pumpkin,
-	cane: Crop.SugarCane,
-	wheat: Crop.Wheat,
-	seeds: Crop.Seeds,
-};
-
-const fullNamesToCrop: Record<string, Crop> = {
-	cactus: Crop.Cactus,
-	carrot: Crop.Carrot,
-	cocoabeans: Crop.CocoaBeans,
-	cocoabean: Crop.CocoaBeans,
-	melon: Crop.Melon,
-	mushroom: Crop.Mushroom,
-	netherwart: Crop.NetherWart,
-	netherwarts: Crop.NetherWart,
-	potato: Crop.Potato,
-	pumpkin: Crop.Pumpkin,
-	sugarcane: Crop.SugarCane,
-	wheat: Crop.Wheat,
-	seeds: Crop.Seeds,
-};
-
-const cropItemIds: Record<string, Crop> = {
-	CACTUS: Crop.Cactus,
-	CARROT_ITEM: Crop.Carrot,
-	'INK_SACK:3': Crop.CocoaBeans,
-	MELON: Crop.Melon,
-	BROWN_MUSHROOM: Crop.Mushroom,
-	RED_MUSHROOM: Crop.Mushroom,
-	MUSHROOM_COLLECTION: Crop.Mushroom,
-	NETHER_STALK: Crop.NetherWart,
-	POTATO_ITEM: Crop.Potato,
-	PUMPKIN: Crop.Pumpkin,
-	SUGAR_CANE: Crop.SugarCane,
-	WHEAT: Crop.Wheat,
-	SEEDS: Crop.Seeds,
-};
-
-const itemIdsToCrop: Record<Crop, string> = {
-	[Crop.Cactus]: 'CACTUS',
-	[Crop.Carrot]: 'CARROT_ITEM',
-	[Crop.CocoaBeans]: 'INK_SACK:3',
-	[Crop.Melon]: 'MELON',
-	[Crop.Mushroom]: 'BROWN_MUSHROOM',
-	[Crop.NetherWart]: 'NETHER_STALK',
-	[Crop.Potato]: 'POTATO_ITEM',
-	[Crop.Pumpkin]: 'PUMPKIN',
-	[Crop.SugarCane]: 'SUGAR_CANE',
-	[Crop.Wheat]: 'WHEAT',
-	[Crop.Seeds]: 'SEEDS',
-};
-
-const specialCropToName: Record<SpecialCrop, string> = {
-	[SpecialCrop.Cropie]: 'Cropie',
-	[SpecialCrop.Squash]: 'Squash',
-	[SpecialCrop.Fermento]: 'Fermento',
-	[SpecialCrop.CondensedFermento]: 'Condensed Fermento',
-};
-
-const upgradeTypeToName: Record<ComposterUpgrade, string> = {
-	[ComposterUpgrade.COMPOSTER_SPEED]: 'Composter Speed',
-	[ComposterUpgrade.MULTI_DROP]: 'Multi Drop',
-	[ComposterUpgrade.FUEL_CAP]: 'Fuel Cap',
-	[ComposterUpgrade.ORGANIC_MATTER_CAP]: 'Organic Matter Cap',
-	[ComposterUpgrade.COST_REDUCTION]: 'Cost Reduction',
-};

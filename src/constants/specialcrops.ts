@@ -45,3 +45,10 @@ export const MATCHING_SPECIAL_CROP: Record<Crop, SpecialCrop> = {
 	[Crop.SugarCane]: SpecialCrop.Fermento,
 	[Crop.Seeds]: SpecialCrop.Fermento,
 };
+
+export const SPECIAL_CROP_TO_NAME: Record<SpecialCrop, string> = {
+	[SpecialCrop.Cropie]: 'Cropie',
+	[SpecialCrop.Squash]: 'Squash',
+	[SpecialCrop.Fermento]: 'Fermento',
+	[SpecialCrop.CondensedFermento]: 'Condensed Fermento',
+};

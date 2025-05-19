@@ -24,3 +24,11 @@ export const COMPOSTER_UPGRADE_CROPS: Record<ComposterUpgrade, [Crop, Crop]> = {
 	[ComposterUpgrade.ORGANIC_MATTER_CAP]: [Crop.Cactus, Crop.CocoaBeans],
 	[ComposterUpgrade.COST_REDUCTION]: [Crop.Mushroom, Crop.NetherWart],
 };
+
+export const COMPOSTER_UPGRADE_TYPE_TO_NAME: Record<ComposterUpgrade, string> = {
+	[ComposterUpgrade.COMPOSTER_SPEED]: 'Composter Speed',
+	[ComposterUpgrade.MULTI_DROP]: 'Multi Drop',
+	[ComposterUpgrade.FUEL_CAP]: 'Fuel Cap',
+	[ComposterUpgrade.ORGANIC_MATTER_CAP]: 'Organic Matter Cap',
+	[ComposterUpgrade.COST_REDUCTION]: 'Cost Reduction',
+};

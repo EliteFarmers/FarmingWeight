@@ -4,14 +4,13 @@ import {
 	FORTUNE_PER_PEST_BRACKET,
 	PEST_COLLECTION_ADJUSTMENTS,
 	PEST_COLLECTION_BRACKETS,
-	PEST_EXCHANGE_RATES,
 	PEST_IDS,
 	PEST_TO_CROP,
 	Pest,
 } from '../constants/pests.js';
 
 export function fortuneFromPests(pests: number): number {
-	return PEST_EXCHANGE_RATES[pests as keyof typeof PEST_EXCHANGE_RATES] ?? 0;
+	return pests * 4;
 }
 
 export function unlockedPestBestiaryTiers(bestiaryKills: Record<string, number>): number {

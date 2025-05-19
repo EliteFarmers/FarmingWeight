@@ -64,50 +64,6 @@ export const BESTIARY_PEST_BRACKETS: Record<Pest, Record<number, number>> = {
 	},
 };
 
-export const PEST_EXCHANGE_RATES = {
-	0: 0,
-	1: 10,
-	2: 20,
-	3: 30,
-	4: 40,
-	5: 50,
-	6: 60,
-	7: 70,
-	8: 80,
-	9: 90,
-	10: 100,
-	11: 105,
-	12: 110,
-	13: 115,
-	14: 120,
-	15: 125,
-	16: 130,
-	17: 135,
-	18: 140,
-	19: 145,
-	20: 150,
-	21: 153,
-	22: 156,
-	23: 159,
-	24: 162,
-	25: 165,
-	26: 168,
-	27: 171,
-	28: 174,
-	29: 177,
-	30: 180,
-	31: 182,
-	32: 184,
-	33: 186,
-	34: 188,
-	35: 190,
-	36: 192,
-	37: 194,
-	38: 196,
-	39: 198,
-	40: 200,
-};
-
 export const PEST_IDS: Pest[] = [
 	Pest.Beetle,
 	Pest.Cricket,
@@ -147,6 +103,34 @@ export const CROP_TO_PEST: Record<Crop, Pest> = {
 	[Crop.SugarCane]: Pest.Mosquito,
 	[Crop.Wheat]: Pest.Fly,
 	[Crop.Seeds]: Pest.Fly, // Same as wheat
+};
+
+export const PEST_TO_NAME: Record<Pest, string> = {
+	[Pest.Mite]: 'Mite',
+	[Pest.Cricket]: 'Cricket',
+	[Pest.Moth]: 'Moth',
+	[Pest.Worm]: 'Earthworm',
+	[Pest.Slug]: 'Slug',
+	[Pest.Beetle]: 'Beetle',
+	[Pest.Locust]: 'Locust',
+	[Pest.Rat]: 'Rat',
+	[Pest.Mosquito]: 'Mosquito',
+	[Pest.Fly]: 'Fly',
+	[Pest.Mouse]: 'Field Mouse',
+};
+
+export const NAME_TO_PEST: Record<string, Pest> = {
+	'Mite': Pest.Mite,
+	'Cricket': Pest.Cricket,
+	'Moth': Pest.Moth,
+	'Earthworm': Pest.Worm,
+	'Slug': Pest.Slug,
+	'Beetle': Pest.Beetle,
+	'Locust': Pest.Locust,
+	'Rat': Pest.Rat,
+	'Mosquito': Pest.Mosquito,
+	'Fly': Pest.Fly,
+	'Field Mouse': Pest.Mouse,
 };
 
 export const PEST_COLLECTION_BRACKETS = [0, 50, 100, 250, 500, 750, 1000];
@@ -243,5 +227,14 @@ export const PEST_COLLECTION_ADJUSTMENTS: Omit<Record<Pest, Record<number, numbe
 		'1000': 81.57232262585057,
 		'5000': 93.18911771428247,
 	},
-	fly: { '50': 0, '100': 0, '250': 0, '500': 0, '750': 0, '1000': 0, '5000': 0, '0': 0 },
+	fly: {
+		'50': 0,
+		'100': 0,
+		'250': 0,
+		'500': 0,
+		'750': 0,
+		'1000': 0,
+		'5000': 0,
+		'0': 0,
+	},
 };
