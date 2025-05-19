@@ -2,15 +2,17 @@ import { Crop } from '../constants/crops.js';
 import {
 	BESTIARY_PEST_BRACKETS,
 	FORTUNE_PER_PEST_BRACKET,
+	MAX_PEST_EXCHANGE,
 	PEST_COLLECTION_ADJUSTMENTS,
 	PEST_COLLECTION_BRACKETS,
+	PEST_EXCHANGE_FORTUNE_PER_PEST,
 	PEST_IDS,
 	PEST_TO_CROP,
 	Pest,
 } from '../constants/pests.js';
 
 export function fortuneFromPests(pests: number): number {
-	return Math.min(200, Math.max(0, pests * 5));
+	return Math.min(MAX_PEST_EXCHANGE, Math.max(0, pests * PEST_EXCHANGE_FORTUNE_PER_PEST));
 }
 
 export function unlockedPestBestiaryTiers(bestiaryKills: Record<string, number>): number {
