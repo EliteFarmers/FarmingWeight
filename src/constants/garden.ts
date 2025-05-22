@@ -501,3 +501,45 @@ export const GARDEN_VISITORS: Partial<Record<string, GardenVisitor>> = {
 		wiki: 'https://wiki.hypixel.net/Zog',
 	},
 };
+
+export const GARDEN_PLOTS: Record<string, number[]> = {
+	beginner_2: [2, 1],
+	beginner_1: [1, 2],
+	beginner_4: [3, 2],
+	beginner_3: [2, 3],
+	intermediate_1: [1, 1],
+	intermediate_3: [3, 1],
+	intermediate_2: [1, 3],
+	intermediate_4: [3, 3],
+	advanced_6: [2, 0],
+	advanced_2: [0, 2],
+	advanced_11: [4, 2],
+	advanced_7: [2, 4],
+	advanced_4: [1, 0],
+	advanced_8: [3, 0],
+	advanced_1: [0, 1],
+	advanced_10: [4, 1],
+	advanced_3: [0, 3],
+	advanced_12: [4, 3],
+	advanced_5: [1, 4],
+	advanced_9: [3, 4],
+	expert_1: [0, 0],
+	expert_3: [4, 0],
+	expert_2: [0, 4],
+	expert_4: [4, 4],
+};
+
+export const CROP_UPGRADE_COSTS: Record<number, number> = {
+	0: 0,
+	1: 5,
+	2: 10,
+	3: 20,
+	4: 50,
+	5: 100,
+	6: 500,
+	7: 1_000,
+	8: 2_000,
+	9: 4_000,
+};
+
+export const CROP_UPGRADES_MAX_COST = 10 * Object.values(CROP_UPGRADE_COSTS).reduce((a, b) => a + b, 0);
