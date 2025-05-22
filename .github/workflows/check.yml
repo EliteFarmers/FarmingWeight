@@ -1,4 +1,4 @@
-name: Test
+name: Check
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    name: Test
+    name: Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +23,7 @@ jobs:
       - name: Run tests
         run: pnpm test
   lint:
-    name: Lint
+    name: Linting
     runs-on: ubuntu-latest 
     steps:
       - name: Checkout
