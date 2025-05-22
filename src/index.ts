@@ -17,6 +17,7 @@ export * from './items/pets.js';
 export * from './items/tools.js';
 export * from './items/accessories.js';
 
+export * from './constants/enchants.js';
 export * from './constants/garden.js';
 export * from './constants/crops.js';
 export * from './constants/reforges.js';
