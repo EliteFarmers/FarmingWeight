@@ -508,6 +508,9 @@ export type MinecraftVersion = (typeof mcVersions)[number];
 export const directions = ['North', 'South', 'East', 'West'] as const;
 export type Direction = (typeof directions)[number];
 
+export const farmingMethods = ['straight', 'running into wall', 'angled into wall'] as const;
+export type FarmingMethod = (typeof farmingMethods)[number];
+
 export interface farmInfo {
 	name: string;
 	description?: string;
@@ -517,7 +520,7 @@ export interface farmInfo {
 		depthStrider?: 1 | 2 | 3;
 		soulSand: boolean;
 		buildVersion: MinecraftVersion;
-		method: 'straight' | 'running into wall' | 'angled into wall' | 'crouching';
+		method: FarmingMethod;
 	};
 	angle: {
 		yaw: number;
@@ -859,6 +862,7 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: ['not a cow', 'Binrich'],
 		notes: [
 			"Easier to build and use than regular cocoa, but wont work if you don't hold D (but doing so is better anyway so it doesn't really matter)",
+			"The trapdoors used are **not needed**",
 		],
 	},
 	blackCatCactus: {
