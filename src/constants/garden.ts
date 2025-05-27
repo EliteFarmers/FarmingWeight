@@ -614,19 +614,19 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'AgitatedSnake92',
-                url: '',
-            },
-            {
-                name: 'MelonKingDe',
-                url: 'https://www.youtube.com/@SunTzu-MelonKing',
-            },
-            {
-                name: 'SunTzu101',
-                url: 'https://www.youtube.com/@SunTzu-MelonKing',
-            },
-        ],
+			{
+				name: 'AgitatedSnake92',
+				url: '',
+			},
+			{
+				name: 'MelonKingDe',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+			{
+				name: 'SunTzu101',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+		],
 		replacedBy: ['easierMelon', 'chisslMelon'],
 		notes: [blackCatNote],
 	},
@@ -661,23 +661,23 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'AgitatedSnake92',
-                url: '',
-            },
-            {
-                name: 'MelonKingDe',
-                url: 'https://www.youtube.com/@SunTzu-MelonKing',
-            },
-            {
-                name: 'IdkVenom',
-                url: 'https://www.youtube.com/@IdkVenomDeadlyIPanda',
-            },
-            {
-                name: 'DeadlyIPanda',
-                url: 'https://www.youtube.com/@IdkVenomDeadlyIPanda',
-             },
-        ],
+			{
+				name: 'AgitatedSnake92',
+				url: '',
+			},
+			{
+				name: 'MelonKingDe',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+			{
+				name: 'IdkVenom',
+				url: 'https://www.youtube.com/@IdkVenomDeadlyIPanda',
+			},
+			{
+				name: 'DeadlyIPanda',
+				url: 'https://www.youtube.com/@IdkVenomDeadlyIPanda',
+			 },
+		],
 	},
 	chisslMelon: {
 		name: 'Chissl Waterless Melon/Pumpkin',
@@ -701,15 +701,15 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'AgitatedSnake92',
-                url: '',
-            },
-            {
-                name: 'Chissl',
-                url: '',
-            },
-        ],
+			{
+				name: 'AgitatedSnake92',
+				url: '',
+			},
+			{
+				name: 'Chissl',
+				url: '',
+			},
+		],
 		notes: ['Very difficult and time consuming to build, only worthwhile for extreme farmers'],
 	},
 	dropdownWheat: {
@@ -762,11 +762,11 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'AgitatedSnake92',
-                url: '',
-            },
-        ],
+			{
+				name: 'AgitatedSnake92',
+				url: '',
+			},
+		],
 	},
 	draipWheat: {
 		name: 'Draip Looping Wheat/Potato/Carrot/Netherwart',
@@ -795,11 +795,11 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'Draip',
-                url: 'https://www.youtube.com/@draiping',
-            },
-        ],
+			{
+				name: 'Draip',
+				url: 'https://www.youtube.com/@draiping',
+			},
+		],
 		notes: [
 			'Nice for pest farming because it loops, but it doesn require more plots than other designs',
 			'Lanes can be as deep as you want, deeper means laneswitches are easier',
@@ -836,15 +836,15 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'AgitatedSnake92',
-                url: '',
-            },
-            {
-                name: 'Z109',
-                url: 'https://www.youtube.com/@Z109',
-            },
-        ],
+			{
+				name: 'AgitatedSnake92',
+				url: '',
+			},
+			{
+				name: 'Z109',
+				url: 'https://www.youtube.com/@Z109',
+			},
+		],
 	},
 	blackCatWheat: {
 		name: 'Black Cat Wheat/Potato/Carrot',
@@ -877,19 +877,19 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'AgitatedSnake92',
-                url: '',
-            },
-            {
-                name: 'MelonKingDe',
-                url: 'https://www.youtube.com/@SunTzu-MelonKing',
-            },
-            {
-                name: 'SunTzu101',
-                url: 'https://www.youtube.com/@SunTzu-MelonKing',
-            },
-        ],
+			{
+				name: 'AgitatedSnake92',
+				url: '',
+			},
+			{
+				name: 'MelonKingDe',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+			{
+				name: 'SunTzu101',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+		],
 		replacedBy: ['aceWheat', 'draipWheat', 'z109Wheat'],
 		notes: [blackCatNote],
 	},
@@ -924,19 +924,19 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'AgitatedSnake92',
-                url: '',
-            },
-            {
-                name: 'MelonKingDe',
-                url: 'https://www.youtube.com/@SunTzu-MelonKing',
-            },
-            {
-                name: 'SunTzu101',
-                url: 'https://www.youtube.com/@SunTzu-MelonKing',
-            },
-        ],
+			{
+				name: 'AgitatedSnake92',
+				url: '',
+			},
+			{
+				name: 'MelonKingDe',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+			{
+				name: 'SunTzu101',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+		],
 		replacedBy: ['aceWheat', 'draipWheat', 'z109Wheat'],
 		notes: [blackCatNote],
 	},
@@ -971,19 +971,19 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'AgitatedSnake92',
-                url: '',
-            },
-            {
-                name: 'MelonKingDe',
-                url: 'https://www.youtube.com/@SunTzu-MelonKing',
-            },
-            {
-                name: 'SunTzu101',
-                url: 'https://www.youtube.com/@SunTzu-MelonKing',
-            },
-        ],
+			{
+				name: 'AgitatedSnake92',
+				url: '',
+			},
+			{
+				name: 'MelonKingDe',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+			{
+				name: 'SunTzu101',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+		],
 		replacedBy: ['idkpoisonMushroom'],
 	},
 	idkpoisonMushroom: {
@@ -1008,15 +1008,15 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'AgitatedSnake92',
-                url: '',
-            },
-            {
-                name: 'IdkPoison_',
-                url: '',
-            },
-        ],
+			{
+				name: 'AgitatedSnake92',
+				url: '',
+			},
+			{
+				name: 'IdkPoison_',
+				url: '',
+			},
+		],
 	},
 	blackCatCocoa: {
 		name: 'Black Cat Cocoa',
@@ -1049,11 +1049,11 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'AgitatedSnake92',
-                url: '',
-            },
-        ],
+			{
+				name: 'AgitatedSnake92',
+				url: '',
+			},
+		],
 		notes: [blackCatNote],
 	},
 	singleLaneCocoa: {
@@ -1078,15 +1078,15 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'not a cow',
-                url: '',
-            },
-            {
-                name: 'Binrich',
-                url: '',
-            },
-        ],
+			{
+				name: 'not a cow',
+				url: '',
+			},
+			{
+				name: 'Binrich',
+				url: '',
+			},
+		],
 		notes: [
 			"Easier to build and use than regular cocoa, but wont work if you don't hold D (but doing so is better anyway so it doesn't really matter)",
 			"The trapdoors used are **not needed**",
@@ -1123,19 +1123,19 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'AgitatedSnake92',
-                url: '',
-            },
-            {
-                name: 'MelonKingDe',
-                url: 'https://www.youtube.com/@SunTzu-MelonKing',
-            },
-            {
-                name: 'SunTzu101',
-                url: 'https://www.youtube.com/@SunTzu-MelonKing',
-            },
-        ],
+			{
+				name: 'AgitatedSnake92',
+				url: '',
+			},
+			{
+				name: 'MelonKingDe',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+			{
+				name: 'SunTzu101',
+				url: 'https://www.youtube.com/@SunTzu-MelonKing',
+			},
+		],
 		notes: [
 			'Despite the name, this farm **does not** use a black cat pet anymore, instead, cactus knife raises speed cap now',
 		],
@@ -1163,11 +1163,11 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'AgitatedSnake92',
-                url: '',
-            },
-        ],
+			{
+				name: 'AgitatedSnake92',
+				url: '',
+			},
+		],
 		notes: ["Don't worry about getting over 400 speed, cactus knife raises speed cap by 100"],
 	},
 	regularCane: {
@@ -1222,11 +1222,11 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 		authors: [
-            {
-                name: 'AgitatedSnake92',
-                url: '',
-            },
-        ],
+			{
+				name: 'AgitatedSnake92',
+				url: '',
+			},
+		],
 	},
 };
 
