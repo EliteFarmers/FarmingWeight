@@ -512,7 +512,7 @@ export const farmingMethods = ['straight', 'running into wall', 'angled into wal
 export type FarmingMethod = (typeof farmingMethods)[number];
 
 export enum ResourceType {
-	Thread,
+	Discord,
 	Video,
 	Schematic,
 	Garden,
@@ -602,7 +602,7 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159960881287942234',
-				type: ResourceType.Thread,
+				type: ResourceType.Discord,
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=5k9c7qK0l58',
@@ -649,7 +649,7 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1358514959247741068',
-				type: ResourceType.Thread
+				type: ResourceType.Discord
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=s4HV0RyWcoI',
@@ -787,7 +787,7 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159965565218201721',
-				type: ResourceType.Thread
+				type: ResourceType.Discord
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=gcJ5U7SyA-c',
@@ -824,7 +824,7 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1253213095984365629',
-				type: ResourceType.Thread
+				type: ResourceType.Discord
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=9yVNsafjOCA',
@@ -865,7 +865,7 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159961248545374290',
-				type: ResourceType.Thread
+				type: ResourceType.Discord
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=KBGIuETQI-g',
@@ -912,7 +912,7 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159961642952556636',
-				type: ResourceType.Thread
+				type: ResourceType.Discord
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=n218KDmL-5s',
@@ -959,7 +959,7 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159960305300930631',
-				type: ResourceType.Thread
+				type: ResourceType.Discord
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=QyWf0DO831g',
@@ -1037,7 +1037,7 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159959995329298443',
-				type: ResourceType.Thread
+				type: ResourceType.Discord
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=WWR2duiwxK4',
@@ -1111,7 +1111,7 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159959766748119050',
-				type: ResourceType.Thread
+				type: ResourceType.Discord
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=Kj7qxeq1jEw',
@@ -1188,7 +1188,7 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159960545487761479',
-				type: ResourceType.Thread
+				type: ResourceType.Discord
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=nQ5yjQU9gmo',
