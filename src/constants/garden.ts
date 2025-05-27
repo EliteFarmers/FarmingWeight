@@ -511,6 +511,13 @@ export type Direction = (typeof directions)[number];
 export const farmingMethods = ['straight', 'running into wall', 'angled into wall'] as const;
 export type FarmingMethod = (typeof farmingMethods)[number];
 
+export enum ResourceType {
+	Thread,
+	Video,
+	Schematic,
+	Garden,
+}
+
 export interface farmInfo {
 	name: string;
 	description?: string;
@@ -528,13 +535,14 @@ export interface farmInfo {
 	};
 	bps: number;
 	laneDepth: number;
-	tutorials?: {
-		thread?: string;
-		video?: string;
-		garden?: string;
-		schematic?: string;
-	};
-	authors?: string[];
+	resources?: {
+		source: string;
+		type: ResourceType;
+	}[];
+	authors?: {
+		name: string;
+		url?: string;
+	}[];
 	replacedBy?: string[];
 	notes?: string[];
 }
@@ -557,11 +565,22 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 19.5,
 		laneDepth: 3,
-		tutorials: {
-			video: 'https://www.youtube.com/watch?v=Zy_w332uUic',
-			garden: 'IdkDom',
-		},
-		authors: ['IdkDom'],
+		resources: [
+			{
+				source: 'https://www.youtube.com/watch?v=Zy_w332uUic',
+				type: ResourceType.Video
+			},
+			{
+				source: 'IdkDom',
+				type: ResourceType.Garden
+			},
+		],
+		authors: [
+			{
+				name: 'IdkDom',
+				url: 'https://www.youtube.com/@IdkDom'
+			}
+		],
 		replacedBy: ['easierMelon', 'chisslMelon'],
 	},
 	blackCatMelon: {
@@ -580,12 +599,34 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 19.8,
 		laneDepth: 3,
-		tutorials: {
-			thread: 'https://discord.com/channels/1096051612373487687/1159960881287942234',
-			video: 'https://www.youtube.com/watch?v=5k9c7qK0l58',
-			garden: 'MelonKingDe',
-		},
-		authors: ['AgitatedSnake92', 'MelonKingDe', 'SunTzu101'],
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159960881287942234',
+				type: ResourceType.Thread,
+			},
+			{
+				source: 'https://www.youtube.com/watch?v=5k9c7qK0l58',
+				type: ResourceType.Video,
+			},
+			{
+				source: 'MelonKingDe',
+				type: ResourceType.Garden,
+			},
+		],
+		authors: [
+            {
+                name: 'AgitatedSnake92',
+                url: '',
+            },
+            {
+                name: 'MelonKingDe',
+                url: 'https://www.youtube.com/@SunTzu-MelonKing',
+            },
+            {
+                name: 'SunTzu101',
+                url: 'https://www.youtube.com/@SunTzu-MelonKing',
+            },
+        ],
 		replacedBy: ['easierMelon', 'chisslMelon'],
 		notes: [blackCatNote],
 	},
@@ -605,12 +646,38 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 19.8,
 		laneDepth: 3,
-		tutorials: {
-			thread: 'https://discord.com/channels/1096051612373487687/1358514959247741068',
-			video: 'https://www.youtube.com/watch?v=s4HV0RyWcoI',
-			garden: 'IdkVenom',
-		},
-		authors: ['AgitatedSnake92', 'MelonKingDe', 'IdkVenom', 'DeadlyIPanda'],
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1358514959247741068',
+				type: ResourceType.Thread
+			},
+			{
+				source: 'https://www.youtube.com/watch?v=s4HV0RyWcoI',
+				type: ResourceType.Video
+			},
+			{
+				source: 'IdkVenom',
+				type: ResourceType.Garden
+			},
+		],
+		authors: [
+            {
+                name: 'AgitatedSnake92',
+                url: '',
+            },
+            {
+                name: 'MelonKingDe',
+                url: 'https://www.youtube.com/@SunTzu-MelonKing',
+            },
+            {
+                name: 'IdkVenom',
+                url: 'https://www.youtube.com/@IdkVenomDeadlyIPanda',
+            },
+            {
+                name: 'DeadlyIPanda',
+                url: 'https://www.youtube.com/@IdkVenomDeadlyIPanda',
+             },
+        ],
 	},
 	chisslMelon: {
 		name: 'Chissl Waterless Melon/Pumpkin',
@@ -627,10 +694,22 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 19.9,
 		laneDepth: 3,
-		tutorials: {
-			garden: 'Chissl',
-		},
-		authors: ['AgitatedSnake92', 'Chissl'],
+		resources: [
+			{
+				source: 'Chissl',
+				type: ResourceType.Garden
+			},
+		],
+		authors: [
+            {
+                name: 'AgitatedSnake92',
+                url: '',
+            },
+            {
+                name: 'Chissl',
+                url: '',
+            },
+        ],
 		notes: ['Very difficult and time consuming to build, only worthwhile for extreme farmers'],
 	},
 	dropdownWheat: {
@@ -668,11 +747,26 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 20,
 		laneDepth: 5,
-		tutorials: {
-			video: 'https://www.youtube.com/watch?v=hz4lGUz0JP4',
-			garden: 'SageUk',
-		},
-		authors: ['AgitatedSnake92'],
+		resources: [
+			{
+				source: 'https://www.youtube.com/watch?v=hz4lGUz0JP4',
+				type: ResourceType.Video
+			},
+			{
+				source: 'SageUk',
+				type: ResourceType.Garden
+			},
+			{
+				source: 'FarmingHub',
+				type: ResourceType.Garden
+			},
+		],
+		authors: [
+            {
+                name: 'AgitatedSnake92',
+                url: '',
+            },
+        ],
 	},
 	draipWheat: {
 		name: 'Draip Looping Wheat/Potato/Carrot/Netherwart',
@@ -690,11 +784,22 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 20,
 		laneDepth: 3,
-		tutorials: {
-			thread: 'https://discord.com/channels/1096051612373487687/1159965565218201721',
-			video: 'https://www.youtube.com/watch?v=gcJ5U7SyA-c',
-		},
-		authors: ['Draip'],
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159965565218201721',
+				type: ResourceType.Thread
+			},
+			{
+				source: 'https://www.youtube.com/watch?v=gcJ5U7SyA-c',
+				type: ResourceType.Video
+			},
+		],
+		authors: [
+            {
+                name: 'Draip',
+                url: 'https://www.youtube.com/@draiping',
+            },
+        ],
 		notes: [
 			'Nice for pest farming because it loops, but it doesn require more plots than other designs',
 			'Lanes can be as deep as you want, deeper means laneswitches are easier',
@@ -716,12 +821,30 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 20,
 		laneDepth: 3,
-		tutorials: {
-			thread: 'https://discord.com/channels/1096051612373487687/1253213095984365629',
-			video: 'https://www.youtube.com/watch?v=9yVNsafjOCA',
-			garden: 'Z109',
-		},
-		authors: ['AgitatedSnake92', 'Z109'],
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1253213095984365629',
+				type: ResourceType.Thread
+			},
+			{
+				source: 'https://www.youtube.com/watch?v=9yVNsafjOCA',
+				type: ResourceType.Video
+			},
+			{
+				source: 'Z109',
+				type: ResourceType.Garden
+			},
+		],
+		authors: [
+            {
+                name: 'AgitatedSnake92',
+                url: '',
+            },
+            {
+                name: 'Z109',
+                url: 'https://www.youtube.com/@Z109',
+            },
+        ],
 	},
 	blackCatWheat: {
 		name: 'Black Cat Wheat/Potato/Carrot',
@@ -739,12 +862,34 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 19.9,
 		laneDepth: 5,
-		tutorials: {
-			thread: 'https://discord.com/channels/1096051612373487687/1159961248545374290',
-			video: 'https://www.youtube.com/watch?v=KBGIuETQI-g',
-			garden: 'MelonKingDe',
-		},
-		authors: ['AgitatedSnake92', 'MelonKingDe', 'SunTzu101'],
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159961248545374290',
+				type: ResourceType.Thread
+			},
+			{
+				source: 'https://www.youtube.com/watch?v=KBGIuETQI-g',
+				type: ResourceType.Video
+			},
+			{
+				source: 'MelonKingDe',
+				type: ResourceType.Garden
+			},
+		],
+		authors: [
+            {
+                name: 'AgitatedSnake92',
+                url: '',
+            },
+            {
+                name: 'MelonKingDe',
+                url: 'https://www.youtube.com/@SunTzu-MelonKing',
+            },
+            {
+                name: 'SunTzu101',
+                url: 'https://www.youtube.com/@SunTzu-MelonKing',
+            },
+        ],
 		replacedBy: ['aceWheat', 'draipWheat', 'z109Wheat'],
 		notes: [blackCatNote],
 	},
@@ -764,12 +909,34 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 19.9,
 		laneDepth: 5,
-		tutorials: {
-			thread: 'https://discord.com/channels/1096051612373487687/1159961642952556636',
-			video: 'https://www.youtube.com/watch?v=n218KDmL-5s',
-			garden: 'MelonKingDe',
-		},
-		authors: ['AgitatedSnake92', 'MelonKingDe', 'SunTzu101'],
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159961642952556636',
+				type: ResourceType.Thread
+			},
+			{
+				source: 'https://www.youtube.com/watch?v=n218KDmL-5s',
+				type: ResourceType.Video
+			},
+			{
+				source: 'MelonKingDe',
+				type: ResourceType.Garden
+			},
+		],
+		authors: [
+            {
+                name: 'AgitatedSnake92',
+                url: '',
+            },
+            {
+                name: 'MelonKingDe',
+                url: 'https://www.youtube.com/@SunTzu-MelonKing',
+            },
+            {
+                name: 'SunTzu101',
+                url: 'https://www.youtube.com/@SunTzu-MelonKing',
+            },
+        ],
 		replacedBy: ['aceWheat', 'draipWheat', 'z109Wheat'],
 		notes: [blackCatNote],
 	},
@@ -789,12 +956,34 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 19.7,
 		laneDepth: 4,
-		tutorials: {
-			thread: 'https://discord.com/channels/1096051612373487687/1159960305300930631',
-			video: 'https://www.youtube.com/watch?v=QyWf0DO831g',
-			garden: 'MelonKingDe',
-		},
-		authors: ['AgitatedSnake92', 'MelonKingDe', 'SunTzu101'],
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159960305300930631',
+				type: ResourceType.Thread
+			},
+			{
+				source: 'https://www.youtube.com/watch?v=QyWf0DO831g',
+				type: ResourceType.Video
+			},
+			{
+				source: 'MelonKingDe',
+				type: ResourceType.Garden
+			},
+		],
+		authors: [
+            {
+                name: 'AgitatedSnake92',
+                url: '',
+            },
+            {
+                name: 'MelonKingDe',
+                url: 'https://www.youtube.com/@SunTzu-MelonKing',
+            },
+            {
+                name: 'SunTzu101',
+                url: 'https://www.youtube.com/@SunTzu-MelonKing',
+            },
+        ],
 		replacedBy: ['idkpoisonMushroom'],
 	},
 	idkpoisonMushroom: {
@@ -812,10 +1001,22 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 19.9,
 		laneDepth: 4,
-		tutorials: {
-			garden: 'IdkPoison_',
-		},
-		authors: ['AgitatedSnake92', 'IdkPoison_'],
+		resources: [
+			{
+				source: 'IdkPoison_',
+				type: ResourceType.Garden
+			},
+		],
+		authors: [
+            {
+                name: 'AgitatedSnake92',
+                url: '',
+            },
+            {
+                name: 'IdkPoison_',
+                url: '',
+            },
+        ],
 	},
 	blackCatCocoa: {
 		name: 'Black Cat Cocoa',
@@ -833,12 +1034,26 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 19.98,
 		laneDepth: 3,
-		tutorials: {
-			thread: 'https://discord.com/channels/1096051612373487687/1159959995329298443',
-			video: 'https://www.youtube.com/watch?v=WWR2duiwxK4',
-			garden: 'FarmingHub',
-		},
-		authors: ['AgitatedSnake92'],
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159959995329298443',
+				type: ResourceType.Thread
+			},
+			{
+				source: 'https://www.youtube.com/watch?v=WWR2duiwxK4',
+				type: ResourceType.Video
+			},
+			{
+				source: 'FarmingHub',
+				type: ResourceType.Garden
+			},
+		],
+		authors: [
+            {
+                name: 'AgitatedSnake92',
+                url: '',
+            },
+        ],
 		notes: [blackCatNote],
 	},
 	singleLaneCocoa: {
@@ -856,10 +1071,22 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 19.97,
 		laneDepth: 3,
-		tutorials: {
-			garden: 'not_a_cowfr',
-		},
-		authors: ['not a cow', 'Binrich'],
+		resources: [
+			{
+				source: 'not_a_cowfr',
+				type: ResourceType.Garden
+			},
+		],
+		authors: [
+            {
+                name: 'not a cow',
+                url: '',
+            },
+            {
+                name: 'Binrich',
+                url: '',
+            },
+        ],
 		notes: [
 			"Easier to build and use than regular cocoa, but wont work if you don't hold D (but doing so is better anyway so it doesn't really matter)",
 			"The trapdoors used are **not needed**",
@@ -881,12 +1108,34 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 19.9,
 		laneDepth: 1,
-		tutorials: {
-			thread: 'https://discord.com/channels/1096051612373487687/1159959766748119050',
-			video: 'https://www.youtube.com/watch?v=Kj7qxeq1jEw',
-			garden: 'MelonKingDe',
-		},
-		authors: ['AgitatedSnake92', 'MelonKingDe', 'SunTzu101'],
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159959766748119050',
+				type: ResourceType.Thread
+			},
+			{
+				source: 'https://www.youtube.com/watch?v=Kj7qxeq1jEw',
+				type: ResourceType.Video
+			},
+			{
+				source: 'MelonKingDe',
+				type: ResourceType.Garden
+			},
+		],
+		authors: [
+            {
+                name: 'AgitatedSnake92',
+                url: '',
+            },
+            {
+                name: 'MelonKingDe',
+                url: 'https://www.youtube.com/@SunTzu-MelonKing',
+            },
+            {
+                name: 'SunTzu101',
+                url: 'https://www.youtube.com/@SunTzu-MelonKing',
+            },
+        ],
 		notes: [
 			'Despite the name, this farm **does not** use a black cat pet anymore, instead, cactus knife raises speed cap now',
 		],
@@ -907,10 +1156,18 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 19.9,
 		laneDepth: 1,
-		tutorials: {
-			garden: 'LunaSappho',
-		},
-		authors: ['AgitatedSnake92'],
+		resources: [
+			{
+				source: 'LunaSappho',
+				type: ResourceType.Garden
+			},
+		],
+		authors: [
+            {
+                name: 'AgitatedSnake92',
+                url: '',
+            },
+        ],
 		notes: ["Don't worry about getting over 400 speed, cactus knife raises speed cap by 100"],
 	},
 	regularCane: {
@@ -928,11 +1185,20 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 19.98,
 		laneDepth: 2,
-		tutorials: {
-			thread: 'https://discord.com/channels/1096051612373487687/1159960545487761479',
-			video: 'https://www.youtube.com/watch?v=nQ5yjQU9gmo',
-			garden: 'MelonKingDe',
-		},
+		resources: [
+			{
+				source: 'https://discord.com/channels/1096051612373487687/1159960545487761479',
+				type: ResourceType.Thread
+			},
+			{
+				source: 'https://www.youtube.com/watch?v=nQ5yjQU9gmo',
+				type: ResourceType.Video
+			},
+			{
+				source: 'MelonKingDe',
+				type: ResourceType.Garden
+			},
+		],
 	},
 	farminghubCane: {
 		name: 'FarmingHub Sugar Cane',
@@ -949,10 +1215,18 @@ export const farmsData: Record<string, farmInfo> = {
 		},
 		bps: 20,
 		laneDepth: 2,
-		tutorials: {
-			garden: 'FarmingHub',
-		},
-		authors: ['AgitatedSnake92'],
+		resources: [
+			{
+				source: 'FarmingHub',
+				type: ResourceType.Garden
+			},
+		],
+		authors: [
+            {
+                name: 'AgitatedSnake92',
+                url: '',
+            },
+        ],
 	},
 };
 
