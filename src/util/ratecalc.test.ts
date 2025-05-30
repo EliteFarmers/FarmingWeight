@@ -11,10 +11,30 @@ test('Rate calc test', () => {
 	});
 
 	expect(drops[Crop.Wheat].collection).toBe(48_000);
+	expect(drops[Crop.Wheat].npcPrice).toBe(6);
 
 	expect(drops[Crop.NetherWart].otherCollection['Fermento']).toBe(2);
 	expect(drops[Crop.SugarCane].otherCollection['Fermento']).toBe(2);
 	expect(drops[Crop.Cactus].otherCollection['Fermento']).toBe(2);
+
+	expect(drops[Crop.Carrot].items[Crop.Carrot]).toBe(drops[Crop.Carrot].collection - 24000);
+	expect(drops[Crop.Carrot].items).toStrictEqual({
+		[Crop.Carrot]: 120000,
+		CROPIE: 12,
+		MUSHROOM_COLLECTION: 24000,
+	});
+
+	expect(drops[Crop.Melon].items).toStrictEqual({
+		[Crop.Melon]: 426237,
+		SQUASH: 7.2,
+		MUSHROOM_COLLECTION: 24000,
+	});
+
+	expect(drops[Crop.SugarCane].items).toStrictEqual({
+		[Crop.SugarCane]: 96000,
+		FERMENTO: 1.68,
+		MUSHROOM_COLLECTION: 48000,
+	});
 });
 
 test('Possible results - Wheat', () => {
