@@ -8,6 +8,7 @@ import { BEST_FARMING_TOOLS } from '../items/tools.js';
 
 interface CalculateDropsOptions {
 	farmingFortune?: number;
+	cropFortune?: Record<Crop, number>;
 	blocksBroken: number;
 	dicerLevel?: 1 | 2 | 3;
 	armorPieces?: 1 | 2 | 3 | 4;
@@ -27,13 +28,16 @@ const crops = [
 	Crop.Seeds,
 ] as const;
 
-export function calculateAverageDrops(options: CalculateDropsOptions): Record<Crop, number> {
+type CropFortuneOption = { cropFortune?: Partial<Record<Crop, number>> };
+
+export function calculateAverageDrops(options: CalculateDropsOptions & CropFortuneOption): Record<Crop, number> {
 	const result = {} as Record<Crop, number>;
 
 	for (const crop of crops) {
 		result[crop] = calculateExpectedDrops({
 			crop: crop,
 			...options,
+			farmingFortune: (options.cropFortune?.[crop] ?? 0) + (options.farmingFortune ?? 0),
 		});
 	}
 
@@ -55,13 +59,16 @@ interface DetailedDrops {
 	items: Record<string, number>;
 }
 
-export function calculateDetailedAverageDrops(options: CalculateDetailedDropsOptions): Record<Crop, DetailedDrops> {
+export function calculateDetailedAverageDrops(
+	options: CalculateDetailedDropsOptions & CropFortuneOption
+): Record<Crop, DetailedDrops> {
 	const result = {} as Record<Crop, DetailedDrops>;
 
 	for (const crop of crops) {
 		result[crop] = calculateDetailedDrops({
 			crop: crop,
 			...options,
+			farmingFortune: (options.cropFortune?.[crop] ?? 0) + (options.farmingFortune ?? 0),
 		});
 	}
 
@@ -76,6 +83,7 @@ export function calculateDetailedAverageDrops(options: CalculateDetailedDropsOpt
 		wheat.coinSources['Bountiful (Seeds)'] = seeds.coinSources['Bountiful'] ?? 0;
 	}
 	wheat.npcCoins = Object.values(wheat.coinSources).reduce((a, b) => a + b, 0);
+	wheat.items[Crop.Seeds] = seedCollection;
 
 	// Count mooshroom mushrooms as normal mushroom collection
 	if (options.mooshroom) {

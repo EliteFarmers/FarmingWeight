@@ -35,6 +35,21 @@ test('Rate calc test', () => {
 		FERMENTO: 1.68,
 		MUSHROOM_COLLECTION: 48000,
 	});
+
+	expect(drops[Crop.Seeds].items).toStrictEqual({
+		[Crop.Seeds]: 48000,
+		FERMENTO: 1.68,
+		MUSHROOM_COLLECTION: 24000,
+	});
+	expect(drops[Crop.Seeds].otherCollection['Replenish']).toBe(-24000);
+	expect(drops[Crop.Seeds].collection).toBe(48000 + 24000);
+
+	expect(drops[Crop.Wheat].items).toStrictEqual({
+		[Crop.Wheat]: 48000,
+		[Crop.Seeds]: 48000,
+		CROPIE: 12,
+		MUSHROOM_COLLECTION: 24000,
+	});
 });
 
 test('Possible results - Wheat', () => {
