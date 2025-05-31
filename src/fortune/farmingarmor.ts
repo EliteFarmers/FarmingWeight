@@ -4,14 +4,19 @@ import { Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforg
 import { Skill } from '../constants/skills.js';
 import { MATCHING_SPECIAL_CROP, SpecialCrop } from '../constants/specialcrops.js';
 import { Stat } from '../constants/stats.js';
-import { FortuneSourceProgress } from '../constants/upgrades.js';
+import { FortuneSourceProgress, FortuneUpgrade } from '../constants/upgrades.js';
 import { calculateAverageSpecialCrops } from '../crops/special.js';
 import { ARMOR_INFO, ARMOR_SET_BONUS, ArmorSetBonus, FarmingArmorInfo, GEAR_SLOTS, GearSlot } from '../items/armor.js';
 import { EQUIPMENT_INFO } from '../items/equipment.js';
 import { PlayerOptions } from '../player/playeroptions.js';
 import { ARMOR_SET_FORTUNE_SOURCES } from '../upgrades/sources/armorsetsources.js';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
-import { getItemUpgrades, getLastItemUpgradeableTo, getSourceProgress } from '../upgrades/upgrades.js';
+import {
+	getItemUpgrades,
+	getLastItemUpgradeableTo,
+	getSourceProgress,
+	getUpgradeableRarityUpgrade,
+} from '../upgrades/upgrades.js';
 import { getFortuneFromEnchant } from '../util/enchants.js';
 import { getPeridotFortune } from '../util/gems.js';
 import { FarmingEquipment } from './farmingequipment.js';
@@ -292,6 +297,32 @@ export class ArmorSet {
 		return getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, zeroed);
 	}
 
+	getUpgrades() {
+		const upgrades = getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, false).flatMap(
+			(source) => source.upgrades ?? []
+		);
+
+		for (const piece of this.armor) {
+			if (!piece) continue;
+			const pieceUpgrades = piece.getUpgrades();
+			if (pieceUpgrades.length > 0) {
+				upgrades.push(...pieceUpgrades);
+			}
+		}
+
+		for (const piece of this.equipment) {
+			if (!piece) continue;
+			const pieceUpgrades = piece.getUpgrades();
+			if (pieceUpgrades.length > 0) {
+				upgrades.push(...pieceUpgrades);
+			}
+		}
+
+		upgrades.sort((a, b) => b.increase - a.increase);
+
+		return upgrades;
+	}
+
 	getPieceProgress(slot: GearSlot) {
 		let piece = this.getPiece(slot);
 		if (!piece) {
@@ -428,8 +459,19 @@ export class FarmingArmor extends UpgradeableBase {
 		return sum;
 	}
 
-	getUpgrades() {
-		return getItemUpgrades(this);
+	getUpgrades(): FortuneUpgrade[] {
+		const upgrades = getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, false).flatMap(
+			(source) => source.upgrades ?? []
+		);
+
+		const rarityUpgrade = getUpgradeableRarityUpgrade(this);
+		if (rarityUpgrade) {
+			upgrades.push(rarityUpgrade);
+		}
+
+		upgrades.sort((a, b) => b.increase - a.increase);
+
+		return upgrades;
 	}
 
 	getItemUpgrade() {

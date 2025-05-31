@@ -44,9 +44,11 @@ export interface FortuneSourceProgress {
 }
 
 export interface UpgradeCost {
-	items: Record<string, number>;
+	items?: Record<string, number>;
 	coins?: number;
 	copper?: number;
+	bits?: number;
+	applyCost?: Omit<UpgradeCost, 'applyCost'>;
 }
 
 export enum UpgradeCategory {
@@ -54,6 +56,7 @@ export enum UpgradeCategory {
 	Rarity = 'rarity',
 	Item = 'item',
 	Gem = 'gem',
+	Reforge = 'reforge',
 }
 
 export enum UpgradeAction {
@@ -72,6 +75,8 @@ export interface FortuneUpgrade {
 	increase: number;
 	action: UpgradeAction;
 	category: UpgradeCategory;
+	optional?: boolean;
+	repeatable?: number;
 	cost?: UpgradeCost;
 	wiki?: string;
 	improvements?: FortuneUpgradeImprovement[];

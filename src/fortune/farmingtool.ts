@@ -2,11 +2,11 @@ import { Crop } from '../constants/crops.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
 import { REFORGES, Rarity, Reforge, ReforgeTier } from '../constants/reforges.js';
 import { Stat, getStatValue } from '../constants/stats.js';
-import { FortuneSourceProgress } from '../constants/upgrades.js';
+import { FortuneSourceProgress, FortuneUpgrade } from '../constants/upgrades.js';
 import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../items/tools.js';
 import { PlayerOptions } from '../player/playeroptions.js';
 import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources.js';
-import { getSourceProgress } from '../upgrades/upgrades.js';
+import { getSourceProgress, getUpgradeableRarityUpgrade } from '../upgrades/upgrades.js';
 import { getFortuneFromEnchant } from '../util/enchants.js';
 import { getPeridotFortune } from '../util/gems.js';
 import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
@@ -61,6 +61,21 @@ export class FarmingTool extends UpgradeableBase {
 
 	getProgress(zeroed = false): FortuneSourceProgress[] {
 		return getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, zeroed);
+	}
+
+	getUpgrades(): FortuneUpgrade[] {
+		const upgrades = getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, false).flatMap(
+			(source) => source.upgrades ?? []
+		);
+
+		const rarityUpgrade = getUpgradeableRarityUpgrade(this);
+		if (rarityUpgrade) {
+			upgrades.push(rarityUpgrade);
+		}
+
+		upgrades.sort((a, b) => b.increase - a.increase);
+
+		return upgrades;
 	}
 
 	setOptions(options: PlayerOptions) {

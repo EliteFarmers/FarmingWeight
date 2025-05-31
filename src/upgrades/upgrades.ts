@@ -1,4 +1,5 @@
 import { EnchantTierProcurement, FARMING_ENCHANTS } from '../constants/enchants.js';
+import { REFORGES } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import {
 	FortuneSource,
@@ -137,6 +138,13 @@ export function getSourceProgress<T extends object>(
 			progress.api = false;
 		}
 
+		if (source.upgrades) {
+			const upgrades = source.upgrades(upgradeable);
+			if (upgrades.length > 0) {
+				progress.upgrades = upgrades;
+			}
+		}
+
 		result.push(progress);
 	}
 
@@ -156,6 +164,11 @@ export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUp
 		action: UpgradeAction.Recombobulate,
 		category: UpgradeCategory.Rarity,
 		improvements: [] as FortuneUpgradeImprovement[],
+		cost: {
+			items: {
+				RECOMBOBULATOR_3000: 1,
+			},
+		},
 	} satisfies FortuneUpgrade;
 
 	// Gemstone fortune increases with rarity
@@ -200,45 +213,134 @@ export function getUpgradeableEnchants(upgradeable: Upgradeable): FortuneUpgrade
 	const result = [] as FortuneUpgrade[];
 
 	for (const enchantId in FARMING_ENCHANTS) {
-		const enchant = FARMING_ENCHANTS[enchantId];
+		result.push(...getUpgradeableEnchant(upgradeable, enchantId));
+	}
 
-		// Skip if the enchantment doesn't apply to the item
-		if (!enchant || !enchant.appliesTo.includes(upgradeable.type)) continue;
-		// Skip if the enchantment is crop specific and the crop doesn't match
-		if (upgradeable.crop && enchant.cropSpecific !== upgradeable.crop) continue;
+	return result;
+}
 
-		const applied = upgradeable.item.enchantments?.[enchantId];
+export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: string): FortuneUpgrade[] {
+	const enchant = FARMING_ENCHANTS[enchantId];
+	if (!upgradeable.type || !enchant) return [];
 
-		// If the enchantment is not applied, add an entry for applying it
-		if (!applied) {
-			const procurement = enchant.levels[enchant.minLevel]?.procurement;
+	const result = [] as FortuneUpgrade[];
 
-			result.push({
-				title: enchant.name + ' 1',
-				increase: getFortuneFromEnchant(enchant.minLevel, enchant, upgradeable.options, upgradeable.crop),
-				wiki: enchant.wiki,
-				action:
-					!procurement || procurement === EnchantTierProcurement.Normal
-						? UpgradeAction.Apply
-						: UpgradeAction.LevelUp,
-				category: UpgradeCategory.Enchant,
-			});
+	// Skip if the enchantment doesn't apply to the item
+	if (!enchant || !enchant.appliesTo.includes(upgradeable.type)) return result;
+	// Skip if the enchantment is crop specific and the crop doesn't match
+	if (enchant.cropSpecific && enchant.cropSpecific !== upgradeable.crop) return result;
 
-			continue;
-		}
+	const applied = upgradeable.item.enchantments?.[enchantId];
 
-		// If the enchantment is at max level already, skip it
-		if (applied >= enchant.maxLevel) continue;
-
-		// Add an entry for upgrading the enchantment
-		const currentFortune = getFortuneFromEnchant(applied, enchant, upgradeable.options, upgradeable.crop);
-		const nextFortune = getFortuneFromEnchant(applied + 1, enchant, upgradeable.options, upgradeable.crop);
+	// If the enchantment is not applied, add an entry for applying it
+	if (!applied) {
+		const procurement = enchant.levels[enchant.minLevel]?.procurement;
 
 		result.push({
-			title: enchant.name + ' ' + (applied + 1),
-			increase: nextFortune - currentFortune,
-			action: UpgradeAction.Apply,
+			title: enchant.name + ' 1',
+			increase: getFortuneFromEnchant(enchant.minLevel, enchant, upgradeable.options, upgradeable.crop),
+			wiki: enchant.wiki,
+			action:
+				!procurement || procurement === EnchantTierProcurement.Normal
+					? UpgradeAction.Apply
+					: UpgradeAction.LevelUp,
 			category: UpgradeCategory.Enchant,
+			cost: {
+				items: {
+					['ENCHANTMENT_' + enchant.name.toLocaleUpperCase() + '_1']: 1,
+				},
+			},
+		});
+
+		return result;
+	}
+
+	// If the enchantment is at max level already, we don't need to do anything
+	if (applied >= enchant.maxLevel) return result;
+
+	// Add an entry for upgrading the enchantment
+	const currentFortune = getFortuneFromEnchant(applied, enchant, upgradeable.options, upgradeable.crop);
+	const nextFortune = getFortuneFromEnchant(applied + 1, enchant, upgradeable.options, upgradeable.crop);
+
+	const nextEnchant = enchant.levels[applied + 1];
+	if (!nextEnchant) return result;
+
+	const normalNext =
+		!nextEnchant.procurement ||
+		nextEnchant.procurement === EnchantTierProcurement.Normal ||
+		nextEnchant.procurement === EnchantTierProcurement.Loot;
+	const items = nextEnchant.cost?.items ?? ({} as Record<string, number>);
+
+	switch (nextEnchant.procurement) {
+		case EnchantTierProcurement.Normal:
+			// Same level of enchantment can be applied to increase the level
+			items['ENCHANTMENT_' + enchant.name.toLocaleUpperCase() + '_' + applied] = 1;
+			break;
+		case EnchantTierProcurement.Loot:
+			// The desired level needs to be applied directly
+			items['ENCHANTMENT_' + enchant.name.toLocaleUpperCase() + '_' + (applied + 1)] = 1;
+			break;
+		default:
+			break;
+	}
+
+	const cost = {
+		...(nextEnchant.cost ?? {}),
+		items: Object.keys(items).length > 0 ? items : undefined,
+	};
+
+	result.push({
+		title: enchant.name + ' ' + (applied + 1),
+		increase: nextFortune - currentFortune,
+		action: normalNext ? UpgradeAction.Apply : UpgradeAction.LevelUp,
+		category: UpgradeCategory.Enchant,
+		cost: cost,
+	});
+
+	return result;
+}
+
+export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade[] {
+	const currentFortune = upgradeable.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
+	const result: FortuneUpgrade[] = [];
+
+	for (const reforge of Object.values(REFORGES)) {
+		// Skip if the reforge doesn't apply to the item or is currently applied
+		if (
+			!upgradeable.type ||
+			!reforge ||
+			!reforge.appliesTo.includes(upgradeable.type) ||
+			reforge === upgradeable.reforge
+		)
+			return result;
+
+		const tier = reforge.tiers[upgradeable.rarity];
+		if (!tier || !tier.stats?.[Stat.FarmingFortune]) continue;
+
+		const reforgeFortune = tier.stats[Stat.FarmingFortune];
+		// Skip if the reforge doesn't increase farming fortune
+		if (reforgeFortune <= currentFortune) continue;
+
+		result.push({
+			title: 'Reforge to ' + reforge.name,
+			increase: reforgeFortune - currentFortune,
+			action: UpgradeAction.Apply,
+			category: UpgradeCategory.Reforge,
+			wiki: reforge.wiki,
+			cost: reforge.stone?.id
+				? {
+						items: {
+							[reforge.stone.id]: 1,
+						},
+						coins: reforge.stone.npc ?? undefined,
+						copper: reforge.stone.copper ?? undefined,
+						applyCost: tier.cost
+							? {
+									coins: tier.cost,
+								}
+							: undefined,
+					}
+				: undefined,
 		});
 	}
 
@@ -260,6 +362,11 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 		result.push({
 			title: 'Fine Peridot Gemstone',
 			increase: getPeridotGemFortune(upgradeable.rarity, GemRarity.Fine),
+			cost: {
+				items: {
+					FINE_PERIDOT_GEM: 1,
+				},
+			},
 			action: UpgradeAction.Apply,
 			category: UpgradeCategory.Gem,
 		});
@@ -276,6 +383,11 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 		if (nextFortune > currentFortune) {
 			result.push({
 				title: getGemRarityName(nextGem) + ' Peridot Gemstone',
+				cost: {
+					items: {
+						[`${getGemRarityName(nextGem).toUpperCase()}_PERIDOT_GEM`]: 1,
+					},
+				},
 				increase: nextFortune - currentFortune,
 				action: UpgradeAction.Apply,
 				category: UpgradeCategory.Gem,
