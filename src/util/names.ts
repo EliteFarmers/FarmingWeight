@@ -100,7 +100,7 @@ const fullNamesToCrop: Record<string, Crop> = {
 	seeds: Crop.Seeds,
 };
 
-export const cropToFullNames: Record<Crop, string> = {
+export const cropToFullName: Record<Crop, string> = {
 	[Crop.Cactus]: "cactus",
 	[Crop.Carrot]: "carrot",
 	[Crop.CocoaBeans]: "cocoabeans",

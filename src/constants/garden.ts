@@ -1,4 +1,5 @@
 import { Crop } from './crops.js';
+import { DepthStriderLevels } from './enchants.js';
 import { Rarity } from './reforges.js';
 
 export const GARDEN_EXP_REQUIRED = [
@@ -524,7 +525,7 @@ export interface farmInfo {
 	crops: Crop[];
 	speed: {
 		speed: number;
-		depthStrider?: 1 | 2 | 3;
+		depthStrider?: DepthStriderLevels;
 		soulSand: boolean;
 		buildVersion: MinecraftVersion;
 		method: FarmingMethod;
