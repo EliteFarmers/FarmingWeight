@@ -7,14 +7,14 @@ import { getItemUpgrades, getLastItemUpgradeableTo, getNextItemUpgradeableTo } f
 import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
 import { EliteItemDto } from './item.js';
 
+export type GemSlotCost = { type: 'ITEM'; item_id: string; amount: number } | { type: 'COINS'; coins: number };
+
 export interface UpgradeableInfo {
 	name: string;
 	skyblockId: string;
 	upgrade?: Upgrade;
 	wiki?: string;
-	gemSlots?: {
-		peridot: number;
-	};
+	gemSlots?: { slot_type: string; costs: GemSlotCost[] }[];
 	maxRarity: Rarity;
 	stats?: RarityRecord<StatsRecord>;
 	baseStats?: Partial<Record<Stat, number>>;

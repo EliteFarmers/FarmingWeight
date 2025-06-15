@@ -7,9 +7,11 @@ import {
 	UNLOCKED_PLOTS,
 } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
+import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { FarmingAccessory } from '../../fortune/farmingaccessory.js';
 import { FARMING_ACCESSORIES_INFO, FarmingAccessoryInfo } from '../../items/accessories.js';
 import { FarmingPlayer } from '../../player/player.js';
+import { getNextPlotCost } from '../../util/garden.js';
 import { fortuneFromPestBestiary } from '../../util/pests.js';
 import { DynamicFortuneSource } from './toolsources.js';
 
@@ -47,7 +49,21 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		exists: () => true,
 		max: () => UNLOCKED_PLOTS.maxLevel * UNLOCKED_PLOTS.fortunePerLevel,
 		current: (player) => {
-			return (player.options.plotsUnlocked ?? 0) * UNLOCKED_PLOTS.fortunePerLevel;
+			return (player.options.plots?.length ?? player.options.plotsUnlocked ?? 0) * UNLOCKED_PLOTS.fortunePerLevel;
+		},
+		upgrades: (player) => {
+			const plotUpgrade = getNextPlotCost(player.options.plots ?? []);
+			if (!plotUpgrade) return [];
+
+			return [
+				{
+					title: 'Plot ' + plotUpgrade.plot?.name,
+					increase: UNLOCKED_PLOTS.fortunePerLevel,
+					action: UpgradeAction.Purchase,
+					category: UpgradeCategory.Plot,
+					cost: plotUpgrade.cost,
+				},
+			];
 		},
 	},
 	{

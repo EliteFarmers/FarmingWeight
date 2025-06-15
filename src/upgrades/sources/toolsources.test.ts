@@ -89,6 +89,7 @@ test('Test tool fortune sources', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
@@ -200,6 +201,7 @@ test('Tier 1 Wheat Hoe', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([

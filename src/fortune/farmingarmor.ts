@@ -6,8 +6,15 @@ import { MATCHING_SPECIAL_CROP, SpecialCrop } from '../constants/specialcrops.js
 import { Stat } from '../constants/stats.js';
 import { FortuneSourceProgress, FortuneUpgrade } from '../constants/upgrades.js';
 import { calculateAverageSpecialCrops } from '../crops/special.js';
-import { ARMOR_INFO, ARMOR_SET_BONUS, ArmorSetBonus, FarmingArmorInfo, GEAR_SLOTS, GearSlot } from '../items/armor.js';
-import { EQUIPMENT_INFO } from '../items/equipment.js';
+import {
+	ARMOR_SET_BONUS,
+	ArmorSetBonus,
+	FARMING_ARMOR_INFO,
+	FarmingArmorInfo,
+	GEAR_SLOTS,
+	GearSlot,
+} from '../items/armor.js';
+import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
 import { PlayerOptions } from '../player/playeroptions.js';
 import { ARMOR_SET_FORTUNE_SOURCES } from '../upgrades/sources/armorsetsources.js';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
@@ -302,22 +309,6 @@ export class ArmorSet {
 			(source) => source.upgrades ?? []
 		);
 
-		for (const piece of this.armor) {
-			if (!piece) continue;
-			const pieceUpgrades = piece.getUpgrades();
-			if (pieceUpgrades.length > 0) {
-				upgrades.push(...pieceUpgrades);
-			}
-		}
-
-		for (const piece of this.equipment) {
-			if (!piece) continue;
-			const pieceUpgrades = piece.getUpgrades();
-			if (pieceUpgrades.length > 0) {
-				upgrades.push(...pieceUpgrades);
-			}
-		}
-
 		upgrades.sort((a, b) => b.increase - a.increase);
 
 		return upgrades;
@@ -328,8 +319,10 @@ export class ArmorSet {
 		if (!piece) {
 			piece =
 				GEAR_SLOTS[slot].target === ReforgeTarget.Armor
-					? FarmingArmor.fakeItem(ARMOR_INFO[GEAR_SLOTS[slot].startingItem] as UpgradeableInfo)
-					: FarmingEquipment.fakeItem(EQUIPMENT_INFO[GEAR_SLOTS[slot].startingItem] as UpgradeableInfo);
+					? FarmingArmor.fakeItem(FARMING_ARMOR_INFO[GEAR_SLOTS[slot].startingItem] as UpgradeableInfo)
+					: FarmingEquipment.fakeItem(
+							FARMING_EQUIPMENT_INFO[GEAR_SLOTS[slot].startingItem] as UpgradeableInfo
+						);
 			return piece?.getProgress(true) ?? [];
 		}
 
@@ -397,7 +390,7 @@ export class FarmingArmor extends UpgradeableBase {
 	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
-		super({ item, options, items: ARMOR_INFO });
+		super({ item, options, items: FARMING_ARMOR_INFO });
 		this.getFortune();
 	}
 
@@ -479,7 +472,7 @@ export class FarmingArmor extends UpgradeableBase {
 	}
 
 	getLastItemUpgrade() {
-		return getLastItemUpgradeableTo(this, ARMOR_INFO);
+		return getLastItemUpgradeableTo(this, FARMING_ARMOR_INFO);
 	}
 
 	getProgress(zeroed = false): FortuneSourceProgress[] {
@@ -487,7 +480,7 @@ export class FarmingArmor extends UpgradeableBase {
 	}
 
 	static isValid(item: EliteItemDto): boolean {
-		return ARMOR_INFO[item.skyblockId as keyof typeof ARMOR_INFO] !== undefined;
+		return FARMING_ARMOR_INFO[item.skyblockId as keyof typeof FARMING_ARMOR_INFO] !== undefined;
 	}
 
 	static fromArray(items: EliteItemDto[], options?: PlayerOptions): FarmingArmor[] {

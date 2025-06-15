@@ -20,6 +20,7 @@ test('General fortune sources', () => {
 		delete piece.nextInfo;
 		delete piece.info;
 		delete piece.maxInfo;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([

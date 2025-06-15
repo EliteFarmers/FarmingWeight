@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { FarmingArmor } from '../../fortune/farmingarmor.js';
-import { ARMOR_INFO } from '../../items/armor.js';
+import { FARMING_ARMOR_INFO } from '../../items/armor.js';
 import { FarmingPlayer } from '../../player/player.js';
 
 test('Armor set bonus', () => {
@@ -65,6 +65,7 @@ test('Armor set bonus', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
@@ -182,6 +183,7 @@ test('Equipment set bonus', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
@@ -249,7 +251,7 @@ test('Equipment set bonus', () => {
 });
 
 test('Rancher boots preferred upgrade test', () => {
-	const boots = FarmingArmor.fakeItem(ARMOR_INFO.RANCHERS_BOOTS);
+	const boots = FarmingArmor.fakeItem(FARMING_ARMOR_INFO.RANCHERS_BOOTS);
 	if (!boots) throw new Error('No boots');
 
 	const player = new FarmingPlayer({

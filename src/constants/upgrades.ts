@@ -52,17 +52,19 @@ export interface UpgradeCost {
 }
 
 export enum UpgradeCategory {
-	Enchant = 'enchant',
+	Enchant = 'enchantment',
 	Rarity = 'rarity',
 	Item = 'item',
 	Gem = 'gem',
 	Reforge = 'reforge',
+	Plot = 'plot',
 }
 
 export enum UpgradeAction {
 	Apply = 'apply',
 	Recombobulate = 'recombobulate',
 	LevelUp = 'levelup',
+	Purchase = 'purchase',
 }
 
 export interface FortuneUpgradeImprovement {
@@ -72,11 +74,17 @@ export interface FortuneUpgradeImprovement {
 
 export interface FortuneUpgrade {
 	title: string;
+	onto?: {
+		name?: string | null;
+		skyblockId?: string | null;
+		slot?: GearSlot;
+	};
 	increase: number;
 	action: UpgradeAction;
 	category: UpgradeCategory;
 	optional?: boolean;
 	repeatable?: number;
+	deadEnd?: boolean;
 	cost?: UpgradeCost;
 	wiki?: string;
 	improvements?: FortuneUpgradeImprovement[];
@@ -88,7 +96,7 @@ export interface Upgrade {
 	reason: UpgradeReason;
 	cost?: UpgradeCost;
 	why?: string;
-	preffered?: boolean;
+	preferred?: boolean;
 }
 
 export interface InitialItems {

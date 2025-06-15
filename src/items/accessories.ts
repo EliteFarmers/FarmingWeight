@@ -63,9 +63,20 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		skyblockId: 'POWER_RELIC',
 		name: 'Relic of Power',
 		wiki: 'https://wiki.hypixel.net/Relic_Of_Power',
-		gemSlots: {
-			peridot: 1,
-		},
+		gemSlots: [
+			{ slot_type: 'JADE', costs: [] },
+			{ slot_type: 'AMBER', costs: [] },
+			{ slot_type: 'TOPAZ', costs: [] },
+			{ slot_type: 'SAPPHIRE', costs: [] },
+			{ slot_type: 'AMETHYST', costs: [] },
+			{ slot_type: 'JASPER', costs: [] },
+			{ slot_type: 'RUBY', costs: [] },
+			{ slot_type: 'OPAL', costs: [] },
+			{ slot_type: 'ONYX', costs: [] },
+			{ slot_type: 'PERIDOT', costs: [] },
+			{ slot_type: 'CITRINE', costs: [] },
+			{ slot_type: 'AQUAMARINE', costs: [] },
+		],
 		maxRarity: Rarity.Mythic,
 	},
 };

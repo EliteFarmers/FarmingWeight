@@ -103,6 +103,10 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 						(reforge === REFORGES.bountiful && tool.reforge === REFORGES.blessed) ||
 						(reforge === REFORGES.blessed && tool.reforge === REFORGES.bountiful),
 					wiki: reforge.wiki,
+					onto: {
+						name: tool.item.name,
+						skyblockId: tool.item.skyblockId,
+					},
 					cost: reforge.stone?.id
 						? {
 								items: {
@@ -126,19 +130,19 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 	{
 		name: 'Gemstone Slots',
 		wiki: () => 'https://wiki.hypixel.net/Gemstone#Gemstone_Slots',
-		exists: (tool) => {
-			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
-			return last?.gemSlots?.peridot !== undefined;
+		exists: (upgradeable) => {
+			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
+			return last?.gemSlots?.some((s) => s.slot_type === 'PERIDOT') !== undefined;
 		},
-		max: (tool) => {
-			const last = (tool.getLastItemUpgrade() ?? tool)?.info;
+		max: (upgradeable) => {
+			const last = (upgradeable.getLastItemUpgrade() ?? upgradeable)?.info;
 			return (
-				(last?.gemSlots?.peridot ?? 0) *
+				(last?.gemSlots?.filter((s) => s.slot_type === 'PERIDOT').length ?? 0) *
 				getPeridotGemFortune(last?.maxRarity ?? Rarity.Common, GemRarity.Perfect)
 			);
 		},
-		current: (tool) => {
-			return getPeridotFortune(tool.rarity, tool.item);
+		current: (upgradeable) => {
+			return getPeridotFortune(upgradeable.rarity, upgradeable.item);
 		},
 		upgrades: getUpgradeableGems,
 	},
@@ -166,6 +170,10 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 						items: {
 							FARMING_FOR_DUMMIES: 1,
 						},
+					},
+					onto: {
+						name: tool.item.name,
+						skyblockId: tool.item.skyblockId,
 					},
 				},
 			] as FortuneUpgrade[];
