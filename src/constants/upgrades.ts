@@ -65,6 +65,8 @@ export enum UpgradeAction {
 	Recombobulate = 'recombobulate',
 	LevelUp = 'levelup',
 	Purchase = 'purchase',
+	Consume = 'consume',
+	Upgrade = 'upgrade',
 }
 
 export interface FortuneUpgradeImprovement {

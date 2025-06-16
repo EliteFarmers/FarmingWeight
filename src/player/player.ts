@@ -9,7 +9,7 @@ import {
 	UNLOCKED_PLOTS,
 } from '../constants/specific.js';
 import { TEMPORARY_FORTUNE, TemporaryFarmingFortune } from '../constants/tempfortune.js';
-import { UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
+import { FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
 import { FarmingAccessory } from '../fortune/farmingaccessory.js';
 import { ArmorSet, FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
@@ -148,7 +148,7 @@ export class FarmingPlayer {
 		return getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES);
 	}
 
-	getUpgrades(crop?: Crop, tool?: FarmingTool) {
+	getUpgrades() {
 		const upgrades = getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES).flatMap(
 			(source) => source.upgrades ?? []
 		);
@@ -158,36 +158,42 @@ export class FarmingPlayer {
 			upgrades.push(...armorSetUpgrades);
 		}
 
-		if (crop) {
-			const cropUpgrades = this.getCropProgress(crop);
-			for (const source of cropUpgrades) {
-				if (source.upgrades) {
-					upgrades.push(...source.upgrades);
-				}
+		upgrades.sort((a, b) => b.increase - a.increase);
+		return upgrades;
+	}
+
+	getCropUpgrades(crop?: Crop, tool?: FarmingTool) {
+		const upgrades = [] as FortuneUpgrade[];
+		if (!crop) return upgrades;
+
+		const cropUpgrades = this.getCropProgress(crop);
+		for (const source of cropUpgrades) {
+			if (source.upgrades) {
+				upgrades.push(...source.upgrades);
 			}
+		}
 
-			const cropTool = tool ?? this.getSelectedCropTool(crop);
-			if (cropTool) {
-				const toolUpgrades = cropTool.getUpgrades();
-				upgrades.push(...toolUpgrades);
-			} else {
-				const startingInfo = FARMING_TOOLS[CROP_INFO[crop].startingTool];
-				if (startingInfo) {
-					const fakeItem = FarmingTool.fakeItem(startingInfo, this.options);
+		const cropTool = tool ?? this.getSelectedCropTool(crop);
+		if (cropTool) {
+			const toolUpgrades = cropTool.getUpgrades();
+			upgrades.push(...toolUpgrades);
+		} else {
+			const startingInfo = FARMING_TOOLS[CROP_INFO[crop].startingTool];
+			if (startingInfo) {
+				const fakeItem = FarmingTool.fakeItem(startingInfo, this.options);
 
-					upgrades.push({
-						title: startingInfo.name,
-						action: UpgradeAction.Purchase,
-						increase: fakeItem?.getFortune() ?? 0,
-						wiki: startingInfo.wiki,
-						category: UpgradeCategory.Item,
-						cost: {
-							items: {
-								[fakeItem?.item.skyblockId ?? CROP_INFO[crop].startingTool]: 1,
-							},
+				upgrades.push({
+					title: startingInfo.name,
+					action: UpgradeAction.Purchase,
+					increase: fakeItem?.getFortune() ?? 0,
+					wiki: startingInfo.wiki,
+					category: UpgradeCategory.Item,
+					cost: {
+						items: {
+							[fakeItem?.item.skyblockId ?? CROP_INFO[crop].startingTool]: 1,
 						},
-					});
-				}
+					},
+				});
 			}
 		}
 

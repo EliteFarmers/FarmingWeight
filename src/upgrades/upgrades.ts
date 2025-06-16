@@ -42,6 +42,7 @@ export function getItemUpgrades(upgradeable: Upgradeable): FortuneUpgrade[] {
 	const deadEnd = nextItem && nextItem.reason == UpgradeReason.DeadEnd;
 
 	const { info: nextInfo, fake: nextFake } = getUpgradeableInfo(nextItem?.id);
+	const upgrades = [] as (FortuneUpgrade | undefined)[];
 
 	if (deadEnd && nextInfo) {
 		return [
@@ -62,13 +63,38 @@ export function getItemUpgrades(upgradeable: Upgradeable): FortuneUpgrade[] {
 				},
 			} satisfies FortuneUpgrade,
 		];
+	} else if (nextItem && nextInfo) {
+		const nextUpgrade = getNextItemUpgradeableTo(upgradeable, {
+			[nextItem.id]: nextInfo,
+		});
+
+		if (nextUpgrade) {
+			const increase = (nextFake?.getFortune() ?? 0) - upgradeable.fortune;
+			upgrades.push({
+				title: nextInfo.name,
+				increase: increase < 0 ? 0 : increase,
+				wiki: nextInfo.wiki,
+				action: UpgradeAction.Upgrade,
+				category: UpgradeCategory.Item,
+				cost: nextUpgrade.info.upgrade?.cost ?? {
+					items: {
+						[nextItem.id]: 1,
+					},
+				},
+				onto: {
+					name: upgradeable.item.name,
+					skyblockId: upgradeable.item.skyblockId,
+				},
+			} satisfies FortuneUpgrade);
+		}
 	}
 
-	return [
-		getUpgradeableRarityUpgrade(upgradeable),
-		...getUpgradeableEnchants(upgradeable),
-		...getUpgradeableGems(upgradeable),
-	].filter((u) => u) as FortuneUpgrade[];
+	upgrades.push(getUpgradeableRarityUpgrade(upgradeable));
+	upgrades.push(...getUpgradeableEnchants(upgradeable));
+	upgrades.push(...getUpgradeableGems(upgradeable));
+	upgrades.push(...getUpgradeableReforges(upgradeable));
+
+	return upgrades.filter((u) => u) as FortuneUpgrade[];
 }
 
 export function getLastToolUpgrade(tool: FarmingToolInfo): UpgradeableInfo | undefined {
@@ -264,6 +290,8 @@ export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUp
 		});
 	}
 
+	if (result.increase <= 0) return undefined;
+
 	return result;
 }
 
@@ -349,6 +377,8 @@ export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: strin
 			// The desired level needs to be applied directly
 			items['ENCHANTMENT_' + enchant.name.toLocaleUpperCase().replaceAll(' ', '_') + '_' + (applied + 1)] = 1;
 			break;
+		case EnchantTierProcurement.SelfLeveling:
+			return result; // Self-leveling enchantments do not have a cost
 		default:
 			break;
 	}

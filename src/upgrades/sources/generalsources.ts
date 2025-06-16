@@ -110,6 +110,33 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				maxInfo: highest?.getLastItemUpgrade()?.info ?? FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT,
 			};
 		},
+		upgrades: (player) => {
+			const highest = player.activeAccessories.find(
+				(a) => a.info.family === FARMING_ACCESSORIES_INFO.FERMENTO_ARTIFACT?.family
+			);
+
+			if (!highest) {
+				const cropie = FARMING_ACCESSORIES_INFO.CROPIE_TALISMAN;
+				if (!cropie) return [];
+
+				return [
+					{
+						title: cropie.name,
+						increase: cropie.baseStats?.[Stat.FarmingFortune] ?? 0,
+						action: UpgradeAction.Purchase,
+						category: UpgradeCategory.Item,
+						wiki: cropie.wiki,
+						cost: {
+							items: {
+								CROPIE_TALISMAN: 1,
+							},
+						},
+					},
+				];
+			}
+
+			return highest.getUpgrades();
+		},
 	},
 	{
 		name: REFINED_TRUFFLE_SOURCE.name,
@@ -118,6 +145,26 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		max: () => REFINED_TRUFFLE_SOURCE.maxLevel * REFINED_TRUFFLE_SOURCE.fortunePerLevel,
 		current: (player) => {
 			return (player.options.refinedTruffles ?? 0) * REFINED_TRUFFLE_SOURCE.fortunePerLevel;
+		},
+		upgrades: (player) => {
+			const consumed = player.options.refinedTruffles ?? 0;
+			if (consumed >= 5) return [];
+
+			return [
+				{
+					title: 'Refined Dark Cacao Truffle',
+					increase: REFINED_TRUFFLE_SOURCE.fortunePerLevel,
+					action: UpgradeAction.Consume,
+					repeatable: 5 - consumed,
+					wiki: REFINED_TRUFFLE_SOURCE.wiki,
+					category: UpgradeCategory.Item,
+					cost: {
+						items: {
+							REFINED_DARK_CACAO_TRUFFLE: 1,
+						},
+					},
+				},
+			];
 		},
 	},
 	{
@@ -144,6 +191,27 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				nextInfo: fake ? fake.info : accessory?.getNextItemUpgrade()?.info,
 				maxInfo: (fake ? fake : accessory)?.getLastItemUpgrade()?.info,
 			};
+		},
+		upgrades: (player) => {
+			const accessory = player.accessories.find((a) => a.info.skyblockId === 'POWER_RELIC');
+
+			if (!accessory)
+				return [
+					{
+						title: 'Relic of Power',
+						increase: 0,
+						action: UpgradeAction.Purchase,
+						category: UpgradeCategory.Item,
+						wiki: FARMING_ACCESSORIES_INFO.POWER_RELIC?.wiki,
+						cost: {
+							items: {
+								POWER_RELIC: 1,
+							},
+						},
+					},
+				];
+
+			return accessory.getUpgrades();
 		},
 	},
 ];
