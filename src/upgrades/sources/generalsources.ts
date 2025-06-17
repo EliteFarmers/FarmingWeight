@@ -178,6 +178,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 						title: cropie.name,
 						increase: cropie.baseStats?.[Stat.FarmingFortune] ?? 0,
 						action: UpgradeAction.Purchase,
+						item: 'CROPIE_TALISMAN',
 						category: UpgradeCategory.Item,
 						wiki: cropie.wiki,
 						cost: {
@@ -255,6 +256,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 						title: 'Relic of Power',
 						increase: 0,
 						action: UpgradeAction.Purchase,
+						purchase: 'POWER_RELIC',
 						category: UpgradeCategory.Item,
 						wiki: FARMING_ACCESSORIES_INFO.POWER_RELIC?.wiki,
 						cost: FARMING_ACCESSORIES_INFO.POWER_RELIC?.cost,

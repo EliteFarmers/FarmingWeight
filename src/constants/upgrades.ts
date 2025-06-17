@@ -92,6 +92,7 @@ export interface FortuneUpgrade {
 	max?: number;
 	increase: number;
 	action: UpgradeAction;
+	purchase?: string;
 	category: UpgradeCategory;
 	optional?: boolean;
 	api?: boolean;

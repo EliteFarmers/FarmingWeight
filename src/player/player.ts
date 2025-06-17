@@ -181,17 +181,19 @@ export class FarmingPlayer {
 			const startingInfo = FARMING_TOOLS[CROP_INFO[crop].startingTool];
 			if (startingInfo) {
 				const fakeItem = FarmingTool.fakeItem(startingInfo, this.options);
+				const purchaseId = fakeItem?.item.skyblockId ?? CROP_INFO[crop].startingTool;
 
 				upgrades.push({
 					title: startingInfo.name,
 					action: UpgradeAction.Purchase,
+					purchase: purchaseId,
 					increase: fakeItem?.getFortune() ?? 0,
 					wiki: startingInfo.wiki,
 					max: fakeItem?.getProgress()?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0,
 					category: UpgradeCategory.Item,
 					cost: {
 						items: {
-							[fakeItem?.item.skyblockId ?? CROP_INFO[crop].startingTool]: 1,
+							[purchaseId]: 1,
 						},
 					},
 				});

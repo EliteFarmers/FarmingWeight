@@ -68,6 +68,7 @@ export function getSelfFortuneUpgrade(
 				increase: nextFake?.getFortune() ?? 0,
 				wiki: nextInfo.wiki,
 				action: UpgradeAction.Purchase,
+				purchase: nextInfo.skyblockId,
 				category: UpgradeCategory.Item,
 				cost: nextItem.cost ?? {
 					items: {
@@ -89,6 +90,7 @@ export function getSelfFortuneUpgrade(
 				increase: increase < 0 ? 0 : increase,
 				wiki: nextInfo.wiki,
 				action: nextItem.reason === UpgradeReason.Situational ? UpgradeAction.Purchase : UpgradeAction.Upgrade,
+				purchase: nextItem.reason === UpgradeReason.Situational ? nextItem.id : undefined,
 				category: UpgradeCategory.Item,
 				cost: nextItem.cost ?? {
 					items: {
