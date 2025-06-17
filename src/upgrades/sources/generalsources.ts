@@ -24,6 +24,24 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		current: (player) => {
 			return (player.options.farmingLevel ?? 0) * FARMING_LEVEL.fortunePerLevel;
 		},
+		upgrades: (player) => {
+			const current = player.options.farmingLevel ?? 0;
+			if (current < 50 || current >= FARMING_LEVEL.maxLevel) return [];
+
+			const nextCost = FARMING_LEVEL.upgradeCosts?.[current + 1];
+			if (!nextCost) return [];
+
+			return [
+				{
+					title: FARMING_LEVEL.name + ' ' + (current + 1),
+					increase: FARMING_LEVEL.fortunePerLevel,
+					action: UpgradeAction.LevelUp,
+					category: UpgradeCategory.Skill,
+					wiki: FARMING_LEVEL.wiki,
+					cost: nextCost,
+				},
+			];
+		},
 	},
 	{
 		name: PEST_BESTIARY_SOURCE.name,
@@ -41,6 +59,26 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		max: () => ANITA_FORTUNE_UPGRADE.maxLevel * ANITA_FORTUNE_UPGRADE.fortunePerLevel,
 		current: (player) => {
 			return (player.options.anitaBonus ?? 0) * ANITA_FORTUNE_UPGRADE.fortunePerLevel;
+		},
+		upgrades: (player) => {
+			const current = player.options.anitaBonus ?? 0;
+			if (current >= ANITA_FORTUNE_UPGRADE.maxLevel) return [];
+
+			const nextCost = ANITA_FORTUNE_UPGRADE.upgradeCosts?.[current + 1];
+			if (!nextCost) return [];
+
+			return [
+				{
+					title: ANITA_FORTUNE_UPGRADE.name,
+					increase: ANITA_FORTUNE_UPGRADE.fortunePerLevel,
+					action: UpgradeAction.Upgrade,
+					repeatable: ANITA_FORTUNE_UPGRADE.maxLevel - current,
+					api: false,
+					category: UpgradeCategory.Anita,
+					wiki: ANITA_FORTUNE_UPGRADE.wiki,
+					cost: nextCost,
+				},
+			];
 		},
 	},
 	{
@@ -74,6 +112,22 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		max: () => COMMUNITY_CENTER_UPGRADE.maxLevel * COMMUNITY_CENTER_UPGRADE.fortunePerLevel,
 		current: (player) => {
 			return (player.options.communityCenter ?? 0) * COMMUNITY_CENTER_UPGRADE.fortunePerLevel;
+		},
+		upgrades: (player) => {
+			const current = player.options.communityCenter ?? 0;
+			if (current >= COMMUNITY_CENTER_UPGRADE.maxLevel) return [];
+
+			return [
+				{
+					title: COMMUNITY_CENTER_UPGRADE.name,
+					increase: COMMUNITY_CENTER_UPGRADE.fortunePerLevel,
+					action: UpgradeAction.Upgrade,
+					repeatable: COMMUNITY_CENTER_UPGRADE.maxLevel - current,
+					api: false,
+					category: UpgradeCategory.CommunityCenter,
+					wiki: COMMUNITY_CENTER_UPGRADE.wiki,
+				},
+			];
 		},
 	},
 	{
@@ -203,11 +257,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 						action: UpgradeAction.Purchase,
 						category: UpgradeCategory.Item,
 						wiki: FARMING_ACCESSORIES_INFO.POWER_RELIC?.wiki,
-						cost: {
-							items: {
-								POWER_RELIC: 1,
-							},
-						},
+						cost: FARMING_ACCESSORIES_INFO.POWER_RELIC?.cost,
 					},
 				];
 

@@ -305,6 +305,11 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: {
 			id: 'MELON_DICER_2',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_MELON_BLOCK: 64,
+				},
+			},
 		},
 		gemSlots: [
 			{
@@ -334,6 +339,11 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: {
 			id: 'MELON_DICER_3',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_MELON_BLOCK: 128,
+				},
+			},
 		},
 		gemSlots: [
 			{
@@ -431,6 +441,11 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: {
 			id: 'PUMPKIN_DICER_2',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					POLISHED_PUMPKIN: 16,
+				},
+			},
 		},
 		gemSlots: [
 			{
@@ -490,6 +505,11 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: {
 			id: 'PUMPKIN_DICER_3',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					POLISHED_PUMPKIN: 32,
+				},
+			},
 		},
 		name: 'Pumpkin Dicer 2.0',
 		wiki: 'https://wiki.hypixel.net/Pumpkin_Dicer_2.0',
@@ -557,6 +577,12 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: {
 			id: 'THEORETICAL_HOE_CARROT_2',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					JACOBS_TICKET: 64,
+					ENCHANTED_CARROT: 256,
+				},
+			},
 		},
 		gemSlots: [
 			{
@@ -587,6 +613,12 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: {
 			id: 'THEORETICAL_HOE_CARROT_3',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					JACOBS_TICKET: 256,
+					ENCHANTED_GOLDEN_CARROT: 256,
+				},
+			},
 		},
 		gemSlots: [
 			{
@@ -686,6 +718,12 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: {
 			id: 'THEORETICAL_HOE_WARTS_2',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					JACOBS_TICKET: 64,
+					ENCHANTED_NETHER_STALK: 256,
+				},
+			},
 		},
 		gemSlots: [
 			{
@@ -716,6 +754,12 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: {
 			id: 'THEORETICAL_HOE_WARTS_3',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					JACOBS_TICKET: 256,
+					MUTANT_NETHER_STALK: 256,
+				},
+			},
 		},
 		gemSlots: [
 			{
@@ -815,6 +859,12 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: {
 			id: 'THEORETICAL_HOE_POTATO_2',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					JACOBS_TICKET: 64,
+					ENCHANTED_POTATO: 256,
+				},
+			},
 		},
 		gemSlots: [
 			{
@@ -845,6 +895,12 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: {
 			id: 'THEORETICAL_HOE_POTATO_3',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					JACOBS_TICKET: 256,
+					ENCHANTED_BAKED_POTATO: 256,
+				},
+			},
 		},
 		gemSlots: [
 			{
@@ -944,6 +1000,12 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: {
 			id: 'THEORETICAL_HOE_CANE_2',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					JACOBS_TICKET: 64,
+					ENCHANTED_SUGAR: 256,
+				},
+			},
 		},
 		gemSlots: [
 			{
@@ -974,6 +1036,12 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: {
 			id: 'THEORETICAL_HOE_CANE_3',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					JACOBS_TICKET: 256,
+					ENCHANTED_SUGAR_CANE: 256,
+				},
+			},
 		},
 		gemSlots: [
 			{
@@ -1073,6 +1141,12 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: {
 			id: 'THEORETICAL_HOE_WHEAT_2',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					JACOBS_TICKET: 64,
+					ENCHANTED_WHEAT: 256,
+				},
+			},
 		},
 		gemSlots: [
 			{
@@ -1103,6 +1177,12 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		upgrade: {
 			id: 'THEORETICAL_HOE_WHEAT_3',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					JACOBS_TICKET: 256,
+					ENCHANTED_HAY_BALE: 256,
+				},
+			},
 		},
 		gemSlots: [
 			{

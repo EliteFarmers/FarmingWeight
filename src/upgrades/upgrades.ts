@@ -1,4 +1,4 @@
-import { EnchantTierProcurement, FARMING_ENCHANTS } from '../constants/enchants.js';
+import { EnchantTierProcurement, FARMING_ENCHANTS, FarmingEnchant } from '../constants/enchants.js';
 import { REFORGES, Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import {
@@ -38,21 +38,38 @@ export function getFortune(level: number | null | undefined, source: FortuneSour
 }
 
 export function getItemUpgrades(upgradeable: Upgradeable): FortuneUpgrade[] {
+	const { deadEnd, upgrade } = getSelfFortuneUpgrade(upgradeable) ?? {};
+	if (deadEnd) return [upgrade] as FortuneUpgrade[];
+
+	const upgrades = [] as (FortuneUpgrade | undefined)[];
+
+	upgrades.push(upgrade);
+	upgrades.push(getUpgradeableRarityUpgrade(upgradeable));
+	upgrades.push(...getUpgradeableEnchants(upgradeable));
+	upgrades.push(...getUpgradeableGems(upgradeable));
+	upgrades.push(...getUpgradeableReforges(upgradeable));
+
+	return upgrades.filter((u) => u) as FortuneUpgrade[];
+}
+
+export function getSelfFortuneUpgrade(
+	upgradeable: Upgradeable
+): { upgrade: FortuneUpgrade; deadEnd: boolean } | undefined {
 	const nextItem = upgradeable.getItemUpgrade();
 	const deadEnd = nextItem && nextItem.reason == UpgradeReason.DeadEnd;
 
 	const { info: nextInfo, fake: nextFake } = getUpgradeableInfo(nextItem?.id);
-	const upgrades = [] as (FortuneUpgrade | undefined)[];
 
 	if (deadEnd && nextInfo) {
-		return [
-			{
+		return {
+			deadEnd: true,
+			upgrade: {
 				title: nextInfo.name,
 				increase: nextFake?.getFortune() ?? 0,
 				wiki: nextInfo.wiki,
 				action: UpgradeAction.Purchase,
 				category: UpgradeCategory.Item,
-				cost: {
+				cost: nextItem.cost ?? {
 					items: {
 						[nextInfo.skyblockId]: 1,
 					},
@@ -62,21 +79,18 @@ export function getItemUpgrades(upgradeable: Upgradeable): FortuneUpgrade[] {
 					skyblockId: upgradeable.item.skyblockId,
 				},
 			} satisfies FortuneUpgrade,
-		];
-	} else if (nextItem && nextInfo) {
-		const nextUpgrade = getNextItemUpgradeableTo(upgradeable, {
-			[nextItem.id]: nextInfo,
-		});
-
-		if (nextUpgrade) {
-			const increase = (nextFake?.getFortune() ?? 0) - upgradeable.fortune;
-			upgrades.push({
+		};
+	} else if (nextItem && nextInfo && !(nextItem.reason === UpgradeReason.Situational && !nextItem.preferred)) {
+		const increase = (nextFake?.getFortune() ?? 0) - upgradeable.fortune;
+		return {
+			deadEnd: false,
+			upgrade: {
 				title: nextInfo.name,
 				increase: increase < 0 ? 0 : increase,
 				wiki: nextInfo.wiki,
-				action: UpgradeAction.Upgrade,
+				action: nextItem.reason === UpgradeReason.Situational ? UpgradeAction.Purchase : UpgradeAction.Upgrade,
 				category: UpgradeCategory.Item,
-				cost: nextUpgrade.info.upgrade?.cost ?? {
+				cost: nextItem.cost ?? {
 					items: {
 						[nextItem.id]: 1,
 					},
@@ -85,16 +99,9 @@ export function getItemUpgrades(upgradeable: Upgradeable): FortuneUpgrade[] {
 					name: upgradeable.item.name,
 					skyblockId: upgradeable.item.skyblockId,
 				},
-			} satisfies FortuneUpgrade);
-		}
+			} satisfies FortuneUpgrade,
+		};
 	}
-
-	upgrades.push(getUpgradeableRarityUpgrade(upgradeable));
-	upgrades.push(...getUpgradeableEnchants(upgradeable));
-	upgrades.push(...getUpgradeableGems(upgradeable));
-	upgrades.push(...getUpgradeableReforges(upgradeable));
-
-	return upgrades.filter((u) => u) as FortuneUpgrade[];
 }
 
 export function getLastToolUpgrade(tool: FarmingToolInfo): UpgradeableInfo | undefined {
@@ -222,6 +229,10 @@ export function getSourceProgress<T extends object>(
 
 		if (source.upgrades) {
 			const upgrades = source.upgrades(upgradeable);
+			for (const upgrade of upgrades) {
+				upgrade.max = upgrade.max ?? max;
+				upgrade.wiki = upgrade.wiki ?? progress.wiki;
+			}
 			if (upgrades.length > 0) {
 				progress.upgrades = upgrades;
 			}
@@ -273,8 +284,8 @@ export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUp
 
 	// Reforge fortune increases with rarity
 	// Calculate the difference in fortune between the current and next rarity
-
 	if (!upgradeable.reforge) {
+		if (result.increase <= 0) return undefined;
 		return result;
 	}
 
@@ -335,7 +346,7 @@ export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: strin
 			category: UpgradeCategory.Enchant,
 			cost: {
 				items: {
-					['ENCHANTMENT_' + enchant.name.toLocaleUpperCase().replaceAll(' ', '_') + '_1']: 1,
+					[enchantNameToId(enchant) + '_1']: 1,
 				},
 			},
 			onto: {
@@ -370,12 +381,12 @@ export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: strin
 			// Ex: 4 level 1 items = 2 level 2 items = 1 level 3 item
 			// Count = Math.pow(2, applied - 1)
 			const count = Math.pow(2, applied);
-			items['ENCHANTMENT_' + enchant.name.toLocaleUpperCase().replaceAll(' ', '_') + '_1'] = count;
+			items[enchantNameToId(enchant) + '_1'] = count;
 			break;
 		}
 		case EnchantTierProcurement.Loot:
 			// The desired level needs to be applied directly
-			items['ENCHANTMENT_' + enchant.name.toLocaleUpperCase().replaceAll(' ', '_') + '_' + (applied + 1)] = 1;
+			items[enchantNameToId(enchant) + '_' + (applied + 1)] = 1;
 			break;
 		case EnchantTierProcurement.SelfLeveling:
 			return result; // Self-leveling enchantments do not have a cost
@@ -404,6 +415,11 @@ export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: strin
 	return result;
 }
 
+function enchantNameToId(enchant: FarmingEnchant): string {
+	if (enchant.id) return enchant.id;
+	return 'ENCHANTMENT_' + enchant.name.toLocaleUpperCase().replaceAll(' ', '_').replaceAll('-', '_');
+}
+
 export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade[] {
 	const currentFortune = upgradeable.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
 	const result: FortuneUpgrade[] = [];
@@ -415,9 +431,9 @@ export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade
 			!reforge ||
 			!reforge.appliesTo.includes(upgradeable.type) ||
 			reforge === upgradeable.reforge
-		)
-			return result;
-
+		) {
+			continue;
+		}
 		const tier = reforge.tiers[upgradeable.rarity];
 		if (!tier || !tier.stats?.[Stat.FarmingFortune]) continue;
 

@@ -187,6 +187,7 @@ export class FarmingPlayer {
 					action: UpgradeAction.Purchase,
 					increase: fakeItem?.getFortune() ?? 0,
 					wiki: startingInfo.wiki,
+					max: fakeItem?.getProgress()?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0,
 					category: UpgradeCategory.Item,
 					cost: {
 						items: {

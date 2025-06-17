@@ -265,3 +265,47 @@ test('Rancher boots preferred upgrade test', () => {
 	expect(bootProgress!.item?.skyblockId).toBe('RANCHERS_BOOTS');
 	expect(bootProgress!.maxFortune).toBe(113);
 });
+
+const bustlingLeggings = {
+	id: 300,
+	count: 1,
+	skyblockId: 'FERMENTO_LEGGINGS',
+	uuid: '1a21a85c-1ed8-4c0a-bc92-caf32a52eb15',
+	name: '§6Bustling Fermento Leggings',
+	lore: [
+		'§7Health: §a+195',
+		'§7Defense: §a+40',
+		'§7Speed: §a+6',
+		'§7Bonus Pest Chance: §a+5%',
+		'§7Farming Fortune: §a+53 §9(+8)',
+		' §8[§8☘§8] §8[§8☘§8]',
+		'',
+		'§9Pesterminator V',
+		'§7Grants §6+10☘ Farming Fortune §7and',
+		'§7§2+5ൠ Bonus Pest Chance§7, which',
+		'§7increases your chance to spawn',
+		'§7bonus §2Pests §7on §aThe Garden§7.',
+		'',
+		'§6Tiered Bonus: Feast (3/4)',
+		'§7Combines the Tiered Bonuses of',
+		'§7wearing §a3 pieces §7of the Melon Armor,',
+		'§7Cropie Armor, and Squash Armor.',
+		'§7§7Grants §650☘ Farming Fortune§7.',
+		'',
+		'§6§lLEGENDARY LEGGINGS',
+	],
+	enchantments: {
+		pesterminator: 5,
+	},
+	attributes: {
+		modifier: 'bustling',
+		timestamp: '1735603042665',
+	},
+};
+
+test('Bustling Fermento Leggings Upgrades', () => {
+	const item = new FarmingArmor(bustlingLeggings);
+	const upgrades = item.getUpgrades();
+
+	expect(upgrades).toHaveLength(5);
+});

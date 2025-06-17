@@ -1,7 +1,7 @@
 import { Crop } from '../constants/crops.js';
 import { REFORGES, Rarity, RarityRecord, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges.js';
 import { Stat, StatsRecord } from '../constants/stats.js';
-import { FortuneSourceProgress, FortuneUpgrade, Upgrade } from '../constants/upgrades.js';
+import { FortuneSourceProgress, FortuneUpgrade, Upgrade, UpgradeCost } from '../constants/upgrades.js';
 import { PlayerOptions } from '../player/playeroptions.js';
 import { getItemUpgrades, getLastItemUpgradeableTo, getNextItemUpgradeableTo } from '../upgrades/upgrades.js';
 import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
@@ -18,6 +18,7 @@ export interface UpgradeableInfo {
 	maxRarity: Rarity;
 	stats?: RarityRecord<StatsRecord>;
 	baseStats?: Partial<Record<Stat, number>>;
+	cost?: UpgradeCost;
 	computedStats?: (opt: PlayerOptions) => Partial<Record<Stat, number>>;
 }
 

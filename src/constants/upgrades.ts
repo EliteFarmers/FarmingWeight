@@ -2,6 +2,7 @@ import { EliteItemDto } from '../fortune/item.js';
 import { UpgradeableInfo } from '../fortune/upgradeable.js';
 import type { GearSlot } from '../items/armor.js';
 import type { FARMING_TOOLS } from '../items/tools.js';
+import { JacobContestMedal } from '../util/jacob.js';
 import { Crop } from './crops.js';
 import { Stat } from './stats.js';
 
@@ -24,6 +25,7 @@ export interface FortuneSource {
 	maxLevel: number;
 	wiki: string;
 	statsPerLevel?: Partial<Record<Stat, number>>;
+	upgradeCosts?: Partial<Record<number, UpgradeCost>>;
 }
 
 export interface FortuneSourceProgress {
@@ -48,6 +50,7 @@ export interface UpgradeCost {
 	coins?: number;
 	copper?: number;
 	bits?: number;
+	medals?: Partial<Record<Exclude<JacobContestMedal, 'platinum' | 'diamond'>, number>>;
 	applyCost?: Omit<UpgradeCost, 'applyCost'>;
 }
 
@@ -58,6 +61,10 @@ export enum UpgradeCategory {
 	Gem = 'gem',
 	Reforge = 'reforge',
 	Plot = 'plot',
+	Skill = 'skill',
+	CommunityCenter = 'community_center',
+	Anita = 'anita',
+	Misc = 'misc',
 }
 
 export enum UpgradeAction {
@@ -67,6 +74,7 @@ export enum UpgradeAction {
 	Purchase = 'purchase',
 	Consume = 'consume',
 	Upgrade = 'upgrade',
+	Unlock = 'unlock',
 }
 
 export interface FortuneUpgradeImprovement {
@@ -81,10 +89,12 @@ export interface FortuneUpgrade {
 		skyblockId?: string | null;
 		slot?: GearSlot;
 	};
+	max?: number;
 	increase: number;
 	action: UpgradeAction;
 	category: UpgradeCategory;
 	optional?: boolean;
+	api?: boolean;
 	repeatable?: number;
 	deadEnd?: boolean;
 	cost?: UpgradeCost;

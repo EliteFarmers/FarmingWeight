@@ -21,6 +21,7 @@ import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
 import {
 	getItemUpgrades,
 	getLastItemUpgradeableTo,
+	getSelfFortuneUpgrade,
 	getSourceProgress,
 	getUpgradeableRarityUpgrade,
 } from '../upgrades/upgrades.js';
@@ -453,9 +454,16 @@ export class FarmingArmor extends UpgradeableBase {
 	}
 
 	getUpgrades(): FortuneUpgrade[] {
+		const { deadEnd, upgrade: self } = getSelfFortuneUpgrade(this) ?? {};
+		if (deadEnd && self) return [self];
+
 		const upgrades = getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, false).flatMap(
 			(source) => source.upgrades ?? []
 		);
+
+		if (self) {
+			upgrades.push(self);
+		}
 
 		const rarityUpgrade = getUpgradeableRarityUpgrade(this);
 		if (rarityUpgrade) {

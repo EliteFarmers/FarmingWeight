@@ -89,6 +89,11 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'RANCHERS_BOOTS',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_PUMPKIN: 256,
+				},
+			},
 		},
 		maxRarity: Rarity.Rare,
 		slot: GearSlot.Boots,
@@ -459,6 +464,13 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'CROPIE_HELMET',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_HAY_BALE: 8,
+					BOX_OF_SEEDS: 6,
+					CROPIE: 20,
+				},
+			},
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -478,6 +490,14 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'CROPIE_CHESTPLATE',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_HAY_BALE: 8,
+					BOX_OF_SEEDS: 6,
+					CROPIE: 20,
+					ENCHANTED_BAKED_POTATO: 45,
+				},
+			},
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -497,6 +517,14 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'CROPIE_LEGGINGS',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_HAY_BALE: 8,
+					BOX_OF_SEEDS: 6,
+					CROPIE: 20,
+					ENCHANTED_GOLDEN_CARROT: 30,
+				},
+			},
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -516,6 +544,12 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'CROPIE_BOOTS',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					ENCHANTED_HAY_BALE: 16,
+					CROPIE: 20,
+				},
+			},
 		},
 		family: 'MELON',
 		special: [SpecialCrop.Cropie],
@@ -535,6 +569,13 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'SQUASH_HELMET',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					SQUASH: 20,
+					POLISHED_PUMPKIN: 8,
+					ENCHANTED_MELON_BLOCK: 48,
+				},
+			},
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
@@ -570,6 +611,14 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'SQUASH_CHESTPLATE',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					SQUASH: 20,
+					POLISHED_PUMPKIN: 8,
+					ENCHANTED_MELON_BLOCK: 48,
+					ENCHANTED_COOKIE: 30,
+				},
+			},
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
@@ -605,6 +654,14 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'SQUASH_LEGGINGS',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					SQUASH: 20,
+					POLISHED_PUMPKIN: 8,
+					ENCHANTED_MELON_BLOCK: 48,
+					ENCHANTED_COOKIE: 20,
+				},
+			},
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
@@ -640,6 +697,12 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'SQUASH_BOOTS',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					SQUASH: 20,
+					POLISHED_PUMPKIN: 12,
+				},
+			},
 		},
 		family: 'CROPIE',
 		special: [SpecialCrop.Squash],
@@ -675,6 +738,14 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'FERMENTO_HELMET',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					CONDENSED_FERMENTO: 2,
+					ENCHANTED_SUGAR_CANE: 32,
+					ENCHANTED_HUGE_MUSHROOM_2: 32,
+					ENCHANTED_HUGE_MUSHROOM_1: 32,
+				},
+			},
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
@@ -710,6 +781,16 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'FERMENTO_CHESTPLATE',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					CONDENSED_FERMENTO: 2,
+					ENCHANTED_SUGAR_CANE: 32,
+					ENCHANTED_HUGE_MUSHROOM_2: 32,
+					ENCHANTED_HUGE_MUSHROOM_1: 32,
+					MUTANT_NETHER_STALK: 30,
+					ENCHANTED_CACTUS: 25,
+				},
+			},
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
@@ -745,6 +826,15 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'FERMENTO_LEGGINGS',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					CONDENSED_FERMENTO: 2,
+					ENCHANTED_SUGAR_CANE: 32,
+					ENCHANTED_HUGE_MUSHROOM_2: 32,
+					ENCHANTED_HUGE_MUSHROOM_1: 32,
+					MUTANT_NETHER_STALK: 40,
+				},
+			},
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],
@@ -780,6 +870,13 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		upgrade: {
 			id: 'FERMENTO_BOOTS',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					CONDENSED_FERMENTO: 2,
+					ENCHANTED_HUGE_MUSHROOM_2: 32,
+					ENCHANTED_HUGE_MUSHROOM_1: 32,
+				},
+			},
 		},
 		family: 'SQUASH',
 		special: [SpecialCrop.Fermento],

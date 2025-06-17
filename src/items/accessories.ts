@@ -36,6 +36,11 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		upgrade: {
 			id: 'FERMENTO_ARTIFACT',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					CONDENSED_FERMENTO: 8,
+				},
+			},
 		},
 		maxRarity: Rarity.Rare,
 		crops: [Crop.Wheat, Crop.Carrot, Crop.Potato, Crop.Pumpkin, Crop.Melon, Crop.Mushroom, Crop.CocoaBeans],
@@ -52,6 +57,11 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 		upgrade: {
 			id: 'SQUASH_RING',
 			reason: UpgradeReason.NextTier,
+			cost: {
+				items: {
+					SQUASH: 128,
+				},
+			},
 		},
 		maxRarity: Rarity.Uncommon,
 		crops: [Crop.Wheat, Crop.Carrot, Crop.Potato],
@@ -77,6 +87,12 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryIn
 			{ slot_type: 'CITRINE', costs: [] },
 			{ slot_type: 'AQUAMARINE', costs: [] },
 		],
+		cost: {
+			items: {
+				PERFECT_PLATE: 1,
+				GLACITE_AMALGAMATION: 32,
+			},
+		},
 		maxRarity: Rarity.Mythic,
 	},
 };

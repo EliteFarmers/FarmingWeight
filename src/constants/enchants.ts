@@ -24,6 +24,7 @@ export interface FarmingEnchantTier {
 
 export interface FarmingEnchant {
 	name: string;
+	id?: string;
 	appliesTo: readonly ReforgeTarget[];
 	wiki: string;
 	minLevel: number;
@@ -395,6 +396,7 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 	},
 	turbo_coco: {
 		name: 'Turbo-Cocoa',
+		id: 'ENCHANTMENT_TURBO_COCO',
 		wiki: 'https://wiki.hypixel.net/Turbo-Cocoa_Enchantment',
 		cropSpecific: Crop.CocoaBeans,
 		...turboEnchant,
