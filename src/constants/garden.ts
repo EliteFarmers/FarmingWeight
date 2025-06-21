@@ -1185,8 +1185,8 @@ export const farmsData: Record<string, farmInfo> = {
 			},
 		],
 	},
-	farminghubCane: {
-		name: 'FarmingHub Sugar Cane',
+	reverseCane: {
+		name: 'Reverse Sugar Cane',
 		crops: [Crop.SugarCane],
 		speed: {
 			speed: 328,
