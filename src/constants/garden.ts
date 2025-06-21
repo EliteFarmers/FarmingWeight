@@ -524,7 +524,8 @@ export interface farmInfo {
 	description?: string;
 	crops: Crop[];
 	speed: {
-		speed: number;
+		'1.8.9': number;
+		'1.21'?: number;
 		depthStrider?: DepthStriderLevels;
 		soulSand: boolean;
 		buildVersion: MinecraftVersion;
@@ -555,7 +556,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'IdkDom Melon/Pumpkin',
 		crops: [Crop.Melon, Crop.Pumpkin],
 		speed: {
-			speed: 155,
+			'1.8.9': 155,
 			soulSand: false,
 			buildVersion: '1.8.9',
 			method: 'straight',
@@ -588,7 +589,8 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'SunTzu & MelonKingDe Black Cat Melon',
 		crops: [Crop.Melon, Crop.Pumpkin],
 		speed: {
-			speed: 400,
+			'1.8.9': 400,
+			'1.21': 368,
 			depthStrider: 3,
 			soulSand: true,
 			buildVersion: '1.8.9',
@@ -634,7 +636,8 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Easier to Build Melon/Pumpkin',
 		crops: [Crop.Melon, Crop.Pumpkin],
 		speed: {
-			speed: 400,
+			'1.8.9': 400,
+			'1.21': 368,
 			depthStrider: 3,
 			soulSand: true,
 			buildVersion: '1.8.9',
@@ -682,7 +685,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Chissl Waterless Melon/Pumpkin',
 		crops: [Crop.Melon, Crop.Pumpkin],
 		speed: {
-			speed: 360,
+			'1.8.9': 360,
 			depthStrider: 1,
 			soulSand: false,
 			buildVersion: '1.8.9',
@@ -717,7 +720,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Dropdown Wheat/Potato/Carrot/Netherwart',
 		crops: [Crop.Wheat, Crop.Potato, Crop.Carrot, Crop.NetherWart],
 		speed: {
-			speed: 93,
+			'1.8.9': 93,
 			depthStrider: 3,
 			soulSand: false,
 			buildVersion: '1.8.9',
@@ -736,7 +739,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Ace Wheat/Potato/Carrot/Netherwart',
 		crops: [Crop.Wheat, Crop.Potato, Crop.Carrot, Crop.NetherWart],
 		speed: {
-			speed: 347,
+			'1.8.9': 347,
 			depthStrider: 2,
 			soulSand: true,
 			buildVersion: '1.8.9',
@@ -772,7 +775,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Draip Looping Wheat/Potato/Carrot/Netherwart',
 		crops: [Crop.Wheat, Crop.Potato, Crop.Carrot, Crop.NetherWart],
 		speed: {
-			speed: 328,
+			'1.8.9': 328,
 			depthStrider: 3,
 			soulSand: false,
 			buildVersion: '1.8.9',
@@ -809,7 +812,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Z109 Sprial Wheat/Potato/Carrot/Netherwart',
 		crops: [Crop.Wheat, Crop.Potato, Crop.Carrot, Crop.NetherWart],
 		speed: {
-			speed: 328,
+			'1.8.9': 328,
 			depthStrider: 3,
 			soulSand: false,
 			buildVersion: '1.8.9',
@@ -849,7 +852,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Black Cat Wheat/Potato/Carrot',
 		crops: [Crop.Wheat, Crop.Potato, Crop.Carrot],
 		speed: {
-			speed: 347,
+			'1.8.9': 347,
 			depthStrider: 2,
 			soulSand: true,
 			buildVersion: '1.8.9',
@@ -895,7 +898,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Black Cat Nether Wart',
 		crops: [Crop.NetherWart],
 		speed: {
-			speed: 347,
+			'1.8.9': 347,
 			depthStrider: 2,
 			soulSand: true,
 			buildVersion: '1.8.9',
@@ -941,7 +944,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Slanted Downward Spiral (SDS) Mushroom',
 		crops: [Crop.Mushroom],
 		speed: {
-			speed: 233,
+			'1.8.9': 233,
 			depthStrider: 3,
 			soulSand: true,
 			buildVersion: '1.8.9',
@@ -986,7 +989,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'IdkPoison_ Mushroom',
 		crops: [Crop.Mushroom],
 		speed: {
-			speed: 259,
+			'1.8.9': 259,
 			soulSand: false,
 			buildVersion: '1.8.9',
 			method: 'angled into wall',
@@ -1016,7 +1019,8 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Black Cat Cocoa',
 		crops: [Crop.CocoaBeans],
 		speed: {
-			speed: 400,
+			'1.8.9': 400,
+			'1.21': 368,
 			depthStrider: 3,
 			soulSand: true,
 			buildVersion: '1.8.9',
@@ -1053,7 +1057,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Single Lane Cocoa',
 		crops: [Crop.CocoaBeans],
 		speed: {
-			speed: 215,
+			'1.8.9': 215,
 			soulSand: false,
 			buildVersion: '1.8.9',
 			method: 'running into wall',
@@ -1087,7 +1091,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Black Cat Cactus',
 		crops: [Crop.Cactus],
 		speed: {
-			speed: 464,
+			'1.8.9': 464,
 			depthStrider: 3,
 			soulSand: false,
 			buildVersion: '1.8.9',
@@ -1134,7 +1138,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Ace Cactus',
 		crops: [Crop.Cactus],
 		speed: {
-			speed: 464,
+			'1.8.9': 464,
 			depthStrider: 3,
 			soulSand: false,
 			buildVersion: '1.8.9',
@@ -1163,7 +1167,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Regular Sugar Cane',
 		crops: [Crop.SugarCane],
 		speed: {
-			speed: 328,
+			'1.8.9': 328,
 			soulSand: false,
 			buildVersion: '1.8.9',
 			method: 'angled into wall',
@@ -1193,7 +1197,7 @@ export const farmsData: Record<string, farmInfo> = {
 		name: 'Reverse Sugar Cane',
 		crops: [Crop.SugarCane],
 		speed: {
-			speed: 328,
+			'1.8.9': 328,
 			soulSand: false,
 			buildVersion: '1.8.9',
 			method: 'angled into wall',
