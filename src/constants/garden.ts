@@ -617,7 +617,6 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: [
 			{
 				name: 'AgitatedSnake92',
-				url: '',
 			},
 			{
 				name: 'MelonKingDe',
@@ -664,7 +663,6 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: [
 			{
 				name: 'AgitatedSnake92',
-				url: '',
 			},
 			{
 				name: 'MelonKingDe',
@@ -704,11 +702,9 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: [
 			{
 				name: 'AgitatedSnake92',
-				url: '',
 			},
 			{
 				name: 'Chissl',
-				url: '',
 			},
 		],
 		notes: ['Very difficult and time consuming to build, only worthwhile for extreme farmers'],
@@ -765,7 +761,6 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: [
 			{
 				name: 'AgitatedSnake92',
-				url: '',
 			},
 		],
 	},
@@ -839,7 +834,6 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: [
 			{
 				name: 'AgitatedSnake92',
-				url: '',
 			},
 			{
 				name: 'Z109',
@@ -880,7 +874,6 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: [
 			{
 				name: 'AgitatedSnake92',
-				url: '',
 			},
 			{
 				name: 'MelonKingDe',
@@ -927,7 +920,6 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: [
 			{
 				name: 'AgitatedSnake92',
-				url: '',
 			},
 			{
 				name: 'MelonKingDe',
@@ -974,7 +966,6 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: [
 			{
 				name: 'AgitatedSnake92',
-				url: '',
 			},
 			{
 				name: 'MelonKingDe',
@@ -1011,11 +1002,9 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: [
 			{
 				name: 'AgitatedSnake92',
-				url: '',
 			},
 			{
 				name: 'IdkPoison_',
-				url: '',
 			},
 		],
 	},
@@ -1052,7 +1041,6 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: [
 			{
 				name: 'AgitatedSnake92',
-				url: '',
 			},
 		],
 		notes: [blackCatNote],
@@ -1081,11 +1069,9 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: [
 			{
 				name: 'not a cow',
-				url: '',
 			},
 			{
 				name: 'Binrich',
-				url: '',
 			},
 		],
 		notes: [
@@ -1126,7 +1112,6 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: [
 			{
 				name: 'AgitatedSnake92',
-				url: '',
 			},
 			{
 				name: 'MelonKingDe',
@@ -1166,7 +1151,6 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: [
 			{
 				name: 'AgitatedSnake92',
-				url: '',
 			},
 		],
 		notes: ["Don't worry about getting over 400 speed, cactus knife raises speed cap by 100"],
@@ -1225,7 +1209,6 @@ export const farmsData: Record<string, farmInfo> = {
 		authors: [
 			{
 				name: 'AgitatedSnake92',
-				url: '',
 			},
 		],
 	},
