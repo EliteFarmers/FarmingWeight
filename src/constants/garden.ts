@@ -992,7 +992,7 @@ export const farmsData: Record<string, farmInfo> = {
 			method: 'angled into wall',
 		},
 		angle: {
-			yaw: 0, // todo: fix
+			yaw: 26.57,
 			pitch: 0,
 		},
 		bps: 19.98,
