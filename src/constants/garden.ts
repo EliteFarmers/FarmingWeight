@@ -568,7 +568,7 @@ export const farmsData: Record<string, farmInfo> = {
 		laneDepth: 3,
 		resources: [
 			{
-				source: 'https://www.youtube.com/watch?v=Zy_w332uUic',
+				source: 'https://youtu.be/Zy_w332uUic',
 				type: ResourceType.Video,
 			},
 			{
@@ -606,7 +606,7 @@ export const farmsData: Record<string, farmInfo> = {
 				type: ResourceType.Thread,
 			},
 			{
-				source: 'https://www.youtube.com/watch?v=5k9c7qK0l58',
+				source: 'https://youtu.be/5k9c7qK0l58',
 				type: ResourceType.Video,
 			},
 			{
@@ -652,7 +652,7 @@ export const farmsData: Record<string, farmInfo> = {
 				type: ResourceType.Thread,
 			},
 			{
-				source: 'https://www.youtube.com/watch?v=s4HV0RyWcoI',
+				source: 'https://youtu.be/s4HV0RyWcoI',
 				type: ResourceType.Video,
 			},
 			{
@@ -750,7 +750,7 @@ export const farmsData: Record<string, farmInfo> = {
 		laneDepth: 5,
 		resources: [
 			{
-				source: 'https://www.youtube.com/watch?v=hz4lGUz0JP4',
+				source: 'https://youtu.be/hz4lGUz0JP4',
 				type: ResourceType.Video,
 			},
 			{
@@ -790,7 +790,7 @@ export const farmsData: Record<string, farmInfo> = {
 				type: ResourceType.Thread,
 			},
 			{
-				source: 'https://www.youtube.com/watch?v=gcJ5U7SyA-c',
+				source: 'https://youtu.be/gcJ5U7SyA-c',
 				type: ResourceType.Video,
 			},
 		],
@@ -827,7 +827,7 @@ export const farmsData: Record<string, farmInfo> = {
 				type: ResourceType.Thread,
 			},
 			{
-				source: 'https://www.youtube.com/watch?v=9yVNsafjOCA',
+				source: 'https://youtu.be/9yVNsafjOCA',
 				type: ResourceType.Video,
 			},
 			{
@@ -867,7 +867,7 @@ export const farmsData: Record<string, farmInfo> = {
 				type: ResourceType.Thread,
 			},
 			{
-				source: 'https://www.youtube.com/watch?v=KBGIuETQI-g',
+				source: 'https://youtu.be/KBGIuETQI-g',
 				type: ResourceType.Video,
 			},
 			{
@@ -913,7 +913,7 @@ export const farmsData: Record<string, farmInfo> = {
 				type: ResourceType.Thread,
 			},
 			{
-				source: 'https://www.youtube.com/watch?v=n218KDmL-5s',
+				source: 'https://youtu.be/n218KDmL-5s',
 				type: ResourceType.Video,
 			},
 			{
@@ -959,7 +959,7 @@ export const farmsData: Record<string, farmInfo> = {
 				type: ResourceType.Thread,
 			},
 			{
-				source: 'https://www.youtube.com/watch?v=QyWf0DO831g',
+				source: 'https://youtu.be/QyWf0DO831g',
 				type: ResourceType.Video,
 			},
 			{
@@ -1034,7 +1034,7 @@ export const farmsData: Record<string, farmInfo> = {
 				type: ResourceType.Thread,
 			},
 			{
-				source: 'https://www.youtube.com/watch?v=WWR2duiwxK4',
+				source: 'https://youtu.be/WWR2duiwxK4',
 				type: ResourceType.Video,
 			},
 			{
@@ -1105,7 +1105,7 @@ export const farmsData: Record<string, farmInfo> = {
 				type: ResourceType.Thread,
 			},
 			{
-				source: 'https://www.youtube.com/watch?v=Kj7qxeq1jEw',
+				source: 'https://youtu.be/Kj7qxeq1jEw',
 				type: ResourceType.Video,
 			},
 			{
@@ -1180,7 +1180,7 @@ export const farmsData: Record<string, farmInfo> = {
 				type: ResourceType.Thread,
 			},
 			{
-				source: 'https://www.youtube.com/watch?v=nQ5yjQU9gmo',
+				source: 'https://youtu.be/nQ5yjQU9gmo',
 				type: ResourceType.Video,
 			},
 			{
