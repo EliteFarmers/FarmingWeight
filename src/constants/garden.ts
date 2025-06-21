@@ -564,23 +564,23 @@ export const farmsData: Record<string, farmInfo> = {
 			yaw: 0,
 			pitch: 28.5,
 		},
-		bps: 19.5,
+		bps: 19.7,
 		laneDepth: 3,
 		resources: [
 			{
 				source: 'https://www.youtube.com/watch?v=Zy_w332uUic',
-				type: ResourceType.Video
+				type: ResourceType.Video,
 			},
 			{
 				source: 'IdkDom',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 		authors: [
 			{
 				name: 'IdkDom',
-				url: 'https://www.youtube.com/@IdkDom'
-			}
+				url: 'https://www.youtube.com/@IdkDom',
+			},
 		],
 		replacedBy: ['easierMelon', 'chisslMelon'],
 	},
@@ -598,7 +598,7 @@ export const farmsData: Record<string, farmInfo> = {
 			yaw: 0,
 			pitch: -59,
 		},
-		bps: 19.8,
+		bps: 19.93,
 		laneDepth: 3,
 		resources: [
 			{
@@ -644,20 +644,20 @@ export const farmsData: Record<string, farmInfo> = {
 			yaw: 0,
 			pitch: -59,
 		},
-		bps: 19.8,
+		bps: 19.94,
 		laneDepth: 3,
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1358514959247741068',
-				type: ResourceType.Thread
+				type: ResourceType.Thread,
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=s4HV0RyWcoI',
-				type: ResourceType.Video
+				type: ResourceType.Video,
 			},
 			{
 				source: 'IdkVenom',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 		authors: [
@@ -675,28 +675,29 @@ export const farmsData: Record<string, farmInfo> = {
 			{
 				name: 'DeadlyIPanda',
 				url: 'https://www.youtube.com/@IdkVenomDeadlyIPanda',
-			 },
+			},
 		],
 	},
 	chisslMelon: {
 		name: 'Chissl Waterless Melon/Pumpkin',
 		crops: [Crop.Melon, Crop.Pumpkin],
 		speed: {
-			speed: 365,
-			soulSand: false, // todo: check
+			speed: 360,
+			depthStrider: 1,
+			soulSand: false,
 			buildVersion: '1.8.9',
-			method: 'straight', // todo: check
+			method: 'running into wall',
 		},
 		angle: {
 			yaw: 0,
 			pitch: 59,
 		},
-		bps: 19.9,
+		bps: 19.95,
 		laneDepth: 3,
 		resources: [
 			{
 				source: 'Chissl',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 		authors: [
@@ -707,7 +708,10 @@ export const farmsData: Record<string, farmInfo> = {
 				name: 'Chissl',
 			},
 		],
-		notes: ['Very difficult and time consuming to build, only worthwhile for extreme farmers'],
+		notes: [
+			'Very difficult and time consuming to build, only worthwhile for extreme farmers',
+			'Great for pest farming, most recommended design if you pest farm with melons often',
+		],
 	},
 	dropdownWheat: {
 		name: 'Dropdown Wheat/Potato/Carrot/Netherwart',
@@ -723,7 +727,7 @@ export const farmsData: Record<string, farmInfo> = {
 			yaw: 0,
 			pitch: 3,
 		},
-		bps: 19.8,
+		bps: 19.85,
 		laneDepth: 5,
 		replacedBy: ['aceWheat', 'draipWheat', 'z109Wheat'],
 		notes: ['Annoying to use', 'Not infinite even at garden 15', 'Requires 5 plots, no less'],
@@ -747,15 +751,15 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'https://www.youtube.com/watch?v=hz4lGUz0JP4',
-				type: ResourceType.Video
+				type: ResourceType.Video,
 			},
 			{
-				source: 'SageUk',
-				type: ResourceType.Garden
+				source: 'sageuk',
+				type: ResourceType.Garden,
 			},
 			{
 				source: 'FarmingHub',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 		authors: [
@@ -783,11 +787,11 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159965565218201721',
-				type: ResourceType.Thread
+				type: ResourceType.Thread,
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=gcJ5U7SyA-c',
-				type: ResourceType.Video
+				type: ResourceType.Video,
 			},
 		],
 		authors: [
@@ -820,15 +824,15 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1253213095984365629',
-				type: ResourceType.Thread
+				type: ResourceType.Thread,
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=9yVNsafjOCA',
-				type: ResourceType.Video
+				type: ResourceType.Video,
 			},
 			{
 				source: 'Z109',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 		authors: [
@@ -855,20 +859,20 @@ export const farmsData: Record<string, farmInfo> = {
 			yaw: 0,
 			pitch: 3,
 		},
-		bps: 19.9,
+		bps: 19.93,
 		laneDepth: 5,
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159961248545374290',
-				type: ResourceType.Thread
+				type: ResourceType.Thread,
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=KBGIuETQI-g',
-				type: ResourceType.Video
+				type: ResourceType.Video,
 			},
 			{
 				source: 'MelonKingDe',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 		authors: [
@@ -901,20 +905,20 @@ export const farmsData: Record<string, farmInfo> = {
 			yaw: 0,
 			pitch: 3,
 		},
-		bps: 19.9,
+		bps: 19.93,
 		laneDepth: 5,
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159961642952556636',
-				type: ResourceType.Thread
+				type: ResourceType.Thread,
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=n218KDmL-5s',
-				type: ResourceType.Video
+				type: ResourceType.Video,
 			},
 			{
 				source: 'MelonKingDe',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 		authors: [
@@ -947,20 +951,20 @@ export const farmsData: Record<string, farmInfo> = {
 			yaw: 16,
 			pitch: 5.5,
 		},
-		bps: 19.7,
+		bps: 19.8,
 		laneDepth: 4,
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159960305300930631',
-				type: ResourceType.Thread
+				type: ResourceType.Thread,
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=QyWf0DO831g',
-				type: ResourceType.Video
+				type: ResourceType.Video,
 			},
 			{
 				source: 'MelonKingDe',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 		authors: [
@@ -991,12 +995,12 @@ export const farmsData: Record<string, farmInfo> = {
 			yaw: 0, // todo: fix
 			pitch: 0,
 		},
-		bps: 19.9,
+		bps: 19.98,
 		laneDepth: 4,
 		resources: [
 			{
 				source: 'IdkPoison_',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 		authors: [
@@ -1027,15 +1031,15 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159959995329298443',
-				type: ResourceType.Thread
+				type: ResourceType.Thread,
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=WWR2duiwxK4',
-				type: ResourceType.Video
+				type: ResourceType.Video,
 			},
 			{
 				source: 'FarmingHub',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 		authors: [
@@ -1063,7 +1067,7 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'not_a_cowfr',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 		authors: [
@@ -1076,7 +1080,7 @@ export const farmsData: Record<string, farmInfo> = {
 		],
 		notes: [
 			"Easier to build and use than regular cocoa, but wont work if you don't hold D (but doing so is better anyway so it doesn't really matter)",
-			"The trapdoors used are **not needed**",
+			'The trapdoors used are **not needed**',
 		],
 	},
 	blackCatCactus: {
@@ -1093,20 +1097,20 @@ export const farmsData: Record<string, farmInfo> = {
 			yaw: 0,
 			pitch: 0,
 		},
-		bps: 19.9,
+		bps: 19.7,
 		laneDepth: 1,
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159959766748119050',
-				type: ResourceType.Thread
+				type: ResourceType.Thread,
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=Kj7qxeq1jEw',
-				type: ResourceType.Video
+				type: ResourceType.Video,
 			},
 			{
 				source: 'MelonKingDe',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 		authors: [
@@ -1140,12 +1144,12 @@ export const farmsData: Record<string, farmInfo> = {
 			yaw: 0,
 			pitch: 0,
 		},
-		bps: 19.9,
+		bps: 20,
 		laneDepth: 1,
 		resources: [
 			{
 				source: 'LunaSappho',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 		authors: [
@@ -1168,20 +1172,20 @@ export const farmsData: Record<string, farmInfo> = {
 			yaw: 45,
 			pitch: 0,
 		},
-		bps: 19.98,
+		bps: 19.95,
 		laneDepth: 2,
 		resources: [
 			{
 				source: 'https://discord.com/channels/1096051612373487687/1159960545487761479',
-				type: ResourceType.Thread
+				type: ResourceType.Thread,
 			},
 			{
 				source: 'https://www.youtube.com/watch?v=nQ5yjQU9gmo',
-				type: ResourceType.Video
+				type: ResourceType.Video,
 			},
 			{
 				source: 'MelonKingDe',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 	},
@@ -1203,7 +1207,7 @@ export const farmsData: Record<string, farmInfo> = {
 		resources: [
 			{
 				source: 'FarmingHub',
-				type: ResourceType.Garden
+				type: ResourceType.Garden,
 			},
 		],
 		authors: [
