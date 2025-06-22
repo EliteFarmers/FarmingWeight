@@ -528,7 +528,6 @@ export interface FarmDesignInfo {
 		'1.21'?: number;
 		depthStrider?: DepthStriderLevels;
 		soulSand: boolean;
-		buildVersion: MinecraftVersion;
 		method: FarmingMethod;
 	};
 	angle: {
@@ -558,7 +557,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 		speed: {
 			'1.8.9': 155,
 			soulSand: false,
-			buildVersion: '1.8.9',
 			method: 'straight',
 		},
 		angle: {
@@ -593,7 +591,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 			'1.21': 368,
 			depthStrider: 3,
 			soulSand: true,
-			buildVersion: '1.8.9',
 			method: 'running into wall',
 		},
 		angle: {
@@ -640,7 +637,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 			'1.21': 368,
 			depthStrider: 3,
 			soulSand: true,
-			buildVersion: '1.8.9',
 			method: 'running into wall',
 		},
 		angle: {
@@ -688,7 +684,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 			'1.8.9': 360,
 			depthStrider: 1,
 			soulSand: false,
-			buildVersion: '1.8.9',
 			method: 'running into wall',
 		},
 		angle: {
@@ -723,7 +718,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 			'1.8.9': 93,
 			depthStrider: 3,
 			soulSand: false,
-			buildVersion: '1.8.9',
 			method: 'straight',
 		},
 		angle: {
@@ -742,7 +736,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 			'1.8.9': 347,
 			depthStrider: 2,
 			soulSand: true,
-			buildVersion: '1.8.9',
 			method: 'running into wall',
 		},
 		angle: {
@@ -778,7 +771,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 			'1.8.9': 328,
 			depthStrider: 3,
 			soulSand: false,
-			buildVersion: '1.8.9',
 			method: 'angled into wall',
 		},
 		angle: {
@@ -815,7 +807,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 			'1.8.9': 328,
 			depthStrider: 3,
 			soulSand: false,
-			buildVersion: '1.8.9',
 			method: 'angled into wall',
 		},
 		angle: {
@@ -855,7 +846,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 			'1.8.9': 347,
 			depthStrider: 2,
 			soulSand: true,
-			buildVersion: '1.8.9',
 			method: 'running into wall',
 		},
 		angle: {
@@ -901,7 +891,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 			'1.8.9': 347,
 			depthStrider: 2,
 			soulSand: true,
-			buildVersion: '1.8.9',
 			method: 'running into wall',
 		},
 		angle: {
@@ -947,7 +936,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 			'1.8.9': 233,
 			depthStrider: 3,
 			soulSand: true,
-			buildVersion: '1.8.9',
 			method: 'angled into wall',
 		},
 		angle: {
@@ -991,7 +979,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 		speed: {
 			'1.8.9': 259,
 			soulSand: false,
-			buildVersion: '1.8.9',
 			method: 'angled into wall',
 		},
 		angle: {
@@ -1023,7 +1010,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 			'1.21': 368,
 			depthStrider: 3,
 			soulSand: true,
-			buildVersion: '1.8.9',
 			method: 'running into wall',
 		},
 		angle: {
@@ -1059,7 +1045,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 		speed: {
 			'1.8.9': 215,
 			soulSand: false,
-			buildVersion: '1.8.9',
 			method: 'running into wall',
 		},
 		angle: {
@@ -1094,7 +1079,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 			'1.8.9': 464,
 			depthStrider: 3,
 			soulSand: false,
-			buildVersion: '1.8.9',
 			method: 'straight',
 		},
 		angle: {
@@ -1141,7 +1125,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 			'1.8.9': 464,
 			depthStrider: 3,
 			soulSand: false,
-			buildVersion: '1.8.9',
 			method: 'straight',
 		},
 		angle: {
@@ -1169,7 +1152,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 		speed: {
 			'1.8.9': 328,
 			soulSand: false,
-			buildVersion: '1.8.9',
 			method: 'angled into wall',
 		},
 		angle: {
@@ -1199,7 +1181,6 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 		speed: {
 			'1.8.9': 328,
 			soulSand: false,
-			buildVersion: '1.8.9',
 			method: 'angled into wall',
 		},
 		angle: {
