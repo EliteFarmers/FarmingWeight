@@ -519,7 +519,7 @@ export enum ResourceType {
 	Garden,
 }
 
-export interface farmInfo {
+export interface FarmDesignInfo {
 	name: string;
 	description?: string;
 	crops: Crop[];
@@ -551,7 +551,7 @@ export interface farmInfo {
 
 const blackCatNote = 'Despite the name, this farm **does not** use a black cat pet anymore';
 
-export const farmsData: Record<string, farmInfo> = {
+export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 	idkdomPumpkin: {
 		name: 'IdkDom Melon/Pumpkin',
 		crops: [Crop.Melon, Crop.Pumpkin],
@@ -1221,5 +1221,3 @@ export const farmsData: Record<string, farmInfo> = {
 		],
 	},
 };
-
-export const farmDesigns = Object.entries(farmsData);
