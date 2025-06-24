@@ -42,7 +42,7 @@ export function getCropFromName(name: string) {
 	const fromId = CROP_ID_TO_CROP[name];
 	if (fromId) return fromId;
 
-	return Crop.Wheat;
+	return undefined;
 }
 
 export function getProperCropFromCrop(crop: Crop) {
