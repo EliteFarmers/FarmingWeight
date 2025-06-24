@@ -24,7 +24,7 @@ export function getComposterUpgradeDisplayName(upgrade: ComposterUpgrade) {
 }
 
 export function getCropDisplayName(crop?: Crop | null): string {
-	return (crop ? CROP_TO_PROPER_CROP[crop] : null) ?? 'Unknown Crop';
+	return CROP_TO_PROPER_CROP[crop!] ?? 'Unknown Crop';
 }
 
 export function getCropFromName(name: string) {
