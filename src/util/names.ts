@@ -62,7 +62,7 @@ export function getPestFromCrop(crop: Crop) {
 }
 
 export function getMinionFromCrop(crop: Crop) {
-	return CROP_TO_MINION[crop] ?? 'WHEAT';
+	return CROP_TO_MINION[crop];
 }
 
 export function getItemIdFromCrop(crop: Crop) {
@@ -70,14 +70,11 @@ export function getItemIdFromCrop(crop: Crop) {
 }
 
 export function getPestFromName(name: string) {
-	const fromDisplay = NAME_TO_PEST[name];
-	if (fromDisplay) return fromDisplay;
-
-	return Pest.Fly;
+	return NAME_TO_PEST[name];
 }
 
 export function getCropFromPest(pest: Pest) {
-	return PEST_TO_CROP[pest] ?? Crop.Wheat;
+	return PEST_TO_CROP[pest];
 }
 
 export function getPestNameFromPest(pest: Pest) {
