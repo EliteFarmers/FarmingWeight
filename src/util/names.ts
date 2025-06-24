@@ -15,16 +15,16 @@ import { CROP_TO_PEST, NAME_TO_PEST, PEST_TO_CROP, PEST_TO_NAME, Pest } from '..
 import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
 import { SPECIAL_CROP_TO_NAME, SpecialCrop } from '../constants/specialcrops.js';
 
-export function getCropDisplayName(crop: Crop) {
-	return CROP_TO_PROPER_CROP[crop] ?? 'Unknown Crop';
-}
-
 export function getSpecialCropDisplayName(crop: SpecialCrop) {
 	return SPECIAL_CROP_TO_NAME[crop] ?? 'Unknown Special Crop';
 }
 
 export function getComposterUpgradeDisplayName(upgrade: ComposterUpgrade) {
 	return COMPOSTER_UPGRADE_TYPE_TO_NAME[upgrade] ?? 'Unknown Upgrade';
+}
+
+export function getCropDisplayName(crop?: Crop | null): string {
+	return (crop ? CROP_TO_PROPER_CROP[crop] : null) ?? 'Unknown Crop';
 }
 
 export function getCropFromName(name: string) {

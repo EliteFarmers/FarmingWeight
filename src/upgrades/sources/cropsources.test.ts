@@ -61,6 +61,7 @@ test('Wheat fortune test', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
@@ -173,6 +174,7 @@ test('Nether Wart fortune test', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
@@ -184,6 +186,13 @@ test('Nether Wart fortune test', () => {
 			progress: FarmingTool.fakeItem(
 				FARMING_TOOLS[CROP_INFO[Crop.NetherWart].startingTool] as FarmingToolInfo
 			)?.getProgress(true),
+		},
+		{
+			name: 'Exportable Crop',
+			fortune: 0,
+			maxFortune: 12,
+			ratio: 0,
+			api: false,
 		},
 		{
 			name: 'Garden Crop Upgrade',
@@ -221,6 +230,7 @@ test('Carrot fortune test', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
@@ -276,6 +286,7 @@ test('Melon fortune test', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([

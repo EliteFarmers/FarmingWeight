@@ -31,6 +31,7 @@ export * from './constants/stats.js';
 export * from './constants/specific.js';
 export * from './constants/composter.js';
 export * from './constants/specialcrops.js';
+export * from './constants/plots.js';
 
 export * from './util/garden.js';
 export * from './util/itemstats.js';
