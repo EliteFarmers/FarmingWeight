@@ -1,5 +1,5 @@
 import { Crop } from '../constants/crops.js';
-import { CROP_MILESTONES, GARDEN_EXP_REQUIRED, GARDEN_VISITORS } from '../constants/garden.js';
+import { CROP_MILESTONES, CROP_UPGRADE_COSTS, GARDEN_EXP_REQUIRED, GARDEN_VISITORS } from '../constants/garden.js';
 import { GARDEN_PLOTS, GARDEN_PLOT_COSTS, type PlotType } from '../constants/plots.js';
 import { Rarity } from '../constants/reforges.js';
 import { getCropFromName } from './names.js';
@@ -162,6 +162,22 @@ export function groupGardenVisitors(visitors: Record<string, GardenVisitorStats>
 	}
 
 	return groups;
+}
+
+export function getCopperToMaxCropUpgrade(level: number): number {
+	let totalCost = 0;
+	for (let i = level + 1; i <= 9; i++) {
+		totalCost += CROP_UPGRADE_COSTS[i] || 0;
+	}
+	return totalCost;
+}
+
+export function getCopperSpentCropUpgrade(level: number): number {
+	let totalCost = 0;
+	for (let i = 1; i <= level; i++) {
+		totalCost += CROP_UPGRADE_COSTS[i] || 0;
+	}
+	return totalCost;
 }
 
 export function getNextPlotCost(plots: string[]) {

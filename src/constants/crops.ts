@@ -25,6 +25,178 @@ export interface CropCraft {
 	}[];
 }
 
+export const API_CROP_TO_CROP_NAME: Record<string, string> = {
+	WHEAT: 'wheat',
+	POTATO_ITEM: 'potato',
+	CARROT_ITEM: 'carrot',
+	MELON: 'melon',
+	PUMPKIN: 'pumpkin',
+	CACTUS: 'cactus',
+	SUGAR_CANE: 'sugarcane',
+	INK_SACK: 'cocoa',
+	'INK_SACK:3': 'cocoa',
+	MUSHROOM_COLLECTION: 'mushroom',
+	NETHER_STALK: 'netherwart',
+} as const;
+
+export const PROPER_CROP_TO_API_CROP: Record<string, string> = {
+	Cactus: 'CACTUS',
+	Carrot: 'CARROT_ITEM',
+	'Cocoa Beans': 'INK_SACK:3',
+	Melon: 'MELON',
+	Mushroom: 'MUSHROOM_COLLECTION',
+	'Nether Wart': 'NETHER_STALK',
+	Potato: 'POTATO_ITEM',
+	Pumpkin: 'PUMPKIN',
+	'Sugar Cane': 'SUGAR_CANE',
+	Wheat: 'WHEAT',
+} as const;
+
+export const CROP_TO_MINION: Partial<Record<string, string>> = {
+	[Crop.Cactus]: 'CACTUS',
+	[Crop.Carrot]: 'CARROT',
+	[Crop.CocoaBeans]: 'COCOA',
+	[Crop.Melon]: 'MELON',
+	[Crop.Mushroom]: 'MUSHROOM',
+	[Crop.NetherWart]: 'NETHER_WARTS',
+	[Crop.Potato]: 'POTATO',
+	[Crop.Pumpkin]: 'PUMPKIN',
+	[Crop.SugarCane]: 'SUGAR_CANE',
+	[Crop.Wheat]: 'WHEAT',
+} as const;
+
+export const ELITE_CROP_TO_CROP: Record<string, Crop> = {
+	Cactus: Crop.Cactus,
+	Carrot: Crop.Carrot,
+	CocoaBeans: Crop.CocoaBeans,
+	Melon: Crop.Melon,
+	Mushroom: Crop.Mushroom,
+	NetherWart: Crop.NetherWart,
+	Potato: Crop.Potato,
+	Pumpkin: Crop.Pumpkin,
+	SugarCane: Crop.SugarCane,
+	Wheat: Crop.Wheat,
+	Seeds: Crop.Seeds,
+} as const;
+
+export const CROP_TO_ELITE_CROP: Record<Crop, string> = {
+	[Crop.Cactus]: 'Cactus',
+	[Crop.Carrot]: 'Carrot',
+	[Crop.CocoaBeans]: 'CocoaBeans',
+	[Crop.Melon]: 'Melon',
+	[Crop.Mushroom]: 'Mushroom',
+	[Crop.NetherWart]: 'NetherWart',
+	[Crop.Potato]: 'Potato',
+	[Crop.Pumpkin]: 'Pumpkin',
+	[Crop.SugarCane]: 'SugarCane',
+	[Crop.Wheat]: 'Wheat',
+	[Crop.Seeds]: 'Seeds',
+} as const;
+
+export const CROP_TO_PROPER_CROP: Record<Crop, string> = {
+	[Crop.Cactus]: 'Cactus',
+	[Crop.Carrot]: 'Carrot',
+	[Crop.CocoaBeans]: 'Cocoa Beans',
+	[Crop.Melon]: 'Melon',
+	[Crop.Mushroom]: 'Mushroom',
+	[Crop.NetherWart]: 'Nether Wart',
+	[Crop.Potato]: 'Potato',
+	[Crop.Pumpkin]: 'Pumpkin',
+	[Crop.SugarCane]: 'Sugar Cane',
+	[Crop.Wheat]: 'Wheat',
+	[Crop.Seeds]: 'Seeds',
+} as const;
+
+export const CROP_UNICODE_EMOJIS: Record<Crop, string> = {
+	[Crop.Wheat]: '🌾',
+	[Crop.Carrot]: '🥕',
+	[Crop.Potato]: '🥔',
+	[Crop.Pumpkin]: '🎃',
+	[Crop.Melon]: '🍈',
+	[Crop.Mushroom]: '🍄',
+	[Crop.CocoaBeans]: '🍫',
+	[Crop.Cactus]: '🌵',
+	[Crop.SugarCane]: '🎋',
+	[Crop.NetherWart]: '🌹',
+	[Crop.Seeds]: '🌱',
+} as const;
+
+export const PROPER_CROP_TO_CROP: Record<string, Crop> = {
+	Cactus: Crop.Cactus,
+	Carrot: Crop.Carrot,
+	'Cocoa Beans': Crop.CocoaBeans,
+	Melon: Crop.Melon,
+	Mushroom: Crop.Mushroom,
+	'Nether Wart': Crop.NetherWart,
+	Potato: Crop.Potato,
+	Pumpkin: Crop.Pumpkin,
+	'Sugar Cane': Crop.SugarCane,
+	Wheat: Crop.Wheat,
+	Seeds: Crop.Seeds,
+} as const;
+
+export const SHORT_NAME_TO_CROP: Record<string, Crop> = {
+	cactus: Crop.Cactus,
+	carrot: Crop.Carrot,
+	cocoa: Crop.CocoaBeans,
+	melon: Crop.Melon,
+	mushroom: Crop.Mushroom,
+	wart: Crop.NetherWart,
+	potato: Crop.Potato,
+	pumpkin: Crop.Pumpkin,
+	cane: Crop.SugarCane,
+	wheat: Crop.Wheat,
+	seeds: Crop.Seeds,
+} as const;
+
+export const FULL_NAME_TO_CROP: Record<string, Crop> = {
+	cactus: Crop.Cactus,
+	carrot: Crop.Carrot,
+	cocoabeans: Crop.CocoaBeans,
+	cocoabean: Crop.CocoaBeans,
+	melon: Crop.Melon,
+	mushroom: Crop.Mushroom,
+	netherwart: Crop.NetherWart,
+	netherwarts: Crop.NetherWart,
+	potato: Crop.Potato,
+	pumpkin: Crop.Pumpkin,
+	sugarcane: Crop.SugarCane,
+	wheat: Crop.Wheat,
+	seeds: Crop.Seeds,
+} as const;
+
+export const CROP_ID_TO_CROP: Record<string, Crop> = {
+	CACTUS: Crop.Cactus,
+	CARROT_ITEM: Crop.Carrot,
+	'INK_SACK:3': Crop.CocoaBeans,
+	MELON: Crop.Melon,
+	BROWN_MUSHROOM: Crop.Mushroom,
+	RED_MUSHROOM: Crop.Mushroom,
+	MUSHROOM_COLLECTION: Crop.Mushroom,
+	NETHER_STALK: Crop.NetherWart,
+	POTATO_ITEM: Crop.Potato,
+	PUMPKIN: Crop.Pumpkin,
+	SUGAR_CANE: Crop.SugarCane,
+	WHEAT: Crop.Wheat,
+	SEEDS: Crop.Seeds,
+} as const;
+
+export const CROP_TO_NAME: Record<Crop, string> = {
+	[Crop.Cactus]: 'CACTUS',
+	[Crop.Carrot]: 'CARROT_ITEM',
+	[Crop.CocoaBeans]: 'INK_SACK:3',
+	[Crop.Melon]: 'MELON',
+	[Crop.Mushroom]: 'BROWN_MUSHROOM',
+	[Crop.NetherWart]: 'NETHER_STALK',
+	[Crop.Potato]: 'POTATO_ITEM',
+	[Crop.Pumpkin]: 'PUMPKIN',
+	[Crop.SugarCane]: 'SUGAR_CANE',
+	[Crop.Wheat]: 'WHEAT',
+	[Crop.Seeds]: 'SEEDS',
+} as const;
+
+export const PROPER_CROP_NAMES = Object.values(CROP_TO_PROPER_CROP);
+
 export interface CropInfo {
 	name: string;
 	npc: number;
@@ -295,7 +467,7 @@ export const MAX_CROP_FORTUNE: Record<Crop, number> = {
 	[Crop.SugarCane]: 2001,
 	[Crop.Wheat]: 2053,
 	[Crop.Seeds]: 2053, // Not a crop, same as wheat
-};
+} as const;
 
 export const LIST_OF_CROPS: Exclude<Crop, Crop.Seeds>[] = [
 	Crop.Cactus,
