@@ -1,5 +1,6 @@
 import { COMPOSTER_UPGRADE_TYPE_TO_NAME, ComposterUpgrade } from '../constants/composter.js';
 import {
+	API_CROP_TO_CROP_NAME,
 	CROP_ID_TO_CROP,
 	CROP_TO_ELITE_CROP,
 	CROP_TO_MINION,
@@ -79,6 +80,10 @@ export function getCropFromPest(pest: Pest) {
 
 export function getPestNameFromPest(pest: Pest) {
 	return PEST_TO_NAME[pest];
+}
+
+export function getCropNameFromApiCrop(crop: string) {
+	return API_CROP_TO_CROP_NAME[crop];
 }
 
 export function getCropFromContestKey(contestKey: string) {
