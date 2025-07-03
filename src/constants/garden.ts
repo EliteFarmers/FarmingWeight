@@ -734,6 +734,7 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 		crops: [Crop.Wheat, Crop.Potato, Crop.Carrot, Crop.NetherWart],
 		speed: {
 			'1.8.9': 347,
+			'1.21': 308,
 			depthStrider: 2,
 			soulSand: true,
 			method: 'running into wall',
@@ -844,6 +845,7 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 		crops: [Crop.Wheat, Crop.Potato, Crop.Carrot],
 		speed: {
 			'1.8.9': 347,
+			'1.21': 308,
 			depthStrider: 2,
 			soulSand: true,
 			method: 'running into wall',
@@ -889,6 +891,7 @@ export const FARM_DESIGNS: Record<string, FarmDesignInfo> = {
 		crops: [Crop.NetherWart],
 		speed: {
 			'1.8.9': 347,
+			'1.21': 308,
 			depthStrider: 2,
 			soulSand: true,
 			method: 'running into wall',
