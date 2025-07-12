@@ -1,3 +1,4 @@
+import { FARMING_ATTRIBUTE_SHARDS, type FarmingAttributes } from '../constants/attributes.js';
 import { CROP_INFO, Crop, CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
 import { REFORGES, Rarity } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
@@ -12,6 +13,7 @@ interface CalculateDropsOptions {
 	blocksBroken: number;
 	dicerLevel?: 1 | 2 | 3;
 	armorPieces?: 1 | 2 | 3 | 4;
+	attributes?: FarmingAttributes;
 }
 
 const crops = [
@@ -50,11 +52,12 @@ interface CalculateDetailedDropsOptions extends CalculateDropsOptions {
 	mooshroom: boolean;
 }
 
-interface DetailedDrops {
+export interface DetailedDropsResult {
 	npcPrice: number;
 	collection: number;
 	npcCoins: number;
 	fortune: number;
+	blocksBroken: number;
 	coinSources: Record<string, number>;
 	otherCollection: Record<string, number>;
 	items: Record<string, number>;
@@ -62,8 +65,8 @@ interface DetailedDrops {
 
 export function calculateDetailedAverageDrops(
 	options: CalculateDetailedDropsOptions & CropFortuneOption
-): Record<Crop, DetailedDrops> {
-	const result = {} as Record<Crop, DetailedDrops>;
+): Record<Crop, DetailedDropsResult> {
+	const result = {} as Record<Crop, DetailedDropsResult>;
 
 	for (const crop of crops) {
 		const fortune = (options.cropFortune?.[crop] ?? 0) + (options.farmingFortune ?? 0);
@@ -105,7 +108,7 @@ interface CalculateExpectedDropsOptions extends CalculateDropsOptions {
 	crop: Crop;
 }
 
-interface CalculateCropDetailedDropsOptions extends CalculateDetailedDropsOptions {
+export interface CalculateCropDetailedDropsOptions extends CalculateDetailedDropsOptions {
 	blocksBroken: number;
 	crop: Crop;
 }
@@ -142,12 +145,13 @@ export function calculateExpectedDrops(options: CalculateExpectedDropsOptions): 
 	}
 }
 
-export function calculateDetailedDrops(options: CalculateCropDetailedDropsOptions): DetailedDrops {
+export function calculateDetailedDrops(options: CalculateCropDetailedDropsOptions): DetailedDropsResult {
 	const result = {
 		npcPrice: 0,
 		collection: 0,
 		npcCoins: 0,
 		fortune: 0,
+		blocksBroken: options.blocksBroken,
 		coinSources: {} as Record<string, number>,
 		otherCollection: {} as Record<string, number>,
 		items: {} as Record<string, number>,
@@ -230,6 +234,14 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 	}
 
 	result.npcCoins = Object.values(result.coinSources).reduce((a, b) => a + b, 0);
+
+	if (options.attributes) {
+		for (const shard of Object.values(FARMING_ATTRIBUTE_SHARDS)) {
+			if (shard.ratesModifier) {
+				shard.ratesModifier(result, options);
+			}
+		}
+	}
 
 	return result;
 }

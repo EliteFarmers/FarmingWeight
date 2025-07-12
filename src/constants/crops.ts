@@ -289,7 +289,7 @@ export const MAX_CROP_FORTUNE: Record<Crop, number> = {
 	[Crop.CocoaBeans]: 1842,
 	[Crop.Melon]: 1809,
 	[Crop.Mushroom]: 1813,
-	[Crop.NetherWart]: 1991,
+	[Crop.NetherWart]: 2003,
 	[Crop.Potato]: 2001,
 	[Crop.Pumpkin]: 1821,
 	[Crop.SugarCane]: 2001,
