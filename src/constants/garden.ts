@@ -1,5 +1,5 @@
 import { Crop } from './crops.js';
-import { DepthStriderLevels } from './enchants.js';
+import type { DepthStriderLevels } from './enchants.js';
 import { Rarity } from './reforges.js';
 
 export const GARDEN_EXP_REQUIRED = [
