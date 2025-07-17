@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { FARMING_ATTRIBUTE_SHARDS } from '../constants/attributes.js';
 import { FarmingPlayer } from './player.js';
 
 test('Player construct test', () => {
@@ -38,4 +39,14 @@ test('Fortune progress test', () => {
 
 	const plots = progress.find((p) => p.name === 'Unlocked Plots');
 	expect(plots?.fortune).toBe(3);
+});
+
+test('Max attribute shard fortune test', () => {
+	const player = new FarmingPlayer({
+		attributes: Object.fromEntries(Object.values(FARMING_ATTRIBUTE_SHARDS).map((shard) => [shard.skyblockId, 500])),
+	});
+
+	const fortune = player.fortune;
+
+	expect(fortune).toBe(0);
 });

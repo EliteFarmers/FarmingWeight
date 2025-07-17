@@ -61,6 +61,7 @@ export interface DetailedDropsResult {
 	coinSources: Record<string, number>;
 	otherCollection: Record<string, number>;
 	items: Record<string, number>;
+	rngItems?: Record<string, number>;
 }
 
 export function calculateDetailedAverageDrops(

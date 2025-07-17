@@ -22,6 +22,7 @@ export interface FortuneMissingFromAPI {
 	cocoaFortuneUpgrade?: number;
 
 	sprayedPlot?: boolean;
+	infestedPlotProbability?: number;
 
 	attributes?: Record<string, number>;
 
