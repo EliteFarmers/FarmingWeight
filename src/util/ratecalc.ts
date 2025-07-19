@@ -13,7 +13,7 @@ interface CalculateDropsOptions {
 	blocksBroken: number;
 	dicerLevel?: 1 | 2 | 3;
 	armorPieces?: 1 | 2 | 3 | 4;
-	attributes?: FarmingAttributes;
+	attributes?: FarmingAttributes | Record<string, number>;
 }
 
 const crops = [
@@ -112,6 +112,7 @@ interface CalculateExpectedDropsOptions extends CalculateDropsOptions {
 export interface CalculateCropDetailedDropsOptions extends CalculateDetailedDropsOptions {
 	blocksBroken: number;
 	crop: Crop;
+	infestedPlotProbability?: number;
 }
 
 export function calculateExpectedDrops(options: CalculateExpectedDropsOptions): number {
@@ -147,7 +148,7 @@ export function calculateExpectedDrops(options: CalculateExpectedDropsOptions): 
 }
 
 export function calculateDetailedDrops(options: CalculateCropDetailedDropsOptions): DetailedDropsResult {
-	const result = {
+	const result: DetailedDropsResult = {
 		npcPrice: 0,
 		collection: 0,
 		npcCoins: 0,
@@ -174,7 +175,7 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		fortune += blessedFortune - bountifulFortune;
 	}
 
-	const { drops, npc, breaks = 1, replenish = false } = getCropInfo(crop);
+	const { drops, npc, breaks = 1, replenish = false, rng } = getCropInfo(crop);
 	result.npcPrice = npc;
 
 	if (!drops) return result;
@@ -240,6 +241,16 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		for (const shard of Object.values(FARMING_ATTRIBUTE_SHARDS)) {
 			if (shard.ratesModifier) {
 				shard.ratesModifier(result, options);
+			}
+		}
+	}
+
+	if (rng) {
+		for (const rngDrop of rng) {
+			const drops = rngDrop.chance * blocksBroken;
+			for (const [item, count] of Object.entries(rngDrop.drops)) {
+				result.rngItems ??= {};
+				result.rngItems[item] = count * drops + (result.rngItems[item] ?? 0);
 			}
 		}
 	}

@@ -44,9 +44,31 @@ test('Fortune progress test', () => {
 test('Max attribute shard fortune test', () => {
 	const player = new FarmingPlayer({
 		attributes: Object.fromEntries(Object.values(FARMING_ATTRIBUTE_SHARDS).map((shard) => [shard.skyblockId, 500])),
+		infestedPlotProbability: 1,
 	});
 
-	const fortune = player.fortune;
+	const fortune = player.breakdown;
 
-	expect(fortune).toBe(0);
+	expect(fortune).toStrictEqual({
+		'Lunar Moth Shard': 50,
+		'Galaxy Fish Shard': 10,
+		'Termite Shard': 30,
+	});
+});
+
+test('Attribute shards upgrade test', () => {
+	const player = new FarmingPlayer({
+		attributes: {
+			SHARD_LUNAR_MOTH: 25,
+			SHARD_GALAXY_FISH: 19,
+		},
+	});
+
+	const upgrades = player.getUpgrades();
+
+	const lunarMoth = upgrades.find((u) => u.title.startsWith('Lunar Moth 10'));
+	expect(lunarMoth).toBeDefined();
+
+	const galaxyFish = upgrades.find((u) => u.title.startsWith('Galaxy Fish 10'));
+	expect(galaxyFish).toBeDefined();
 });

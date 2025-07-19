@@ -1,4 +1,4 @@
-import { FARMING_ATTRIBUTE_SHARDS, getShardLevel } from '../constants/attributes.js';
+import { FARMING_ATTRIBUTE_SHARDS, getShardFortune } from '../constants/attributes.js';
 import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests.js';
 import {
@@ -9,7 +9,6 @@ import {
 	GARDEN_CROP_UPGRADES,
 	UNLOCKED_PLOTS,
 } from '../constants/specific.js';
-import { getStatValue, Stat } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
 import { FarmingAccessory } from '../fortune/farmingaccessory.js';
@@ -310,13 +309,7 @@ export class FarmingPlayer {
 			const shard = FARMING_ATTRIBUTE_SHARDS[shardId as keyof typeof FARMING_ATTRIBUTE_SHARDS];
 			if (!shard || value <= 0) continue;
 
-			const stats = getStatValue<unknown, FarmingPlayer>(shard.stats?.[Stat.FarmingFortune], this);
-
-			const shardLevel = getShardLevel(shard.rarity, value);
-			const perLevel =
-				shardLevel * getStatValue<unknown, FarmingPlayer>(shard.perLevelStats?.[Stat.FarmingFortune], this);
-
-			const fortune = stats + perLevel;
+			const fortune = getShardFortune(shard, this);
 			if (fortune <= 0) continue;
 
 			breakdown[shard.name] = fortune;
