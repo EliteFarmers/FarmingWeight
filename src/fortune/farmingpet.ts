@@ -1,19 +1,19 @@
 import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
-import { Stat, getStatValue } from '../constants/stats.js';
+import { getStatValue, Stat } from '../constants/stats.js';
 import {
-	FARMING_PETS,
 	FARMING_PET_ITEMS,
-	FarmingPetInfo,
-	FarmingPetItemInfo,
+	FARMING_PETS,
+	type FarmingPetInfo,
+	type FarmingPetItemInfo,
 	FarmingPetStatType,
-	FarmingPetType,
-	FarmingPets,
+	type FarmingPets,
+	type FarmingPetType,
 	PET_LEVELS,
 	PET_RARITY_OFFSETS,
 } from '../items/pets.js';
-import { PlayerOptions } from '../player/playeroptions.js';
+import type { PlayerOptions } from '../player/playeroptions.js';
 import { getRarityFromLore } from '../util/itemstats.js';
-import { EliteItemDto } from './item.js';
+import type { EliteItemDto } from './item.js';
 
 export function createFarmingPet(pet: FarmingPetType) {
 	return new FarmingPet(pet);
@@ -61,12 +61,12 @@ export class FarmingPet {
 		this.fortune = this.getFortune();
 	}
 
-	getFortune() {
+	getFortune(stat = Stat.FarmingFortune): number {
 		let fortune = 0;
 		const breakdown: Record<string, number> = {};
 
 		// Base stats
-		const baseStat = this.info.stats?.[Stat.FarmingFortune];
+		const baseStat = this.info.stats?.[stat];
 		const stats = getStatValue(baseStat, this);
 		if (stats) {
 			fortune += stats;
@@ -74,7 +74,7 @@ export class FarmingPet {
 		}
 
 		// Per level stats
-		const perLevelStats = this.info.perLevelStats?.[Stat.FarmingFortune];
+		const perLevelStats = this.info.perLevelStats?.[stat];
 		if (perLevelStats) {
 			const amount = getStatValue(perLevelStats, this) * this.level;
 			fortune += amount;
@@ -82,7 +82,7 @@ export class FarmingPet {
 		}
 
 		// Per rarity fortune stats
-		const perRarityStats = this.info.perRarityLevelStats?.[this.rarity]?.[Stat.FarmingFortune];
+		const perRarityStats = this.info.perRarityLevelStats?.[this.rarity]?.[stat];
 		if (perRarityStats) {
 			const amount = getStatValue(perRarityStats, this) * this.level;
 			fortune += amount;
@@ -97,7 +97,7 @@ export class FarmingPet {
 				}
 
 				const stats = ability.computed(this.options ?? {}, this);
-				const fortuneStat = stats[Stat.FarmingFortune];
+				const fortuneStat = stats[stat];
 
 				const value = getStatValue(fortuneStat, this.options);
 				if (!value || !fortuneStat) continue;
@@ -109,7 +109,7 @@ export class FarmingPet {
 
 		// Pet item stats
 		if (this.item) {
-			const fortuneStat = this.item.stats?.[Stat.FarmingFortune];
+			const fortuneStat = this.item.stats?.[stat];
 
 			const value = getStatValue(fortuneStat, this.options);
 			if (value && fortuneStat) {
@@ -118,8 +118,10 @@ export class FarmingPet {
 			}
 		}
 
-		this.breakdown = breakdown;
-		this.fortune = fortune;
+		if (stat === Stat.FarmingFortune) {
+			this.breakdown = breakdown;
+			this.fortune = fortune;
+		}
 		return fortune;
 	}
 

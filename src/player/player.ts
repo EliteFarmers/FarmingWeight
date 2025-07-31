@@ -1,4 +1,5 @@
-import { Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
+import { FARMING_ATTRIBUTE_SHARDS, getShardFortune } from '../constants/attributes.js';
+import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests.js';
 import {
 	ANITA_FORTUNE_UPGRADE,
@@ -8,19 +9,25 @@ import {
 	GARDEN_CROP_UPGRADES,
 	UNLOCKED_PLOTS,
 } from '../constants/specific.js';
-import { TEMPORARY_FORTUNE, TemporaryFarmingFortune } from '../constants/tempfortune.js';
+import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
+import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
 import { FarmingAccessory } from '../fortune/farmingaccessory.js';
 import { ArmorSet, FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
 import { FarmingPet } from '../fortune/farmingpet.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
-import { EliteItemDto } from '../fortune/item.js';
+import type { EliteItemDto } from '../fortune/item.js';
+import { FarmingPets } from '../items/pets.js';
+import { FARMING_TOOLS } from '../items/tools.js';
+import { getFortune } from '../upgrades/getfortune.js';
+import { getSourceProgress } from '../upgrades/getsourceprogress.js';
+import { getFakeItem } from '../upgrades/itemregistry.js';
 import { CROP_FORTUNE_SOURCES } from '../upgrades/sources/cropsources.js';
 import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources.js';
-import { getFortune, getSourceProgress } from '../upgrades/upgrades.js';
 import { getCropDisplayName, getItemIdFromCrop } from '../util/names.js';
 import { fortuneFromPestBestiary } from '../util/pests.js';
-import { FarmingWeightInfo, createFarmingWeightCalculator } from '../weight/weightcalc.js';
+import { calculateDetailedDrops } from '../util/ratecalc.js';
+import { createFarmingWeightCalculator, type FarmingWeightInfo } from '../weight/weightcalc.js';
 import type { PlayerOptions } from './playeroptions.js';
 
 export function createFarmingPlayer(options: PlayerOptions) {
@@ -47,6 +54,10 @@ export class FarmingPlayer {
 
 	declare selectedTool?: FarmingTool;
 	declare selectedPet?: FarmingPet;
+
+	get attributes() {
+		return this.options.attributes ?? {};
+	}
 
 	constructor(options: PlayerOptions) {
 		this.options = options;
@@ -77,7 +88,7 @@ export class FarmingPlayer {
 			this.armorSet = options.armor;
 
 			this.armor = this.armorSet.pieces;
-			this.armor.sort((a, b) => b.fortune - a.fortune);
+			this.armor.sort((a, b) => b.potential - a.potential);
 
 			this.equipment = this.armorSet.equipmentPieces;
 			this.equipment.sort((a, b) => b.fortune - a.fortune);
@@ -144,12 +155,68 @@ export class FarmingPlayer {
 		return getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES);
 	}
 
+	getUpgrades() {
+		const upgrades = getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES).flatMap(
+			(source) => source.upgrades ?? []
+		);
+
+		const armorSetUpgrades = this.armorSet.getUpgrades();
+		if (armorSetUpgrades.length > 0) {
+			upgrades.push(...armorSetUpgrades);
+		}
+
+		upgrades.sort((a, b) => b.increase - a.increase);
+		return upgrades;
+	}
+
+	getCropUpgrades(crop?: Crop, tool?: FarmingTool) {
+		const upgrades = [] as FortuneUpgrade[];
+		if (!crop) return upgrades;
+
+		const cropUpgrades = this.getCropProgress(crop);
+		for (const source of cropUpgrades) {
+			if (source.upgrades) {
+				upgrades.push(...source.upgrades);
+			}
+		}
+
+		const cropTool = tool ?? this.getSelectedCropTool(crop);
+		if (cropTool) {
+			const toolUpgrades = cropTool.getUpgrades();
+			upgrades.push(...toolUpgrades);
+		} else {
+			const startingInfo = FARMING_TOOLS[CROP_INFO[crop].startingTool];
+			if (startingInfo) {
+				const fakeItem = getFakeItem(startingInfo.skyblockId, this.options);
+				const purchaseId = fakeItem?.item.skyblockId ?? CROP_INFO[crop].startingTool;
+
+				upgrades.push({
+					title: startingInfo.name,
+					action: UpgradeAction.Purchase,
+					purchase: purchaseId,
+					increase: fakeItem?.getFortune() ?? 0,
+					wiki: startingInfo.wiki,
+					max: fakeItem?.getProgress()?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0,
+					category: UpgradeCategory.Item,
+					cost: {
+						items: {
+							[purchaseId]: 1,
+						},
+					},
+				});
+			}
+		}
+
+		upgrades.sort((a, b) => b.increase - a.increase);
+		return upgrades;
+	}
+
 	getGeneralFortune() {
 		let sum = 0;
 		const breakdown = {} as Record<string, number>;
 
 		// Plots
-		const plots = getFortune(this.options.plotsUnlocked, UNLOCKED_PLOTS);
+		const plots = getFortune(this.options.plots?.length ?? this.options.plotsUnlocked, UNLOCKED_PLOTS);
 		if (plots > 0) {
 			breakdown['Unlocked Plots'] = plots;
 			sum += plots;
@@ -237,6 +304,18 @@ export class FarmingPlayer {
 			sum += truffles;
 		}
 
+		// Attribute Shards
+		for (const [shardId, value] of Object.entries(this.attributes)) {
+			const shard = FARMING_ATTRIBUTE_SHARDS[shardId as keyof typeof FARMING_ATTRIBUTE_SHARDS];
+			if (!shard || value <= 0) continue;
+
+			const fortune = getShardFortune(shard, this);
+			if (fortune <= 0) continue;
+
+			breakdown[shard.name] = fortune;
+			sum += fortune;
+		}
+
 		// Extra Fortune
 		for (const extra of this.options.extraFortune ?? []) {
 			if (extra.crop) continue;
@@ -283,8 +362,17 @@ export class FarmingPlayer {
 			this.selectTool(tool);
 		}
 
+		const { fortuneType } = CROP_INFO[crop];
+
 		let sum = 0;
 		const breakdown = {} as Record<string, number>;
+
+		// Selected Pet
+		const petFortune = this.selectedPet?.getFortune(fortuneType);
+		if (petFortune && petFortune > 0) {
+			breakdown[this.selectedPet?.info.name ?? 'Selected Pet'] = petFortune;
+			sum += petFortune;
+		}
 
 		// Crop upgrades
 		const upgrade = getFortune(this.options.cropUpgrades?.[crop], GARDEN_CROP_UPGRADES);
@@ -354,7 +442,21 @@ export class FarmingPlayer {
 		return getSourceProgress<{ crop: Crop; player: FarmingPlayer }>({ crop, player: this }, CROP_FORTUNE_SOURCES);
 	}
 
-	getWeightCalc(info?: FarmingWeightInfo) {
+	getRates(crop: Crop, blocksBroken: number): ReturnType<typeof calculateDetailedDrops> {
+		const tool = this.getBestTool(crop);
+		const cropFortune = this.getCropFortune(crop, tool);
+		const fortune = this.permFortune + this.tempFortune + cropFortune.fortune;
+
+		return calculateDetailedDrops({
+			crop: crop,
+			blocksBroken: blocksBroken,
+			farmingFortune: fortune,
+			bountiful: tool?.bountiful ?? false,
+			mooshroom: this.selectedPet?.type === FarmingPets.MooshroomCow,
+		});
+	}
+
+	getWeightCalc(info?: FarmingWeightInfo): ReturnType<typeof createFarmingWeightCalculator> {
 		return createFarmingWeightCalculator({
 			collection: this.options.collection,
 			pests: this.options.bestiaryKills,

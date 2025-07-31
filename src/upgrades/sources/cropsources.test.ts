@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest';
 import { CROP_INFO, Crop } from '../../constants/crops.js';
 import { FarmingTool } from '../../fortune/farmingtool.js';
-import { EliteItemDto } from '../../fortune/item.js';
-import { FARMING_TOOLS, FarmingToolInfo } from '../../items/tools.js';
+import type { EliteItemDto } from '../../fortune/item.js';
+import { FARMING_TOOLS, type FarmingToolInfo } from '../../items/tools.js';
 import { FarmingPlayer } from '../../player/player.js';
 
 const fermentoArtifact: EliteItemDto = {
@@ -61,6 +61,7 @@ test('Wheat fortune test', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
@@ -173,6 +174,7 @@ test('Nether Wart fortune test', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
@@ -184,6 +186,13 @@ test('Nether Wart fortune test', () => {
 			progress: FarmingTool.fakeItem(
 				FARMING_TOOLS[CROP_INFO[Crop.NetherWart].startingTool] as FarmingToolInfo
 			)?.getProgress(true),
+		},
+		{
+			name: 'Exportable Crop',
+			fortune: 0,
+			maxFortune: 12,
+			ratio: 0,
+			api: false,
 		},
 		{
 			name: 'Garden Crop Upgrade',
@@ -221,6 +230,7 @@ test('Carrot fortune test', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
@@ -276,13 +286,14 @@ test('Melon fortune test', () => {
 		delete piece.wiki;
 		delete piece.nextInfo;
 		delete piece.info;
+		delete piece.upgrades;
 	});
 
 	expect(progress).toStrictEqual([
 		{
 			name: 'Farming Tool',
 			fortune: 0,
-			maxFortune: 267,
+			maxFortune: 272.34,
 			ratio: 0,
 			progress: FarmingTool.fakeItem(
 				FARMING_TOOLS[CROP_INFO[Crop.Melon].startingTool] as FarmingToolInfo

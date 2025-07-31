@@ -1,5 +1,6 @@
-import { CROP_INFO, Crop, CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
-import { REFORGES, Rarity } from '../constants/reforges.js';
+import { FARMING_ATTRIBUTE_SHARDS, type FarmingAttributes } from '../constants/attributes.js';
+import { CROP_INFO, Crop, type CropInfo, MAX_CROP_FORTUNE } from '../constants/crops.js';
+import { Rarity, REFORGES } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { calculateMelonPerkBonus } from '../crops/melon.js';
 import { calculatePumpkinPerkBonus } from '../crops/pumpkin.js';
@@ -8,9 +9,11 @@ import { BEST_FARMING_TOOLS } from '../items/tools.js';
 
 interface CalculateDropsOptions {
 	farmingFortune?: number;
+	cropFortune?: Record<Crop, number>;
 	blocksBroken: number;
 	dicerLevel?: 1 | 2 | 3;
 	armorPieces?: 1 | 2 | 3 | 4;
+	attributes?: FarmingAttributes | Record<string, number>;
 }
 
 const crops = [
@@ -27,13 +30,17 @@ const crops = [
 	Crop.Seeds,
 ] as const;
 
-export function calculateAverageDrops(options: CalculateDropsOptions): Record<Crop, number> {
+type CropFortuneOption = { cropFortune?: Partial<Record<Crop, number>> };
+
+export function calculateAverageDrops(options: CalculateDropsOptions & CropFortuneOption): Record<Crop, number> {
 	const result = {} as Record<Crop, number>;
 
 	for (const crop of crops) {
+		const fortune = (options.cropFortune?.[crop] ?? 0) + (options.farmingFortune ?? 0);
 		result[crop] = calculateExpectedDrops({
 			crop: crop,
 			...options,
+			farmingFortune: fortune > 0 ? fortune : undefined,
 		});
 	}
 
@@ -45,21 +52,29 @@ interface CalculateDetailedDropsOptions extends CalculateDropsOptions {
 	mooshroom: boolean;
 }
 
-interface DetailedDrops {
+export interface DetailedDropsResult {
+	npcPrice: number;
 	collection: number;
 	npcCoins: number;
 	fortune: number;
+	blocksBroken: number;
 	coinSources: Record<string, number>;
 	otherCollection: Record<string, number>;
+	items: Record<string, number>;
+	rngItems?: Record<string, number>;
 }
 
-export function calculateDetailedAverageDrops(options: CalculateDetailedDropsOptions): Record<Crop, DetailedDrops> {
-	const result = {} as Record<Crop, DetailedDrops>;
+export function calculateDetailedAverageDrops(
+	options: CalculateDetailedDropsOptions & CropFortuneOption
+): Record<Crop, DetailedDropsResult> {
+	const result = {} as Record<Crop, DetailedDropsResult>;
 
 	for (const crop of crops) {
+		const fortune = (options.cropFortune?.[crop] ?? 0) + (options.farmingFortune ?? 0);
 		result[crop] = calculateDetailedDrops({
 			crop: crop,
 			...options,
+			farmingFortune: fortune > 0 ? fortune : undefined,
 		});
 	}
 
@@ -74,6 +89,7 @@ export function calculateDetailedAverageDrops(options: CalculateDetailedDropsOpt
 		wheat.coinSources['Bountiful (Seeds)'] = seeds.coinSources['Bountiful'] ?? 0;
 	}
 	wheat.npcCoins = Object.values(wheat.coinSources).reduce((a, b) => a + b, 0);
+	wheat.items[Crop.Seeds] = seedCollection;
 
 	// Count mooshroom mushrooms as normal mushroom collection
 	if (options.mooshroom) {
@@ -93,9 +109,10 @@ interface CalculateExpectedDropsOptions extends CalculateDropsOptions {
 	crop: Crop;
 }
 
-interface CalculateCropDetailedDropsOptions extends CalculateDetailedDropsOptions {
+export interface CalculateCropDetailedDropsOptions extends CalculateDetailedDropsOptions {
 	blocksBroken: number;
 	crop: Crop;
+	infestedPlotProbability?: number;
 }
 
 export function calculateExpectedDrops(options: CalculateExpectedDropsOptions): number {
@@ -130,13 +147,16 @@ export function calculateExpectedDrops(options: CalculateExpectedDropsOptions): 
 	}
 }
 
-export function calculateDetailedDrops(options: CalculateCropDetailedDropsOptions): DetailedDrops {
-	const result = {
+export function calculateDetailedDrops(options: CalculateCropDetailedDropsOptions): DetailedDropsResult {
+	const result: DetailedDropsResult = {
+		npcPrice: 0,
 		collection: 0,
 		npcCoins: 0,
 		fortune: 0,
+		blocksBroken: options.blocksBroken,
 		coinSources: {} as Record<string, number>,
 		otherCollection: {} as Record<string, number>,
+		items: {} as Record<string, number>,
 	};
 
 	const { farmingFortune, blocksBroken, crop, bountiful, armorPieces = 4 } = options;
@@ -155,7 +175,9 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		fortune += blessedFortune - bountifulFortune;
 	}
 
-	const { drops, npc, breaks = 1, replenish = false } = getCropInfo(crop);
+	const { drops, npc, breaks = 1, replenish = false, rng } = getCropInfo(crop);
+	result.npcPrice = npc;
+
 	if (!drops) return result;
 
 	const baseDrops = blocksBroken * drops * (fortune * 0.01);
@@ -170,11 +192,13 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 		const mushroomDrops = Math.round(blocksBroken * breaks);
 		result.coinSources['Mooshroom'] = mushroomDrops * CROP_INFO[Crop.Mushroom].npc;
 		result.otherCollection['Mushroom'] = mushroomDrops;
+		result.items[Crop.Mushroom] = mushroomDrops;
 	}
 
 	const specialCrops = calculateAverageSpecialCrops(blocksBroken, crop, armorPieces);
 
 	result.otherCollection[specialCrops.type] = Math.round(specialCrops.amount);
+	result.items[specialCrops.id] = +specialCrops.amount.toFixed(2);
 	result.coinSources[specialCrops.type] = Math.round(specialCrops.npc);
 
 	let extraDrops = 0;
@@ -185,6 +209,7 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 			result.coinSources['Collection'] = Math.round(baseDrops * npc);
 			result.otherCollection['RNG Pumpkin'] = Math.round(extraDrops);
 			result.collection = Math.round(baseDrops + extraDrops);
+			result.items[Crop.Pumpkin] = Math.round(baseDrops + extraDrops);
 			break;
 		case Crop.Melon:
 			extraDrops = Math.round(calculateMelonPerkBonus(blocksBroken, options.dicerLevel));
@@ -192,6 +217,7 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 			result.coinSources['Collection'] = Math.round(baseDrops * npc);
 			result.otherCollection['RNG Melon'] = Math.round(extraDrops);
 			result.collection = Math.round(baseDrops + extraDrops);
+			result.items[Crop.Melon] = Math.round(baseDrops + extraDrops);
 			break;
 		default:
 			if (replenish) {
@@ -199,15 +225,35 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 				result.coinSources['Collection'] = Math.round((baseDrops - blocksBroken * breaks) * npc);
 				result.otherCollection['Replenish'] = -Math.round(blocksBroken * breaks);
 				result.collection = Math.round(baseDrops);
+				result.items[crop] = Math.round(baseDrops - blocksBroken * breaks);
 				break;
 			}
 
 			result.coinSources['Collection'] = Math.round(baseDrops * npc);
 			result.collection = Math.round(baseDrops);
+			result.items[crop] = Math.round(baseDrops);
 			break;
 	}
 
 	result.npcCoins = Object.values(result.coinSources).reduce((a, b) => a + b, 0);
+
+	if (options.attributes) {
+		for (const shard of Object.values(FARMING_ATTRIBUTE_SHARDS)) {
+			if (shard.ratesModifier) {
+				shard.ratesModifier(result, options);
+			}
+		}
+	}
+
+	if (rng) {
+		for (const rngDrop of rng) {
+			const drops = rngDrop.chance * blocksBroken;
+			for (const [item, count] of Object.entries(rngDrop.drops)) {
+				result.rngItems ??= {};
+				result.rngItems[item] = count * drops + (result.rngItems[item] ?? 0);
+			}
+		}
+	}
 
 	return result;
 }
@@ -248,6 +294,49 @@ export function getNPCProfitFromCrops(crop: Crop, amount: number): number {
 	const { npc } = getCropInfo(crop);
 	if (!npc) return 0;
 	return npc * amount;
+}
+
+interface PossibleProfit {
+	items: number;
+	fractionalItems: number;
+	remainder: number;
+	cost: number;
+	fractionalCost: number;
+}
+
+export function getPossibleResultsFromCrops(crop: Crop, amount: number): Record<string, PossibleProfit> {
+	const { crafts } = getCropInfo(crop);
+
+	return {
+		[crop]: {
+			items: amount,
+			fractionalItems: amount,
+			remainder: 0,
+			cost: 0,
+			fractionalCost: 0,
+		},
+		...crafts.reduce<Record<string, PossibleProfit>>((acc, curr) => {
+			const items = Math.floor(amount / curr.takes);
+			const remainder = amount % curr.takes;
+			const cost = curr.and?.reduce((sum, curr) => sum + (curr.cost ?? 0) * curr.amount * items, 0);
+
+			const fractionalItems = amount / curr.takes;
+			const fractionalCost = curr.and?.reduce(
+				(sum, curr) => sum + (curr.cost ?? 0) * curr.amount * fractionalItems,
+				0
+			);
+
+			acc[curr.item] = {
+				items,
+				remainder,
+				cost: cost ?? 0,
+				fractionalItems,
+				fractionalCost: fractionalCost ?? 0,
+			};
+
+			return acc;
+		}, {}),
+	};
 }
 
 export function getCropInfo(crop: Crop): CropInfo {

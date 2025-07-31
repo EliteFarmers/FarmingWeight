@@ -1,18 +1,21 @@
-import { Crop } from '../constants/crops.js';
+import type { Crop } from '../constants/crops.js';
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
-import { REFORGES, Rarity, Reforge, ReforgeTier } from '../constants/reforges.js';
-import { Stat, getStatValue } from '../constants/stats.js';
-import { FortuneSourceProgress } from '../constants/upgrades.js';
-import { FARMING_TOOLS, FarmingToolInfo, FarmingToolType } from '../items/tools.js';
-import { PlayerOptions } from '../player/playeroptions.js';
+import { type Rarity, REFORGES, type Reforge, type ReforgeTier } from '../constants/reforges.js';
+import { getStatValue, Stat } from '../constants/stats.js';
+import type { FortuneSourceProgress, FortuneUpgrade } from '../constants/upgrades.js';
+import { FARMING_TOOLS, type FarmingToolInfo, FarmingToolType } from '../items/tools.js';
+import type { PlayerOptions } from '../player/playeroptions.js';
+import { getSourceProgress } from '../upgrades/getsourceprogress.js';
+import { registerItem } from '../upgrades/itemregistry.js';
 import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources.js';
-import { getSourceProgress } from '../upgrades/upgrades.js';
+import { getSelfFortuneUpgrade, getUpgradeableRarityUpgrade } from '../upgrades/upgrades.js';
 import { getFortuneFromEnchant } from '../util/enchants.js';
 import { getPeridotFortune } from '../util/gems.js';
 import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
-import { extractNumberFromLine } from '../util/lore.js';
-import { EliteItemDto } from './item.js';
-import { UpgradeableBase, UpgradeableInfo } from './upgradeable.js';
+import { extractNumberFromLine, getNumberFromMatchingLine } from '../util/lore.js';
+import type { EliteItemDto } from './item.js';
+import type { UpgradeableInfo } from './upgradeable.js';
+import { UpgradeableBase } from './upgradeablebase.js';
 
 export class FarmingTool extends UpgradeableBase {
 	public declare item: EliteItemDto;
@@ -32,6 +35,10 @@ export class FarmingTool extends UpgradeableBase {
 	private declare colorPrefix: string;
 	public get name() {
 		return this.colorPrefix + (this.reforge?.name ?? '') + ' ' + this.itemname;
+	}
+
+	public get bountiful() {
+		return this.reforge?.name === REFORGES.bountiful?.name;
 	}
 
 	public declare rarity: Rarity;
@@ -57,6 +64,28 @@ export class FarmingTool extends UpgradeableBase {
 
 	getProgress(zeroed = false): FortuneSourceProgress[] {
 		return getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, zeroed);
+	}
+
+	getUpgrades(): FortuneUpgrade[] {
+		const { deadEnd, upgrade: self } = getSelfFortuneUpgrade(this) ?? {};
+		if (deadEnd && self) return [self];
+
+		const upgrades = getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, false).flatMap(
+			(source) => source.upgrades ?? []
+		);
+
+		if (self) {
+			upgrades.push(self);
+		}
+
+		const rarityUpgrade = getUpgradeableRarityUpgrade(this);
+		if (rarityUpgrade) {
+			upgrades.push(rarityUpgrade);
+		}
+
+		upgrades.sort((a, b) => b.increase - a.increase);
+
+		return upgrades;
 	}
 
 	setOptions(options: PlayerOptions) {
@@ -242,6 +271,15 @@ export class FarmingTool extends UpgradeableBase {
 		return this.item?.enchantments?.dedication && (this.options?.milestones?.[this.crop] ?? 0) <= 0;
 	}
 
+	// Check if the tool has the Axed Perk by seeing if the stats in the lore have an additional 2% bonus
+	hasAxedPerk(): boolean {
+		const regex = /§7Farming Fortune: §a\+(\d+\.\d+)/g;
+		const found = getNumberFromMatchingLine(this.item.lore ?? [], regex);
+		if (!found) return false;
+
+		return found >= this.getFortune() * 0.02;
+	}
+
 	private getFarmingAbilityFortune() {
 		const regex = /§7You have §6\+(\d+)☘/g;
 		let foundCounter = false;
@@ -286,4 +324,12 @@ export class FarmingTool extends UpgradeableBase {
 
 		return new FarmingTool(fake, options);
 	}
+}
+
+for (const item of Object.values(FARMING_TOOLS)) {
+	if (!item) continue;
+	registerItem({
+		info: item,
+		fakeItem: (i, o) => FarmingTool.fakeItem(i, o),
+	});
 }

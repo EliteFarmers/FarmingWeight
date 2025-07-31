@@ -1,17 +1,19 @@
 import { FARMING_ENCHANTS } from '../constants/enchants.js';
-import { Rarity, Reforge, ReforgeTarget, ReforgeTier } from '../constants/reforges.js';
+import { type Rarity, type Reforge, ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
-import { FortuneSourceProgress } from '../constants/upgrades.js';
-import { FarmingArmorInfo } from '../items/armor.js';
-import { EQUIPMENT_INFO } from '../items/equipment.js';
+import type { FortuneSourceProgress } from '../constants/upgrades.js';
+import type { FarmingArmorInfo } from '../items/armor.js';
+import { FARMING_EQUIPMENT_INFO } from '../items/equipment.js';
 import { type PlayerOptions, ZorroMode } from '../player/playeroptions.js';
+import { getSourceProgress } from '../upgrades/getsourceprogress.js';
+import { registerItem } from '../upgrades/itemregistry.js';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
-import { getSourceProgress } from '../upgrades/upgrades.js';
 import { getFortuneFromEnchant } from '../util/enchants.js';
 import { extractNumberFromLine } from '../util/lore.js';
-import { FarmingArmor } from './farmingarmor.js';
-import { EliteItemDto } from './item.js';
-import { UpgradeableBase, UpgradeableInfo } from './upgradeable.js';
+import type { FarmingArmor } from './farmingarmor.js';
+import type { EliteItemDto } from './item.js';
+import type { UpgradeableInfo } from './upgradeable.js';
+import { UpgradeableBase } from './upgradeablebase.js';
 
 export class FarmingEquipment extends UpgradeableBase {
 	public declare item: EliteItemDto;
@@ -35,7 +37,7 @@ export class FarmingEquipment extends UpgradeableBase {
 	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
-		super({ item, options, items: EQUIPMENT_INFO });
+		super({ item, options, items: FARMING_EQUIPMENT_INFO });
 		this.getFortune();
 	}
 
@@ -173,7 +175,7 @@ export class FarmingEquipment extends UpgradeableBase {
 	}
 
 	static isValid(item: EliteItemDto): boolean {
-		return EQUIPMENT_INFO[item.skyblockId as keyof typeof EQUIPMENT_INFO] !== undefined;
+		return FARMING_EQUIPMENT_INFO[item.skyblockId as keyof typeof FARMING_EQUIPMENT_INFO] !== undefined;
 	}
 
 	static fromArray(items: EliteItemDto[], options?: PlayerOptions): FarmingEquipment[] {
@@ -201,3 +203,11 @@ export class FarmingEquipment extends UpgradeableBase {
 // For backwards compatibility
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LotusGear = FarmingEquipment;
+
+for (const item of Object.values(FARMING_EQUIPMENT_INFO)) {
+	if (!item) continue;
+	registerItem({
+		info: item,
+		fakeItem: (i, o) => FarmingEquipment.fakeItem(i, o),
+	});
+}

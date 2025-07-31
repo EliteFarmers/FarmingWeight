@@ -1,10 +1,10 @@
 import { ComposterUpgrade } from '../constants/composter.js';
 import { Crop } from '../constants/crops.js';
-import { RARITY_COLORS, Rarity } from '../constants/reforges.js';
 import { SpecialCrop } from '../constants/specialcrops.js';
+import { RARITY_COLORS, type Rarity } from '../constants/reforges.js';
 
-export function getCropDisplayName(crop: Crop) {
-	return cropDisplayNames[crop] ?? 'Unknown Crop';
+export function getCropDisplayName(crop?: Crop | null): string {
+	return (crop ? cropDisplayNames[crop] : null) ?? 'Unknown Crop';
 }
 
 export function getSpecialCropDisplayName(crop: SpecialCrop) {

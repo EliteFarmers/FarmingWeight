@@ -1,9 +1,10 @@
-import { EliteItemDto } from '../fortune/item.js';
-import { UpgradeableInfo } from '../fortune/upgradeable.js';
+import type { EliteItemDto } from '../fortune/item.js';
+import type { UpgradeableInfo } from '../fortune/upgradeable.js';
 import type { GearSlot } from '../items/armor.js';
 import type { FARMING_TOOLS } from '../items/tools.js';
-import { Crop } from './crops.js';
-import { Stat } from './stats.js';
+import type { JacobContestMedal } from '../util/jacob.js';
+import type { Crop } from './crops.js';
+import type { Stat } from './stats.js';
 
 export enum UpgradeReason {
 	NextTier = 'next', // Standard upgrade
@@ -24,6 +25,7 @@ export interface FortuneSource {
 	maxLevel: number;
 	wiki: string;
 	statsPerLevel?: Partial<Record<Stat, number>>;
+	upgradeCosts?: Partial<Record<number, UpgradeCost>>;
 }
 
 export interface FortuneSourceProgress {
@@ -41,25 +43,44 @@ export interface FortuneSourceProgress {
 	nextInfo?: UpgradeableInfo;
 	maxInfo?: UpgradeableInfo;
 	api?: boolean;
+	active?: {
+		active: boolean;
+		reason?: string;
+		fortune?: number;
+	};
 }
 
 export interface UpgradeCost {
-	items: Record<string, number>;
+	items?: Record<string, number>;
 	coins?: number;
 	copper?: number;
+	bits?: number;
+	medals?: Partial<Record<Exclude<JacobContestMedal, 'platinum' | 'diamond'>, number>>;
+	applyCost?: Omit<UpgradeCost, 'applyCost'>;
 }
 
 export enum UpgradeCategory {
-	Enchant = 'enchant',
+	Enchant = 'enchantment',
 	Rarity = 'rarity',
 	Item = 'item',
 	Gem = 'gem',
+	Reforge = 'reforge',
+	Plot = 'plot',
+	Skill = 'skill',
+	CommunityCenter = 'community_center',
+	Anita = 'anita',
+	Misc = 'misc',
+	Attribute = 'attribute',
 }
 
 export enum UpgradeAction {
 	Apply = 'apply',
 	Recombobulate = 'recombobulate',
 	LevelUp = 'levelup',
+	Purchase = 'purchase',
+	Consume = 'consume',
+	Upgrade = 'upgrade',
+	Unlock = 'unlock',
 }
 
 export interface FortuneUpgradeImprovement {
@@ -69,9 +90,20 @@ export interface FortuneUpgradeImprovement {
 
 export interface FortuneUpgrade {
 	title: string;
+	onto?: {
+		name?: string | null;
+		skyblockId?: string | null;
+		slot?: GearSlot;
+	};
+	max?: number;
 	increase: number;
 	action: UpgradeAction;
+	purchase?: string;
 	category: UpgradeCategory;
+	optional?: boolean;
+	api?: boolean;
+	repeatable?: number;
+	deadEnd?: boolean;
 	cost?: UpgradeCost;
 	wiki?: string;
 	improvements?: FortuneUpgradeImprovement[];
@@ -83,7 +115,7 @@ export interface Upgrade {
 	reason: UpgradeReason;
 	cost?: UpgradeCost;
 	why?: string;
-	preffered?: boolean;
+	preferred?: boolean;
 }
 
 export interface InitialItems {

@@ -13,6 +13,7 @@ export interface FortuneMissingFromAPI {
 	cropUpgrades?: Partial<Record<Crop, number>>;
 	gardenLevel?: number;
 	plotsUnlocked?: number;
+	plots?: string[];
 	uniqueVisitors?: number;
 	communityCenter?: number;
 	milestones?: Partial<Record<Crop, number>>;
@@ -21,6 +22,9 @@ export interface FortuneMissingFromAPI {
 	cocoaFortuneUpgrade?: number;
 
 	sprayedPlot?: boolean;
+	infestedPlotProbability?: number;
+
+	attributes?: Record<string, number>;
 
 	temporaryFortune?: TemporaryFarmingFortune;
 }

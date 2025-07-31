@@ -1,6 +1,6 @@
 {
 	"name": "farming-weight",
-	"version": "0.8.3",
+	"version": "0.10.3",
 	"description": "Tools for calculating farming weight and fortune in Hypixel Skyblock",
 	"type": "module",
 	"main": "dist/index.js",
@@ -9,15 +9,26 @@
 	"scripts": {
 		"build": "tsc",
 		"format": "pnpm biome check --write",
-		"lint": "pnpm biome lint",
-		"test": "vitest"
+		"lint": "pnpm biome check",
+		"test": "vitest",
+		"debug": "vitest --test-timeout=0 --no-file-parallelism"
 	},
-	"keywords": ["farming", "weight", "farming-weight", "skyblock", "hypixel", "hypixel-skyblock", "fortune"],
+	"keywords": [
+		"farming",
+		"weight",
+		"farming-weight",
+		"skyblock",
+		"hypixel",
+		"hypixel-skyblock",
+		"fortune"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/EliteFarmers/FarmingWeight.git"
 	},
-	"files": ["dist/**/*"],
+	"files": [
+		"dist/**/*"
+	],
 	"bugs": {
 		"url": "https://github.com/EliteFarmers/FarmingWeight/issues"
 	},
@@ -29,8 +40,10 @@
 	"author": "Kaeso",
 	"license": "MIT",
 	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
-		"typescript": "^5.2.2",
+		"@biomejs/biome": "2.0.6",
+		"@types/madge": "^5.0.3",
+		"madge": "^8.0.0",
+		"typescript": "^5.8.3",
 		"vitest": "^1.6.0"
 	},
 	"packageManager": "pnpm@9.15.0"

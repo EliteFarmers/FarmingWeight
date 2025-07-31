@@ -2,24 +2,26 @@ import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../../constants/crops.
 import { fortuneFromPersonalBestContest } from '../../constants/personalbests.js';
 import { COCOA_FORTUNE_UPGRADE, GARDEN_CROP_UPGRADES } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
-import { FarmingTool } from '../../fortune/farmingtool.js';
+import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
+import type { FarmingTool } from '../../fortune/farmingtool.js';
 import { FARMING_ACCESSORIES_INFO } from '../../items/accessories.js';
-import { FARMING_TOOLS, FarmingToolInfo } from '../../items/tools.js';
-import { FarmingPlayer } from '../../player/player.js';
+import type { FarmingPlayer } from '../../player/player.js';
 import { getCropDisplayName, getItemIdFromCrop } from '../../util/names.js';
-import { DynamicFortuneSource } from './toolsources.js';
+import { getFakeItem, ITEM_REGISTRY } from '../itemregistry.js';
+import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
 export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer; crop: Crop }>[] = [
 	{
 		name: 'Farming Tool',
 		exists: () => true,
 		wiki: ({ player, crop }) => {
-			return player.getSelectedCropTool(crop)?.info.wiki ?? FARMING_TOOLS[CROP_INFO[crop].startingTool]?.wiki;
+			return (
+				player.getSelectedCropTool(crop)?.info.wiki ??
+				ITEM_REGISTRY.get(CROP_INFO[crop].startingTool)?.info.wiki
+			);
 		},
 		max: ({ crop }) => {
-			const tool = FARMING_TOOLS[CROP_INFO[crop].startingTool];
-			if (!tool) return 0;
-			const progress = FarmingTool.fakeItem(tool)?.getProgress();
+			const progress = getFakeItem(CROP_INFO[crop].startingTool)?.getProgress();
 			return progress?.reduce((acc, p) => acc + p.maxFortune, 0) ?? 0;
 		},
 		current: ({ player, crop }) => {
@@ -31,15 +33,13 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 			const tool = player.getSelectedCropTool(crop);
 			if (tool) return tool.getProgress();
 
-			const fake = FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[crop].startingTool] as FarmingToolInfo);
+			const fake = getFakeItem<FarmingTool>(CROP_INFO[crop].startingTool);
 			return fake?.getProgress(true) ?? [];
 		},
 		info: ({ player, crop }) => {
 			const tool = player.selectedTool?.crop === crop ? player.selectedTool : player.getSelectedCropTool(crop);
 
-			const fake = !tool
-				? FarmingTool.fakeItem(FARMING_TOOLS[CROP_INFO[crop].startingTool] as FarmingToolInfo)
-				: undefined;
+			const fake = !tool ? getFakeItem(CROP_INFO[crop].startingTool) : undefined;
 
 			return {
 				item: tool?.item,
@@ -58,6 +58,21 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 		current: ({ player, crop }) => {
 			return player.options.exportableCrops?.[crop] ? EXPORTABLE_CROP_FORTUNE : 0;
 		},
+		upgrades: ({ player, crop }) => {
+			if (player.options.exportableCrops?.[crop]) return [];
+
+			return [
+				{
+					title: 'Exportable Crop',
+					increase: EXPORTABLE_CROP_FORTUNE,
+					action: UpgradeAction.Unlock,
+					category: UpgradeCategory.Misc,
+					api: false,
+					wiki: 'https://wiki.hypixel.net/Carrolyn',
+					cost: CROP_INFO[crop].exportableCost,
+				},
+			];
+		},
 	},
 	{
 		name: GARDEN_CROP_UPGRADES.name,
@@ -67,6 +82,21 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 		current: ({ player, crop }) => {
 			return (player.options.cropUpgrades?.[crop] ?? 0) * GARDEN_CROP_UPGRADES.fortunePerLevel;
 		},
+		upgrades: ({ player, crop }) => {
+			const level = player.options.cropUpgrades?.[crop] ?? 0;
+			if (level >= GARDEN_CROP_UPGRADES.maxLevel) return [];
+
+			return [
+				{
+					title: GARDEN_CROP_UPGRADES.name,
+					increase: GARDEN_CROP_UPGRADES.fortunePerLevel,
+					action: UpgradeAction.Upgrade,
+					wiki: GARDEN_CROP_UPGRADES.wiki,
+					category: UpgradeCategory.Misc,
+					cost: GARDEN_CROP_UPGRADES.upgradeCosts?.[level + 1],
+				},
+			];
+		},
 	},
 	{
 		name: COCOA_FORTUNE_UPGRADE.name,
@@ -75,6 +105,21 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 		max: () => COCOA_FORTUNE_UPGRADE.fortunePerLevel * COCOA_FORTUNE_UPGRADE.maxLevel,
 		current: ({ player }) => {
 			return (player.options.cocoaFortuneUpgrade ?? 0) * COCOA_FORTUNE_UPGRADE.fortunePerLevel;
+		},
+		upgrades: ({ player }) => {
+			const level = player.options.cocoaFortuneUpgrade ?? 0;
+			if (level >= COCOA_FORTUNE_UPGRADE.maxLevel) return [];
+
+			return [
+				{
+					title: COCOA_FORTUNE_UPGRADE.name,
+					increase: COCOA_FORTUNE_UPGRADE.fortunePerLevel,
+					action: UpgradeAction.Upgrade,
+					repeatable: COCOA_FORTUNE_UPGRADE.maxLevel - level,
+					wiki: COCOA_FORTUNE_UPGRADE.wiki,
+					category: UpgradeCategory.Misc,
+				},
+			];
 		},
 	},
 	{
