@@ -62,7 +62,7 @@ export const LEVEL_REQUIREMENTS = [
 ];
 
 export function getComposterUpgradeCollectionAmount(upgrade: ComposterUpgrade, tier: number) {
-	const amount = UPGRADE_CROP_AMOUNTS[upgrade][tier]!;
+	const amount = UPGRADE_CROP_AMOUNTS[upgrade][tier + 1]!;
 
 	// if the crop amount is more than 10x the upgrade tier
 	// and the upgrade tier is < 8
