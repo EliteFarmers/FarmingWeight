@@ -61,6 +61,34 @@ export const LEVEL_REQUIREMENTS = [
 	{ level: 25, copper: 4000, specialCrop: SpecialCrop.CondensedFermento, specialCropAmount: 14 },
 ];
 
+export function getComposterUpgradeCollectionAmount(upgrade: ComposterUpgrade, tier: number) {
+	const amount = UPGRADE_CROP_AMOUNTS[upgrade][tier]!;
+
+	// if the crop amount is more than 10x the upgrade tier
+	// and the upgrade tier is < 8
+	// then its counted as a t1 enchanted crop
+	return amount * getEnchantedCropCollectionAmount(COMPOSTER_UPGRADE_CROPS[upgrade][tier % 2]!, amount > tier * 10 && tier < 8 ? 1 : 2)
+}
+
+export function getEnchantedCropCollectionAmount(crop: Crop, tier: number): number {
+	switch (tier) {
+		case 1:
+			return 160;
+		case 2:
+			switch (crop) {
+				case Crop.Mushroom:
+					return 32 * getEnchantedCropCollectionAmount(crop, 1);
+				case Crop.CocoaBeans:
+				case Crop.Carrot:
+					return 128 * getEnchantedCropCollectionAmount(crop, 1);
+				default:
+					return 160 * getEnchantedCropCollectionAmount(crop, 1);
+			}
+		default:
+			return 0;
+	}
+}
+
 export const UPGRADE_CROP_AMOUNTS: Record<ComposterUpgrade, Record<number, number>> = {
 	[ComposterUpgrade.COMPOSTER_SPEED]: {
 		1: 128,
