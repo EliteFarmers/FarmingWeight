@@ -134,7 +134,7 @@ export interface FortuneUpgradeImprovement {
 	fortune: number;
 }
 
-export interface UpgradeInfo<T> {
+export interface UpgradeInfo<T = number> {
 	title: string;
 	onto?: {
 		name?: string | null;
@@ -142,6 +142,7 @@ export interface UpgradeInfo<T> {
 		slot?: GearSlot;
 	};
 	max?: T;
+	current: T;
 	increase: T;
 	action: UpgradeAction;
 	purchase?: string;
