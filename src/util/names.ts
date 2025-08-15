@@ -1,7 +1,7 @@
-import { ComposterUpgrade } from '../constants/composter.js';
 import { Crop } from '../constants/crops.js';
-import { SpecialCrop } from '../constants/specialcrops.js';
 import { RARITY_COLORS, type Rarity } from '../constants/reforges.js';
+import { SpecialCrop } from '../constants/specialcrops.js';
+import { ComposterUpgrade } from '../features/composter/composter.js';
 
 export function getCropDisplayName(crop?: Crop | null): string {
 	return (crop ? cropDisplayNames[crop] : null) ?? 'Unknown Crop';
@@ -148,9 +148,9 @@ const specialCropToName: Record<SpecialCrop, string> = {
 };
 
 const upgradeTypeToName: Record<ComposterUpgrade, string> = {
-	[ComposterUpgrade.COMPOSTER_SPEED]: 'Composter Speed',
-	[ComposterUpgrade.MULTI_DROP]: 'Multi Drop',
-	[ComposterUpgrade.FUEL_CAP]: 'Fuel Cap',
-	[ComposterUpgrade.ORGANIC_MATTER_CAP]: 'Organic Matter Cap',
-	[ComposterUpgrade.COST_REDUCTION]: 'Cost Reduction',
+	[ComposterUpgrade.Speed]: 'Composter Speed',
+	[ComposterUpgrade.MultiDrop]: 'Multi Drop',
+	[ComposterUpgrade.FuelCap]: 'Fuel Cap',
+	[ComposterUpgrade.OrganicMatterCap]: 'Organic Matter Cap',
+	[ComposterUpgrade.CostReduction]: 'Cost Reduction',
 };

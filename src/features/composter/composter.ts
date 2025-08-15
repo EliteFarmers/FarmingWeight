@@ -1,12 +1,12 @@
-import { Crop } from './crops.js';
-import { SpecialCrop } from './specialcrops.js';
+import { Crop } from '../../constants/crops.js';
+import { SpecialCrop } from '../../constants/specialcrops.js';
 
 export enum ComposterUpgrade {
-	COMPOSTER_SPEED = 'COMPOSTER_SPEED',
-	MULTI_DROP = 'MULTI_DROP',
-	FUEL_CAP = 'FUEL_CAP',
-	ORGANIC_MATTER_CAP = 'ORGANIC_MATTER_CAP',
-	COST_REDUCTION = 'COST_REDUCTION',
+	Speed = 'speed',
+	MultiDrop = 'multi_drop',
+	FuelCap = 'fuel_cap',
+	OrganicMatterCap = 'organic_matter_cap',
+	CostReduction = 'cost_reduction',
 }
 
 export interface ComposterUpgradeCost {
@@ -18,19 +18,19 @@ export interface ComposterUpgradeCost {
 }
 
 export const COMPOSTER_UPGRADE_CROPS: Record<ComposterUpgrade, [Crop, Crop]> = {
-	[ComposterUpgrade.COMPOSTER_SPEED]: [Crop.Wheat, Crop.Carrot],
-	[ComposterUpgrade.MULTI_DROP]: [Crop.Potato, Crop.Pumpkin],
-	[ComposterUpgrade.FUEL_CAP]: [Crop.SugarCane, Crop.Melon],
-	[ComposterUpgrade.ORGANIC_MATTER_CAP]: [Crop.Cactus, Crop.CocoaBeans],
-	[ComposterUpgrade.COST_REDUCTION]: [Crop.Mushroom, Crop.NetherWart],
+	[ComposterUpgrade.Speed]: [Crop.Wheat, Crop.Carrot],
+	[ComposterUpgrade.MultiDrop]: [Crop.Potato, Crop.Pumpkin],
+	[ComposterUpgrade.FuelCap]: [Crop.SugarCane, Crop.Melon],
+	[ComposterUpgrade.OrganicMatterCap]: [Crop.Cactus, Crop.CocoaBeans],
+	[ComposterUpgrade.CostReduction]: [Crop.Mushroom, Crop.NetherWart],
 };
 
 export const API_COMPOSTER_UPGRADE_TO_UPGRADE: Record<string, ComposterUpgrade> = {
-	speed: ComposterUpgrade.COMPOSTER_SPEED,
-	multi_drop: ComposterUpgrade.MULTI_DROP,
-	fuel_cap: ComposterUpgrade.FUEL_CAP,
-	organic_matter_cap: ComposterUpgrade.ORGANIC_MATTER_CAP,
-	cost_reduction: ComposterUpgrade.COST_REDUCTION,
+	speed: ComposterUpgrade.Speed,
+	multi_drop: ComposterUpgrade.MultiDrop,
+	fuel_cap: ComposterUpgrade.FuelCap,
+	organic_matter_cap: ComposterUpgrade.OrganicMatterCap,
+	cost_reduction: ComposterUpgrade.CostReduction,
 };
 
 export const LEVEL_REQUIREMENTS = [
@@ -67,7 +67,13 @@ export function getComposterUpgradeCollectionAmount(upgrade: ComposterUpgrade, l
 	// if the crop amount is more than 10x the upgrade tier
 	// and the upgrade tier is < 8
 	// then its counted as a t1 enchanted crop
-	return amount * getEnchantedCropCollectionAmount(getCropFromComposterLevel(upgrade, level)!, amount > level * 10 && level < 8 ? 1 : 2)
+	return (
+		amount *
+		getEnchantedCropCollectionAmount(
+			getCropFromComposterLevel(upgrade, level)!,
+			amount > level * 10 && level < 8 ? 1 : 2
+		)
+	);
 }
 
 export function getEnchantedCropCollectionAmount(crop: Crop, tier: number): number {
@@ -89,12 +95,12 @@ export function getEnchantedCropCollectionAmount(crop: Crop, tier: number): numb
 	}
 }
 
-export function getCropFromComposterLevel(upgrade: ComposterUpgrade,level: number) {
+export function getCropFromComposterLevel(upgrade: ComposterUpgrade, level: number) {
 	return COMPOSTER_UPGRADE_CROPS[upgrade][(level + 1) % 2];
 }
 
 export const UPGRADE_CROP_AMOUNTS: Record<ComposterUpgrade, Record<number, number>> = {
-	[ComposterUpgrade.COMPOSTER_SPEED]: {
+	[ComposterUpgrade.Speed]: {
 		1: 128,
 		2: 2,
 		3: 256,
@@ -121,7 +127,7 @@ export const UPGRADE_CROP_AMOUNTS: Record<ComposterUpgrade, Record<number, numbe
 		24: 320,
 		25: 160,
 	},
-	[ComposterUpgrade.MULTI_DROP]: {
+	[ComposterUpgrade.MultiDrop]: {
 		1: 1,
 		2: 64,
 		3: 2,
@@ -148,7 +154,7 @@ export const UPGRADE_CROP_AMOUNTS: Record<ComposterUpgrade, Record<number, numbe
 		24: 192,
 		25: 320,
 	},
-	[ComposterUpgrade.FUEL_CAP]: {
+	[ComposterUpgrade.FuelCap]: {
 		1: 1,
 		2: 4,
 		3: 2,
@@ -175,7 +181,7 @@ export const UPGRADE_CROP_AMOUNTS: Record<ComposterUpgrade, Record<number, numbe
 		24: 512,
 		25: 320,
 	},
-	[ComposterUpgrade.ORGANIC_MATTER_CAP]: {
+	[ComposterUpgrade.OrganicMatterCap]: {
 		1: 1,
 		2: 3,
 		3: 2,
@@ -202,7 +208,7 @@ export const UPGRADE_CROP_AMOUNTS: Record<ComposterUpgrade, Record<number, numbe
 		24: 448,
 		25: 160,
 	},
-	[ComposterUpgrade.COST_REDUCTION]: {
+	[ComposterUpgrade.CostReduction]: {
 		1: 32,
 		2: 1,
 		3: 2,

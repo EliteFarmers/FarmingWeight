@@ -1,5 +1,4 @@
 export * from './constants/attributes.js';
-export * from './constants/composter.js';
 export * from './constants/crops.js';
 export * from './constants/garden.js';
 export * from './constants/personalbests.js';
@@ -16,6 +15,7 @@ export * from './constants/weight.js';
 export * from './crops/melon.js';
 export * from './crops/pumpkin.js';
 export * from './crops/special.js';
+export * from './features/index.js';
 export * from './fortune/farmingaccessory.js';
 export * from './fortune/farmingarmor.js';
 export * from './fortune/farmingequipment.js';
