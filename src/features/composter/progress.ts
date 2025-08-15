@@ -61,7 +61,7 @@ export const COMPOSTER_UPGRADE_SOURCES: DynamicUpgradeSource<Input, number>[] = 
 				return [
 					{
 						title: upgrade.name + ' ' + nextLevel,
-						increase: upgrade.current(levels[key] ?? 0) - upgrade.current(levels[key] ?? 0),
+						increase: upgrade.current(nextLevel) - upgrade.current(levels[key] ?? 0),
 						action: UpgradeAction.LevelUp,
 						category: UpgradeCategory.Composter,
 						cost: upgrade.levels[nextLevel - 1],

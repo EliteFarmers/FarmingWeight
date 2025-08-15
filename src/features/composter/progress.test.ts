@@ -53,6 +53,7 @@ test('Composter Progress', () => {
 		},
 		copper: 800,
 	});
+	expect(speedUpgrade?.increase).toBeCloseTo(0.2);
 
 	const fuelCapProgress = progress.find((p) => p.name.startsWith('Fuel Cap'));
 	expect(fuelCapProgress).toBeDefined();
