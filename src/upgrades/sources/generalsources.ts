@@ -299,6 +299,41 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			return accessory.getUpgrades();
 		},
 	},
+	{
+		name: 'Magic 8 Ball',
+		exists: () => true,
+		wiki: () => 'https://wiki.hypixel.net/Magic_8_Ball',
+		max: () => 25,
+		active: () => {
+			return { active: true, reason: 'Magic 8 Ball only has a 20% chance to be active each season.' };
+		},
+		current: (player) => {
+			const accessory = player.accessories.find((a) => a.info.skyblockId === 'MAGIC_8_BALL');
+			return accessory ? 25 : 0;
+		},
+		upgrades: (player) => {
+			const accessory = player.accessories.find((a) => a.info.skyblockId === 'MAGIC_8_BALL');
+
+			if (!accessory)
+				return [
+					{
+						title: 'Magic 8 Ball',
+						increase: 25 * 0.2,
+						action: UpgradeAction.Purchase,
+						purchase: 'MAGIC_8_BALL',
+						category: UpgradeCategory.Item,
+						wiki: 'https://wiki.hypixel.net/Magic_8_Ball',
+						cost: {
+							items: {
+								MAGIC_8_BALL: 1,
+							},
+						},
+					},
+				];
+
+			return [];
+		},
+	},
 ];
 
 export const ATTRIBUTE_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer | CalculateCropDetailedDropsOptions>[] =

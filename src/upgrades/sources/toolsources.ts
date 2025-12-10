@@ -66,7 +66,8 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 
 			for (const reforge of Object.values(REFORGES)) {
 				// Skip if the reforge doesn't apply to the item or is currently applied
-				if (!reforge || !reforge.appliesTo.includes(tool.type) || reforge === tool.reforge) return result;
+				if (!reforge || !tool.type || !reforge.appliesTo.includes(tool.type) || reforge === tool.reforge)
+					return result;
 
 				const tier = reforge.tiers[tool.rarity];
 				if (!tier || !tier.stats?.[Stat.FarmingFortune]) continue;
@@ -223,7 +224,9 @@ function enchantSourceBuilder(
 		name: enchant.name,
 		wiki: () => enchant.wiki,
 		exists: (tool) =>
-			enchant.appliesTo.includes(tool.type) && (!enchant.cropSpecific || enchant.cropSpecific === tool.crop),
+			tool.type !== undefined &&
+			enchant.appliesTo.includes(tool.type) &&
+			(!enchant.cropSpecific || enchant.cropSpecific === tool.crop),
 		max: (tool) => getMaxFortuneFromEnchant(enchant, tool.options, tool.crop),
 		current: (tool) => getFortuneFromEnchant(tool.item.enchantments?.[id] ?? 0, enchant, tool.options, tool.crop),
 		upgrades: (tool) => getUpgradeableEnchant(tool, id),

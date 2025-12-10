@@ -2,84 +2,12 @@ import { Rarity, ReforgeTarget } from '../constants/reforges.js';
 import { Skill } from '../constants/skills.js';
 import { SpecialCrop } from '../constants/specialcrops.js';
 import { Stat } from '../constants/stats.js';
-import { type Upgrade, UpgradeReason } from '../constants/upgrades.js';
-import type { UpgradeableInfo } from '../fortune/upgradeable.js';
+import { UpgradeReason } from '../constants/upgrades.js';
+import { GEAR_SLOTS, GearSlot, type GearSlotInfo, type ItemDefinition } from './definitions.js';
 
-export enum GearSlot {
-	Boots = 'Boots',
-	Leggings = 'Leggings',
-	Chestplate = 'Chestplate',
-	Helmet = 'Helmet',
-	Necklace = 'Necklace',
-	Cloak = 'Cloak',
-	Belt = 'Belt',
-	Gloves = 'Gloves',
-}
+export { GEAR_SLOTS, GearSlot, type GearSlotInfo, type ItemDefinition as FarmingArmorInfo };
 
-export interface GearSlotInfo {
-	name: string;
-	startingItem: string;
-	target: ReforgeTarget;
-}
-
-export const GEAR_SLOTS: Record<GearSlot, GearSlotInfo> = {
-	[GearSlot.Helmet]: {
-		name: 'Helmet',
-		target: ReforgeTarget.Armor,
-		startingItem: 'FARM_ARMOR_HELMET',
-	},
-	[GearSlot.Chestplate]: {
-		name: 'Chestplate',
-		target: ReforgeTarget.Armor,
-		startingItem: 'FARM_ARMOR_CHESTPLATE',
-	},
-	[GearSlot.Leggings]: {
-		name: 'Leggings',
-		target: ReforgeTarget.Armor,
-		startingItem: 'FARM_ARMOR_LEGGINGS',
-	},
-	[GearSlot.Boots]: {
-		name: 'Boots',
-		target: ReforgeTarget.Armor,
-		startingItem: 'FARM_ARMOR_BOOTS',
-	},
-	[GearSlot.Necklace]: {
-		name: 'Necklace',
-		target: ReforgeTarget.Equipment,
-		startingItem: 'LOTUS_NECKLACE',
-	},
-	[GearSlot.Cloak]: {
-		name: 'Cloak',
-		target: ReforgeTarget.Equipment,
-		startingItem: 'LOTUS_CLOAK',
-	},
-	[GearSlot.Belt]: {
-		name: 'Belt',
-		target: ReforgeTarget.Equipment,
-		startingItem: 'LOTUS_BELT',
-	},
-	[GearSlot.Gloves]: {
-		name: 'Gloves',
-		target: ReforgeTarget.Equipment,
-		startingItem: 'LOTUS_BRACELET',
-	},
-};
-
-export interface FarmingArmorInfo extends UpgradeableInfo {
-	special?: SpecialCrop[];
-	slot: GearSlot;
-	family?: string;
-	maxRarity: Rarity;
-	upgrade?: Upgrade;
-	wiki: string;
-	contestStatsMultiplier?: number;
-	perLevelStats?: {
-		skill: Skill;
-		appliesTo?: ReforgeTarget[];
-		stats: Partial<Record<Stat, number>>;
-	};
-	skillReq?: Partial<Record<Skill, number>>;
-}
+type FarmingArmorInfo = ItemDefinition;
 
 export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 	FARMER_BOOTS: {

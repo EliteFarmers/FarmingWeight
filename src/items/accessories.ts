@@ -1,21 +1,12 @@
 import { Crop } from '../constants/crops.js';
 import { Rarity } from '../constants/reforges.js';
-import type { Skill } from '../constants/skills.js';
 import { Stat } from '../constants/stats.js';
 import { UpgradeReason } from '../constants/upgrades.js';
-import type { UpgradeableInfo } from '../fortune/upgradeable.js';
+import type { ItemDefinition } from './definitions.js';
 
-export interface FarmingAccessoryInfo extends UpgradeableInfo {
-	name: string;
-	wiki: string;
-	family?: string;
-	familyOrder?: number;
-	maxRarity: Rarity;
-	crops?: Crop[];
-	skillReq?: Partial<Record<Skill, number>>;
-}
+export type { ItemDefinition as FarmingAccessoryInfo };
 
-export const FARMING_ACCESSORIES_INFO: Partial<Record<string, FarmingAccessoryInfo>> = {
+export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> = {
 	FERMENTO_ARTIFACT: {
 		skyblockId: 'FERMENTO_ARTIFACT',
 		name: 'Fermento Artifact',
