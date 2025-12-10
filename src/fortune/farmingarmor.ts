@@ -20,8 +20,8 @@ import { getFakeItem, registerItem } from '../upgrades/itemregistry.js';
 import { ARMOR_SET_FORTUNE_SOURCES } from '../upgrades/sources/armorsetsources.js';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
 import { getLastItemUpgradeableTo, getSelfFortuneUpgrade, getUpgradeableRarityUpgrade } from '../upgrades/upgrades.js';
-import { getFortuneFromEnchant } from '../util/enchants.js';
-import { getPeridotFortune } from '../util/gems.js';
+import { getFortuneFromEnchant, getStatFromEnchant } from '../util/enchants.js';
+import { getGemStat, getPeridotFortune } from '../util/gems.js';
 import { FarmingEquipment } from './farmingequipment.js';
 import type { EliteItemDto } from './item.js';
 import type { UpgradeableInfo } from './upgradeable.js';
@@ -227,6 +227,35 @@ export class ArmorSet {
 		return result;
 	}
 
+	getStat(stat: Stat): number {
+		let sum = 0;
+		// Armor fortune
+		for (const piece of this.armor) {
+			if (!piece) continue;
+			sum += piece.getStat(stat);
+		}
+
+		// Armor set bonuses
+		for (const { bonus, count } of this.setBonuses) {
+			if (count < 2 || count > 4) continue;
+			sum += bonus.stats?.[count]?.[stat] ?? 0;
+		}
+
+		// Equipment fortune
+		for (const piece of this.equipment) {
+			if (!piece) continue;
+			sum += piece.getStat(stat);
+		}
+
+		// Equipment set bonuses
+		for (const { bonus, count } of this.equipmentSetBonuses) {
+			if (count < 2 || count > 4) continue;
+			sum += bonus.stats?.[count]?.[stat] ?? 0;
+		}
+
+		return sum;
+	}
+
 	getFortuneBreakdown(reloadFamilies = false) {
 		if (reloadFamilies) {
 			this.recalculateFamilies();
@@ -405,6 +434,37 @@ export class FarmingArmor extends UpgradeableBase {
 	setOptions(options: PlayerOptions) {
 		this.options = options;
 		this.fortune = this.getFortune();
+	}
+
+	getStat(stat: Stat): number {
+		let sum = 0;
+
+		// Base stats
+		sum += this.info.baseStats?.[stat] ?? 0;
+
+		// Per farming level stats like Rancher's Boots
+		if (this.info.perLevelStats?.skill === Skill.Farming && this.options?.farmingLevel) {
+			sum += (this.info.perLevelStats?.stats[stat] ?? 0) * this.options.farmingLevel;
+		}
+
+		// Reforge stats
+		sum += this.reforgeStats?.stats?.[stat] ?? 0;
+
+		// Gems
+		sum += getGemStat(this.item, stat, this.rarity);
+
+		// Enchantments
+		const enchantments = Object.entries(this.item.enchantments ?? {});
+		for (const [enchant, level] of enchantments) {
+			if (!level) continue;
+
+			const enchantment = FARMING_ENCHANTS[enchant];
+			if (!enchantment || !level || enchantment.cropSpecific) continue;
+
+			sum += getStatFromEnchant(level, enchantment, stat, this.options);
+		}
+
+		return sum;
 	}
 
 	getFortune() {

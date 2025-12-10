@@ -35,6 +35,7 @@ export interface Upgradeable {
 	fortune: number;
 
 	getFortune(): number;
+	getStat(stat: Stat): number;
 	getUpgrades(): FortuneUpgrade[];
 	getItemUpgrade(): Upgrade | undefined;
 	getLastItemUpgrade(): { upgrade: Upgrade; info: UpgradeableInfo } | undefined;

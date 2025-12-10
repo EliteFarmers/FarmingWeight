@@ -9,8 +9,8 @@ import { getSourceProgress } from '../upgrades/getsourceprogress.js';
 import { registerItem } from '../upgrades/itemregistry.js';
 import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources.js';
 import { getSelfFortuneUpgrade, getUpgradeableRarityUpgrade } from '../upgrades/upgrades.js';
-import { getFortuneFromEnchant } from '../util/enchants.js';
-import { getPeridotFortune } from '../util/gems.js';
+import { getFortuneFromEnchant, getStatFromEnchant } from '../util/enchants.js';
+import { getGemStat, getPeridotFortune } from '../util/gems.js';
 import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
 import { extractNumberFromLine, getNumberFromMatchingLine } from '../util/lore.js';
 import type { EliteItemDto } from './item.js';
@@ -158,6 +158,44 @@ export class FarmingTool extends UpgradeableBase {
 		}
 
 		this.fortune = this.getFortune();
+	}
+
+	getStat(stat: Stat): number {
+		if (stat === Stat.FarmingFortune) {
+			return this.getFortune();
+		}
+
+		let sum = 0;
+
+		// Base fortune
+		sum += this.tool.baseStats?.[stat] ?? 0;
+
+		// Computed stats
+		sum += this.getCalculatedStats()?.[stat] ?? 0;
+
+		// Gems
+		sum += getGemStat(this.item, stat, this.rarity);
+
+		// Tool rarity stats
+		const baseRarity = this.recombobulated ? previousRarity(this.rarity) : this.rarity;
+		sum += getStatValue(this.tool.stats?.[baseRarity]?.[stat]);
+
+		// Reforge stats
+		sum += this.reforgeStats?.stats?.[stat] ?? 0;
+
+		// Enchantments
+		const enchantments = Object.entries(this.item.enchantments ?? {});
+		for (const [enchant, level] of enchantments) {
+			if (!level) continue;
+
+			const enchantment = FARMING_ENCHANTS[enchant];
+			if (!enchantment || !level) continue;
+			if (enchantment.cropSpecific && enchantment.cropSpecific !== this.crop) continue;
+
+			sum += getStatFromEnchant(level, enchantment, stat, this.options, this.crop);
+		}
+
+		return sum;
 	}
 
 	getFortune(): number {

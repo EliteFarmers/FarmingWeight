@@ -36,6 +36,7 @@ export enum Stat {
 	Pristine = 'Pristine',
 	BonusPestChance = 'Bonus Pest Chance',
 	PestCooldownReduction = 'Pest Cooldown Reduction',
+	FishingSpeed = 'Fishing Speed',
 }
 
 export function getStatValue<T = unknown, C = PlayerOptions>(stat?: StatValue<T, C>, option?: C) {

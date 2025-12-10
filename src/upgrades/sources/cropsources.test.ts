@@ -399,5 +399,5 @@ test('Squash ring test', () => {
 	expect(fermento).toBeDefined();
 	expect(fermento?.fortune).toBe(0);
 
-	expect(player.breakdown[fermento?.item?.name ?? '']).toBeUndefined();
+	expect(player.breakdown['Fermento Artifact']).toBeUndefined();
 });

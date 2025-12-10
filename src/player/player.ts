@@ -1,4 +1,4 @@
-import { FARMING_ATTRIBUTE_SHARDS, getShardFortune } from '../constants/attributes.js';
+import { FARMING_ATTRIBUTE_SHARDS, getShardStat } from '../constants/attributes.js';
 import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests.js';
 import {
@@ -9,6 +9,7 @@ import {
 	GARDEN_CROP_UPGRADES,
 	UNLOCKED_PLOTS,
 } from '../constants/specific.js';
+import { Stat } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
 import { FarmingAccessory } from '../fortune/farmingaccessory.js';
@@ -212,25 +213,35 @@ export class FarmingPlayer {
 	}
 
 	getGeneralFortune() {
+		const { value, breakdown } = this.getStatBreakdown(Stat.FarmingFortune);
+		this.breakdown = breakdown;
+		return value;
+	}
+
+	getStat(stat: Stat) {
+		return this.getStatBreakdown(stat).value;
+	}
+
+	getStatBreakdown(stat: Stat) {
 		let sum = 0;
-		const breakdown = {} as Record<string, number>;
+		const breakdown: Record<string, number> = {};
 
 		// Plots
-		const plots = getFortune(this.options.plots?.length ?? this.options.plotsUnlocked, UNLOCKED_PLOTS);
+		const plots = getFortune(this.options.plots?.length ?? this.options.plotsUnlocked, UNLOCKED_PLOTS, stat);
 		if (plots > 0) {
 			breakdown['Unlocked Plots'] = plots;
 			sum += plots;
 		}
 
 		// Farming Level
-		const level = getFortune(this.options.farmingLevel, FARMING_LEVEL);
+		const level = getFortune(this.options.farmingLevel, FARMING_LEVEL, stat);
 		if (level > 0) {
 			breakdown['Farming Level'] = level;
 			sum += level;
 		}
 
 		// Bestiary
-		if (this.options.bestiaryKills) {
+		if (stat === Stat.FarmingFortune && this.options.bestiaryKills) {
 			const bestiary = fortuneFromPestBestiary(this.options.bestiaryKills);
 			if (bestiary > 0) {
 				breakdown['Pest Bestiary'] = bestiary;
@@ -238,29 +249,55 @@ export class FarmingPlayer {
 			}
 		}
 
-		// Armor Set
-		const armorSet = this.armorSet.armorFortune;
-		if (armorSet > 0) {
-			breakdown['Armor Set'] = armorSet;
-			sum += armorSet;
+		// Armor pieces
+		for (const piece of this.armorSet.armor) {
+			if (!piece) continue;
+			const val = piece.getStat(stat);
+			if (val > 0) {
+				breakdown[piece.item.name ?? 'Armor Piece'] = val;
+				sum += val;
+			}
 		}
 
-		// Eqiupment
-		const equipment = this.armorSet.equipmentFortune;
-		if (equipment > 0) {
-			breakdown['Equipment'] = equipment;
-			sum += equipment;
+		// Armor Set Bonuses
+		for (const { bonus, count } of this.armorSet.setBonuses) {
+			if (count < 2 || count > 4) continue;
+			const val = bonus.stats?.[count]?.[stat] ?? 0;
+			if (val > 0) {
+				breakdown[bonus.name] = val;
+				sum += val;
+			}
+		}
+
+		// Equipment pieces
+		for (const piece of this.armorSet.equipment) {
+			if (!piece) continue;
+			const val = piece.getStat(stat);
+			if (val > 0) {
+				breakdown[piece.item.name ?? 'Equipment Piece'] = val;
+				sum += val;
+			}
+		}
+
+		// Equipment Set Bonuses
+		for (const { bonus, count } of this.armorSet.equipmentSetBonuses) {
+			if (count < 2 || count > 4) continue;
+			const val = bonus.stats?.[count]?.[stat] ?? 0;
+			if (val > 0) {
+				breakdown[bonus.name] = val;
+				sum += val;
+			}
 		}
 
 		// Anita Bonus
-		const anitaBonus = getFortune(this.options.anitaBonus, ANITA_FORTUNE_UPGRADE);
+		const anitaBonus = getFortune(this.options.anitaBonus, ANITA_FORTUNE_UPGRADE, stat);
 		if (anitaBonus > 0) {
 			breakdown['Anita Bonus Drops'] = anitaBonus;
 			sum += anitaBonus;
 		}
 
 		// Community Center
-		const communityCenter = getFortune(this.options.communityCenter, COMMUNITY_CENTER_UPGRADE);
+		const communityCenter = getFortune(this.options.communityCenter, COMMUNITY_CENTER_UPGRADE, stat);
 		if (communityCenter > 0) {
 			breakdown['Community Center'] = communityCenter;
 			sum += communityCenter;
@@ -268,40 +305,47 @@ export class FarmingPlayer {
 
 		// Selected Pet
 		const pet = this.selectedPet;
-		if (pet && pet.fortune > 0) {
-			breakdown[pet.info.name ?? 'Selected Pet'] = pet.fortune;
-			sum += pet.fortune;
-		}
-
-		// Accessories, only count highest fortune from each family
-		const families = new Map<string, FarmingAccessory>();
-		this.activeAccessories = [];
-		for (const accessory of this.accessories.filter((a) => a.fortune > 0).sort((a, b) => b.fortune - a.fortune)) {
-			if (!accessory.info.family) continue;
-
-			const existing = families.get(accessory.info.family);
-			if (!existing) {
-				families.set(accessory.info.family, accessory);
-				this.activeAccessories.push(accessory);
-			} else if (accessory.info.familyOrder && accessory.info.familyOrder > (existing.info.familyOrder ?? 0)) {
-				families.set(accessory.info.family, accessory);
-				this.activeAccessories.push(accessory);
-				this.activeAccessories = this.activeAccessories.filter((a) => a !== existing);
+		if (pet) {
+			const val = pet.getFortune(stat);
+			if (val > 0) {
+				breakdown[pet.info.name ?? 'Selected Pet'] = val;
+				sum += val;
 			}
 		}
 
-		for (const accessory of this.activeAccessories) {
-			if (accessory.info.crops) continue;
+		// Accessories
+		const families = new Map<string, FarmingAccessory>();
+		const activeAccessories = [];
 
-			breakdown[accessory.item.name ?? accessory.item.skyblockId ?? 'Accessory [Error]'] = accessory.fortune;
-			sum += accessory.fortune;
+		const sortedAccessories = [...this.accessories]
+			.map((a) => ({ acc: a, val: a.getStat(stat) }))
+			.filter((item) => item.val > 0)
+			.sort((a, b) => b.val - a.val);
+
+		for (const { acc, val } of sortedAccessories) {
+			if (!acc.info.family) continue;
+
+			const existing = families.get(acc.info.family);
+			if (!existing) {
+				families.set(acc.info.family, acc);
+				activeAccessories.push(acc);
+
+				breakdown[acc.item.name ?? acc.item.skyblockId ?? 'Accessory'] = val;
+				sum += val;
+			}
+		}
+
+		if (stat === Stat.FarmingFortune) {
+			this.activeAccessories = activeAccessories;
 		}
 
 		// Refined Truffles
-		const truffles = Math.min(5, this.options.refinedTruffles ?? 0);
-		if (truffles > 0) {
-			breakdown['Refined Truffles'] = truffles;
-			sum += truffles;
+		if (stat === Stat.FarmingFortune) {
+			const truffles = Math.min(5, this.options.refinedTruffles ?? 0);
+			if (truffles > 0) {
+				breakdown['Refined Truffles'] = truffles;
+				sum += truffles;
+			}
 		}
 
 		// Attribute Shards
@@ -309,28 +353,29 @@ export class FarmingPlayer {
 			const shard = FARMING_ATTRIBUTE_SHARDS[shardId as keyof typeof FARMING_ATTRIBUTE_SHARDS];
 			if (!shard || value <= 0) continue;
 
-			const fortune = getShardFortune(shard, this);
-			if (fortune <= 0) continue;
+			const val = getShardStat(shard, this, stat);
+			if (val <= 0) continue;
 
-			breakdown[shard.name] = fortune;
-			sum += fortune;
+			breakdown[shard.name] = val;
+			sum += val;
 		}
 
 		// Extra Fortune
-		for (const extra of this.options.extraFortune ?? []) {
-			if (extra.crop) continue;
+		if (stat === Stat.FarmingFortune) {
+			for (const extra of this.options.extraFortune ?? []) {
+				if (extra.crop) continue;
 
-			breakdown[extra.name ?? 'Extra Fortune'] = extra.fortune;
-			sum += extra.fortune;
+				breakdown[extra.name ?? 'Extra Fortune'] = extra.fortune;
+				sum += extra.fortune;
+			}
+
+			const temp = this.getTempFortune();
+			if (temp > 0) {
+				breakdown['Temporary Fortune'] = temp;
+			}
 		}
 
-		const temp = this.getTempFortune();
-		if (temp > 0) {
-			breakdown['Temporary Fortune'] = temp;
-		}
-
-		this.breakdown = breakdown;
-		return sum;
+		return { value: sum, breakdown };
 	}
 
 	getTempFortune() {

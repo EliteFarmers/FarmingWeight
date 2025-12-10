@@ -1,6 +1,6 @@
 import type { Crop } from '../constants/crops.js';
 import { Rarity, REFORGES, type Reforge, type ReforgeTarget, type ReforgeTier } from '../constants/reforges.js';
-import type { Stat } from '../constants/stats.js';
+import { Stat } from '../constants/stats.js';
 import type { FortuneSourceProgress, FortuneUpgrade, Upgrade } from '../constants/upgrades.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
 import { getItemUpgrades, getLastItemUpgradeableTo, getNextItemUpgradeableTo } from '../upgrades/upgrades.js';
@@ -62,6 +62,10 @@ export class UpgradeableBase implements Upgradeable {
 
 	getFortune(): number {
 		return this.fortune;
+	}
+
+	getStat(stat: Stat): number {
+		return stat === Stat.FarmingFortune ? this.getFortune() : 0;
 	}
 
 	getCalculatedStats(): Partial<Record<Stat, number>> {
