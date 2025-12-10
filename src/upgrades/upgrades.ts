@@ -111,7 +111,10 @@ export function getLastToolUpgrade(tool: FarmingToolInfo): UpgradeableInfo | und
 	return item;
 }
 
-export function getUpgradeableInfo(skyblockId?: string): { info?: UpgradeableInfo; fake?: UpgradeableBase } {
+export function getUpgradeableInfo(skyblockId?: string): {
+	info?: UpgradeableInfo;
+	fake?: UpgradeableBase;
+} {
 	if (!skyblockId) return { info: undefined, fake: undefined };
 
 	const fake = getFakeItem(skyblockId);
@@ -248,6 +251,7 @@ export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade
 			increase: reforgeFortune - currentFortune,
 			action: UpgradeAction.Apply,
 			category: UpgradeCategory.Reforge,
+			conflictKey: 'reforge',
 			wiki: reforge.wiki,
 			onto: {
 				name: upgradeable.item.name,

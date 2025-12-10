@@ -153,6 +153,7 @@ export interface UpgradeInfo<T = number> {
 	deadEnd?: boolean;
 	cost?: UpgradeCost;
 	wiki?: string;
+	conflictKey?: string;
 	improvements?: UpgradeInfoImprovement<T>[];
 }
 
@@ -174,6 +175,7 @@ export interface FortuneUpgrade {
 	deadEnd?: boolean;
 	cost?: UpgradeCost;
 	wiki?: string;
+	conflictKey?: string;
 	improvements?: FortuneUpgradeImprovement[];
 	// upgrade: Upgrade;
 }
