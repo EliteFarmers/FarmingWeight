@@ -68,6 +68,9 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 				{
 					title: 'Exportable Crop',
 					increase: EXPORTABLE_CROP_FORTUNE,
+					stats: {
+						[Stat.FarmingFortune]: EXPORTABLE_CROP_FORTUNE,
+					},
 					action: UpgradeAction.Unlock,
 					category: UpgradeCategory.Misc,
 					api: false,
@@ -93,6 +96,9 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 				{
 					title: GARDEN_CROP_UPGRADES.name,
 					increase: GARDEN_CROP_UPGRADES.fortunePerLevel,
+					stats: {
+						[Stat.FarmingFortune]: GARDEN_CROP_UPGRADES.fortunePerLevel,
+					},
 					action: UpgradeAction.Upgrade,
 					wiki: GARDEN_CROP_UPGRADES.wiki,
 					category: UpgradeCategory.Misc,
@@ -122,6 +128,9 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 				{
 					title: COCOA_FORTUNE_UPGRADE.name,
 					increase: COCOA_FORTUNE_UPGRADE.fortunePerLevel,
+					stats: {
+						[Stat.FarmingFortune]: COCOA_FORTUNE_UPGRADE.fortunePerLevel,
+					},
 					action: UpgradeAction.Upgrade,
 					repeatable: COCOA_FORTUNE_UPGRADE.maxLevel - level,
 					wiki: COCOA_FORTUNE_UPGRADE.wiki,
@@ -206,6 +215,9 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 				{
 					title: 'Personal Best Fortune',
 					increase: increase,
+					stats: {
+						[Stat.FarmingFortune]: increase,
+					},
 					action: UpgradeAction.Unlock,
 					wiki: 'https://wiki.hypixel.net/Anita#Personal_Bests',
 					category: UpgradeCategory.Anita,

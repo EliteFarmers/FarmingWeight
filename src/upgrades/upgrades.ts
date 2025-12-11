@@ -53,6 +53,7 @@ export function getSelfFortuneUpgrade(
 			upgrade: {
 				title: nextInfo.name,
 				increase: nextFake?.getFortune() ?? 0,
+				stats: nextFake?.getStats() ?? {},
 				wiki: nextInfo.wiki,
 				action: UpgradeAction.Purchase,
 				purchase: nextInfo.skyblockId,
@@ -79,6 +80,7 @@ export function getSelfFortuneUpgrade(
 			upgrade: {
 				title: nextInfo.name,
 				increase: increase < 0 ? 0 : increase,
+				stats: nextFake?.getStats() ?? {},
 				wiki: nextInfo.wiki,
 				action: nextItem.reason === UpgradeReason.Situational ? UpgradeAction.Purchase : UpgradeAction.Upgrade,
 				purchase: nextItem.reason === UpgradeReason.Situational ? nextItem.id : undefined,
@@ -185,6 +187,9 @@ export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUp
 	const result = {
 		title: 'Recombobulate ' + upgradeable.item.name,
 		increase: 0,
+		stats: {
+			[Stat.FarmingFortune]: 0,
+		},
 		action: UpgradeAction.Recombobulate,
 		category: UpgradeCategory.Rarity,
 		improvements: [] as FortuneUpgradeImprovement[],
@@ -267,6 +272,9 @@ export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade
 		result.push({
 			title: 'Reforge to ' + reforge.name,
 			increase: reforgeFortune - currentFortune,
+			stats: {
+				[Stat.FarmingFortune]: reforgeFortune - currentFortune,
+			},
 			action: UpgradeAction.Apply,
 			category: UpgradeCategory.Reforge,
 			conflictKey: 'reforge',
@@ -338,6 +346,9 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 		result.push({
 			title: 'Fine Peridot Gemstone',
 			increase: getPeridotGemFortune(upgradeable.rarity, GemRarity.Fine),
+			stats: {
+				[Stat.FarmingFortune]: getPeridotGemFortune(upgradeable.rarity, GemRarity.Fine),
+			},
 			cost: cost,
 			onto: {
 				name: upgradeable.item.name,
@@ -391,6 +402,9 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 					skyblockId: upgradeable.item.skyblockId,
 				},
 				increase: nextFortune - currentFortune,
+				stats: {
+					[Stat.FarmingFortune]: nextFortune - currentFortune,
+				},
 				action: UpgradeAction.Apply,
 				category: UpgradeCategory.Gem,
 				meta: {

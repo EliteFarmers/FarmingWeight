@@ -187,7 +187,17 @@ export interface FortuneUpgrade {
 		slot?: GearSlot;
 	};
 	max?: number;
+	/**
+	 * The primary stat increase amount. For backwards compatibility.
+	 * This is typically the FarmingFortune increase.
+	 */
 	increase: number;
+	/**
+	 * All stat increases this upgrade provides.
+	 * If not specified, the upgrade is assumed to only affect FarmingFortune
+	 * with the value from the `increase` field.
+	 */
+	stats?: Partial<Record<Stat, number>>;
 	action: UpgradeAction;
 	purchase?: string;
 	category: UpgradeCategory;
@@ -200,7 +210,6 @@ export interface FortuneUpgrade {
 	conflictKey?: string;
 	improvements?: FortuneUpgradeImprovement[];
 	meta?: UpgradeMeta;
-	// upgrade: Upgrade;
 }
 
 export interface UpgradeTreeNode {

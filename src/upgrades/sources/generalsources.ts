@@ -45,6 +45,9 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				{
 					title: FARMING_LEVEL.name + ' ' + (current + 1),
 					increase: FARMING_LEVEL.fortunePerLevel,
+					stats: {
+						[Stat.FarmingFortune]: FARMING_LEVEL.fortunePerLevel,
+					},
 					action: UpgradeAction.LevelUp,
 					category: UpgradeCategory.Skill,
 					wiki: FARMING_LEVEL.wiki,
@@ -112,6 +115,9 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				{
 					title: ANITA_FORTUNE_UPGRADE.name,
 					increase: ANITA_FORTUNE_UPGRADE.fortunePerLevel,
+					stats: {
+						[Stat.FarmingFortune]: ANITA_FORTUNE_UPGRADE.fortunePerLevel,
+					},
 					action: UpgradeAction.Upgrade,
 					category: UpgradeCategory.Anita,
 					wiki: ANITA_FORTUNE_UPGRADE.wiki,
@@ -141,6 +147,9 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				{
 					title: 'Plot ' + plotUpgrade.plot?.name,
 					increase: UNLOCKED_PLOTS.fortunePerLevel,
+					stats: {
+						[Stat.FarmingFortune]: UNLOCKED_PLOTS.fortunePerLevel,
+					},
 					action: UpgradeAction.Purchase,
 					category: UpgradeCategory.Plot,
 					cost: plotUpgrade.cost,
@@ -170,6 +179,9 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				{
 					title: COMMUNITY_CENTER_UPGRADE.name,
 					increase: COMMUNITY_CENTER_UPGRADE.fortunePerLevel,
+					stats: {
+						[Stat.FarmingFortune]: COMMUNITY_CENTER_UPGRADE.fortunePerLevel,
+					},
 					action: UpgradeAction.Upgrade,
 					repeatable: COMMUNITY_CENTER_UPGRADE.maxLevel - current,
 					api: false,
@@ -231,6 +243,9 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					{
 						title: cropie.name,
 						increase: cropie.baseStats?.[Stat.FarmingFortune] ?? 0,
+						stats: {
+							[Stat.FarmingFortune]: cropie.baseStats?.[Stat.FarmingFortune] ?? 0,
+						},
 						action: UpgradeAction.Purchase,
 						item: 'CROPIE_TALISMAN',
 						category: UpgradeCategory.Item,
@@ -267,6 +282,9 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				{
 					title: 'Refined Dark Cacao Truffle',
 					increase: REFINED_TRUFFLE_SOURCE.fortunePerLevel,
+					stats: {
+						[Stat.FarmingFortune]: REFINED_TRUFFLE_SOURCE.fortunePerLevel,
+					},
 					action: UpgradeAction.Consume,
 					repeatable: 5 - consumed,
 					wiki: REFINED_TRUFFLE_SOURCE.wiki,
@@ -318,6 +336,9 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					{
 						title: 'Relic of Power',
 						increase: 0,
+						stats: {
+							[Stat.FarmingFortune]: 0,
+						},
 						action: UpgradeAction.Purchase,
 						purchase: 'POWER_RELIC',
 						category: UpgradeCategory.Item,
@@ -356,6 +377,9 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					{
 						title: 'Magic 8 Ball',
 						increase: 25 * 0.2,
+						stats: {
+							[Stat.FarmingFortune]: 25 * 0.2,
+						},
 						action: UpgradeAction.Purchase,
 						purchase: 'MAGIC_8_BALL',
 						category: UpgradeCategory.Item,
@@ -435,6 +459,9 @@ function mapShardSource(
 					title: shard.name.replace('Shard', level.toString()),
 					api: false,
 					increase: nextFortune - currentFortune,
+					stats: {
+						[Stat.FarmingFortune]: nextFortune - currentFortune,
+					},
 					action: UpgradeAction.LevelUp,
 					category: UpgradeCategory.Attribute,
 					// wiki: shard.wiki, // Wiki page doesn't exist yet

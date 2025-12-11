@@ -1,4 +1,5 @@
 import { EnchantTierProcurement, FARMING_ENCHANTS, type FarmingEnchant } from '../constants/enchants.js';
+import { Stat } from '../constants/stats.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
 import type { Upgradeable } from '../fortune/upgradeable.js';
 import { getFortuneFromEnchant } from '../util/enchants.js';
@@ -35,6 +36,14 @@ export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: strin
 		result.push({
 			title: enchant.name + ' 1',
 			increase: getFortuneFromEnchant(enchant.minLevel, enchant, upgradeable.options, upgradeable.crop),
+			stats: {
+				[Stat.FarmingFortune]: getFortuneFromEnchant(
+					enchant.minLevel,
+					enchant,
+					upgradeable.options,
+					upgradeable.crop
+				),
+			},
 			wiki: enchant.wiki,
 			action:
 				!procurement || procurement === EnchantTierProcurement.Normal
@@ -105,6 +114,9 @@ export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: strin
 	result.push({
 		title: enchant.name + ' ' + (applied + 1),
 		increase: nextFortune - currentFortune,
+		stats: {
+			[Stat.FarmingFortune]: nextFortune - currentFortune,
+		},
 		action: normalNext ? UpgradeAction.Apply : UpgradeAction.LevelUp,
 		category: UpgradeCategory.Enchant,
 		cost: cost,

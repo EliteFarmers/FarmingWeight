@@ -68,6 +68,15 @@ export class UpgradeableBase implements Upgradeable {
 		return stat === Stat.FarmingFortune ? this.getFortune() : 0;
 	}
 
+	getStats(): Partial<Record<Stat, number>> {
+		const result: Partial<Record<Stat, number>> = {};
+		for (const key of Object.values(Stat)) {
+			const val = this.getStat(key);
+			if (val > 0) result[key] = val;
+		}
+		return result;
+	}
+
 	getCalculatedStats(): Partial<Record<Stat, number>> {
 		if (!this.info.computedStats || !this.options) return {};
 		return this.info.computedStats?.(this.options) ?? {};

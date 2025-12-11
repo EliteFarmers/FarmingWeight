@@ -80,6 +80,9 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 				result.push({
 					title: 'Reforge to ' + reforge.name,
 					increase: (reforgeFortune ?? 0) - currentFortune,
+					stats: {
+						[Stat.FarmingFortune]: (reforgeFortune ?? 0) - currentFortune,
+					},
 					action: UpgradeAction.Apply,
 					category: UpgradeCategory.Reforge,
 					optional:
@@ -148,6 +151,9 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 				{
 					title: 'Farming For Dummies',
 					increase: 1,
+					stats: {
+						[Stat.FarmingFortune]: 1,
+					},
 					action: UpgradeAction.Apply,
 					category: UpgradeCategory.Item,
 					repeatable: 5 - count,
@@ -213,6 +219,9 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 				{
 					title: 'Axed Perk',
 					increase: tool.getFortune() * 0.02,
+					stats: {
+						[Stat.FarmingFortune]: tool.getFortune() * 0.02,
+					},
 					action: UpgradeAction.Unlock,
 					category: UpgradeCategory.Misc,
 					wiki: 'https://wiki.hypixel.net/Essence#Forest_Essence_',

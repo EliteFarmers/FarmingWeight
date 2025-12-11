@@ -118,6 +118,7 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 					action: UpgradeAction.Purchase,
 					purchase: fakeItem?.item.skyblockId ?? undefined,
 					increase: fakeItem?.getFortune() ?? 0,
+					stats: fakeItem?.getStats() ?? {},
 					wiki: itemToPurchase.wiki,
 					category: UpgradeCategory.Item,
 					onto: {

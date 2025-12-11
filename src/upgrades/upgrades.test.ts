@@ -238,3 +238,20 @@ test('Conflicting Reforges Test', () => {
 	const squeaky = reforges.find((u) => u.title === 'Reforge to Squeaky');
 	expect(squeaky).toBeDefined();
 });
+
+test('Upgrade objects have stats field populated', () => {
+	const item = new FarmingArmor(almostMaxHelmet);
+
+	const upgrades = item.getUpgrades();
+	expect(upgrades.length).toBeGreaterThan(0);
+
+	// All upgrades should have a stats field
+	for (const upgrade of upgrades) {
+		expect(upgrade.stats).toBeDefined();
+
+		// If there's an increase in fortune, stats should include FarmingFortune
+		if (upgrade.increase > 0) {
+			expect(upgrade.stats?.['farming_fortune']).toBeDefined();
+		}
+	}
+});
