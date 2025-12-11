@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { Stat } from '../constants/stats.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import { FarmingPlayer } from './player.js';
@@ -302,16 +303,18 @@ test('Interactive Upgrade: Expand Upgrade Tree', () => {
 		return;
 	}
 
-	// Expand the upgrade
+	// Expand the upgrade with stats tracking
 	const tree = player.expandUpgrade(enchantUpgrade, {
 		crop: Crop.Cactus,
 		maxDepth: 3,
+		stats: [Stat.FarmingFortune],
 	});
 
 	// Verify the tree structure
 	expect(tree).toBeDefined();
 	expect(tree.upgrade).toBe(enchantUpgrade);
-	expect(tree.fortuneGained).toBeGreaterThanOrEqual(0);
+	// statsGained may be undefined if no fortune gain (empty object if no change)
+	expect(tree.statsGained[Stat.FarmingFortune] ?? 0).toBeGreaterThanOrEqual(0);
 
 	// The tree should have children (follow-up enchant levels)
 	// Cultivating goes up to level 10

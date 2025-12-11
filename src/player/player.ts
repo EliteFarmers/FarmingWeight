@@ -817,18 +817,24 @@ export class FarmingPlayer {
 	 * Expands an upgrade into a tree of follow-up upgrades.
 	 * This applies the upgrade on a cloned player and recursively finds upgrades
 	 * for the same target item.
+	 *
+	 * @param upgrade - The upgrade to expand
+	 * @param options.maxDepth - Maximum recursion depth (default: 10)
+	 * @param options.crop - Crop for crop-specific fortune calculations
+	 * @param options.stats - Stats to track (default: [Stat.FarmingFortune])
 	 */
 	expandUpgrade(
 		upgrade: FortuneUpgrade,
 		options?: {
 			maxDepth?: number;
 			crop?: Crop;
+			stats?: Stat[];
 		}
 	): UpgradeTreeNode {
-		const { maxDepth = 10, crop } = options ?? {};
+		const { maxDepth = 10, crop, stats = [Stat.FarmingFortune] } = options ?? {};
 		const visited = new Set<string>();
 
-		return this.buildUpgradeTree(upgrade, 0, maxDepth, crop, visited);
+		return this.buildUpgradeTree(upgrade, 0, maxDepth, crop, visited, stats);
 	}
 
 	private buildUpgradeTree(
@@ -836,17 +842,19 @@ export class FarmingPlayer {
 		depth: number,
 		maxDepth: number,
 		crop: Crop | undefined,
-		visited: Set<string>
+		visited: Set<string>,
+		stats: Stat[]
 	): UpgradeTreeNode {
 		// Create unique key for this upgrade to detect cycles
 		const upgradeKey = this.getUpgradeKey(upgrade);
 		if (visited.has(upgradeKey)) {
 			// Return a leaf node if we've seen this exact upgrade before
+			const currentStats = this.getAllStats(stats, crop);
 			return {
 				upgrade,
-				fortuneBefore: this.fortune,
-				fortuneAfter: this.fortune,
-				fortuneGained: 0,
+				statsBefore: currentStats,
+				statsAfter: currentStats,
+				statsGained: {},
 				totalCost: upgrade.cost,
 				children: [],
 			};
@@ -855,18 +863,18 @@ export class FarmingPlayer {
 
 		// Clone player and apply upgrade
 		const clonedPlayer = this.clone();
-		const fortuneBefore = clonedPlayer.fortune + (crop ? clonedPlayer.getCropFortune(crop).fortune : 0);
+		const statsBefore = clonedPlayer.getAllStats(stats, crop);
 
 		clonedPlayer.applyUpgrade(upgrade);
 
-		const fortuneAfter = clonedPlayer.fortune + (crop ? clonedPlayer.getCropFortune(crop).fortune : 0);
-		const fortuneGained = fortuneAfter - fortuneBefore;
+		const statsAfter = clonedPlayer.getAllStats(stats, crop);
+		const statsGained = this.computeStatsDiff(statsBefore, statsAfter);
 
 		const node: UpgradeTreeNode = {
 			upgrade,
-			fortuneBefore,
-			fortuneAfter,
-			fortuneGained,
+			statsBefore,
+			statsAfter,
+			statsGained,
 			totalCost: upgrade.cost,
 			children: [],
 		};
@@ -881,14 +889,60 @@ export class FarmingPlayer {
 
 		// Build children (using the cloned player's state)
 		for (const followUp of followUpUpgrades) {
-			const childNode = clonedPlayer.buildUpgradeTree(followUp, depth + 1, maxDepth, crop, new Set(visited));
+			const childNode = clonedPlayer.buildUpgradeTree(
+				followUp,
+				depth + 1,
+				maxDepth,
+				crop,
+				new Set(visited),
+				stats
+			);
 			node.children.push(childNode);
 		}
 
-		// Sort children by fortune gained (highest first)
-		node.children.sort((a, b) => b.fortuneGained - a.fortuneGained);
+		// Sort children by farming fortune gained (primary stat, highest first)
+		node.children.sort((a, b) => {
+			const aGain = a.statsGained[Stat.FarmingFortune] ?? 0;
+			const bGain = b.statsGained[Stat.FarmingFortune] ?? 0;
+			return bGain - aGain;
+		});
 
 		return node;
+	}
+
+	private getAllStats(stats: Stat[], crop?: Crop): Partial<Record<Stat, number>> {
+		const result: Partial<Record<Stat, number>> = {};
+		for (const stat of stats) {
+			let value = this.getStat(stat);
+
+			// Add crop-specific fortune if applicable
+			if (crop && stat === Stat.FarmingFortune) {
+				value += this.getCropFortune(crop).fortune;
+			}
+
+			if (value !== 0) {
+				result[stat] = value;
+			}
+		}
+		return result;
+	}
+
+	private computeStatsDiff(
+		before: Partial<Record<Stat, number>>,
+		after: Partial<Record<Stat, number>>
+	): Partial<Record<Stat, number>> {
+		const result: Partial<Record<Stat, number>> = {};
+		const allStats = new Set([...Object.keys(before), ...Object.keys(after)]) as Set<Stat>;
+
+		for (const stat of allStats) {
+			const beforeVal = before[stat] ?? 0;
+			const afterVal = after[stat] ?? 0;
+			const diff = afterVal - beforeVal;
+			if (diff !== 0) {
+				result[stat] = diff;
+			}
+		}
+		return result;
 	}
 
 	private getUpgradeKey(upgrade: FortuneUpgrade): string {

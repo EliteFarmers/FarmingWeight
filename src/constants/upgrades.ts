@@ -205,9 +205,9 @@ export interface FortuneUpgrade {
 
 export interface UpgradeTreeNode {
 	upgrade: FortuneUpgrade;
-	fortuneBefore: number;
-	fortuneAfter: number;
-	fortuneGained: number;
+	statsBefore: Partial<Record<Stat, number>>;
+	statsAfter: Partial<Record<Stat, number>>;
+	statsGained: Partial<Record<Stat, number>>;
 	totalCost?: UpgradeCost;
 	children: UpgradeTreeNode[];
 }
