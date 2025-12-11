@@ -50,6 +50,12 @@ export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: strin
 				name: upgradeable.item.name,
 				skyblockId: upgradeable.item.skyblockId,
 			},
+			meta: {
+				type: 'enchant',
+				key: enchantId,
+				value: 1,
+				itemUuid: upgradeable.item.uuid ?? undefined,
+			},
 		});
 
 		return result;
@@ -106,6 +112,12 @@ export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: strin
 		onto: {
 			name: upgradeable.item.name,
 			skyblockId: upgradeable.item.skyblockId,
+		},
+		meta: {
+			type: 'enchant',
+			key: enchantId,
+			value: applied + 1,
+			itemUuid: upgradeable.item.uuid ?? undefined,
 		},
 	});
 

@@ -66,6 +66,10 @@ export function getSelfFortuneUpgrade(
 					name: upgradeable.item.name,
 					skyblockId: upgradeable.item.skyblockId,
 				},
+				meta: {
+					type: 'buy_item',
+					id: nextInfo.skyblockId,
+				},
 			} satisfies FortuneUpgrade,
 		};
 	} else if (nextItem && nextInfo && !(nextItem.reason === UpgradeReason.Situational && !nextItem.preferred)) {
@@ -87,6 +91,14 @@ export function getSelfFortuneUpgrade(
 				onto: {
 					name: upgradeable.item.name,
 					skyblockId: upgradeable.item.skyblockId,
+				},
+				meta: {
+					type: 'buy_item',
+					id: nextItem.id,
+					itemUuid:
+						nextItem.reason === UpgradeReason.Situational
+							? undefined
+							: (upgradeable.item.uuid ?? undefined),
 				},
 			} satisfies FortuneUpgrade,
 		};
@@ -185,6 +197,12 @@ export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUp
 			name: upgradeable.item.name,
 			skyblockId: upgradeable.item.skyblockId,
 		},
+		meta: {
+			itemUuid: upgradeable.item.uuid ?? undefined,
+			type: 'item',
+			id: 'rarity_upgrades',
+			value: 1,
+		},
 	} satisfies FortuneUpgrade;
 
 	// Gemstone fortune increases with rarity
@@ -269,6 +287,11 @@ export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade
 							: undefined,
 					}
 				: undefined,
+			meta: {
+				type: 'reforge',
+				id: reforge.name.toLowerCase().replaceAll(' ', '_'),
+				itemUuid: upgradeable.item.uuid ?? undefined,
+			},
 		});
 	}
 
@@ -322,11 +345,31 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 			},
 			action: UpgradeAction.Apply,
 			category: UpgradeCategory.Gem,
+			meta: {
+				type: 'gem',
+				slot: slotId,
+				value: GemRarity.Fine,
+				itemUuid: upgradeable.item.uuid ?? undefined,
+			},
 		});
 	}
 
 	// Add entries for upgrading existing gems
-	for (const gem of unlockedSlots) {
+	// unlockedSlots is array of GemRarity | null.
+	// The previous loop handled "applying missing gems" which usually means slot unlocking AND gem placement?
+	// Wait, getPeridotGems returns the rarities of gems in slots.
+	// The previous loop checks `upgradeable.item?.gems?.[slotId] !== undefined`.
+	// If gems are missing, it suggests "Fine Peridot".
+
+	// The second loop iterates `unlockedSlots`.
+	// But we need the SLOT ID for the second loop upgrades too.
+	// getPeridotGems returns array of values, logic relies on index implicitly mapping to slots?
+	// getPeridotGems implementation in `src/util/gems.ts` iterates slots PERIDOT_0, PERIDOT_1...
+	// So `unlockedSlots[i]` corresponds to `PERIDOT_i`.
+
+	for (let i = 0; i < unlockedSlots.length; i++) {
+		const gem = unlockedSlots[i];
+		if (gem === undefined) continue;
 		if (gem === GemRarity.Perfect) continue;
 
 		// Start at Fine if the gem is null (not applied)
@@ -350,6 +393,12 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 				increase: nextFortune - currentFortune,
 				action: UpgradeAction.Apply,
 				category: UpgradeCategory.Gem,
+				meta: {
+					type: 'gem',
+					slot: 'PERIDOT_' + i,
+					value: nextGem,
+					itemUuid: upgradeable.item.uuid ?? undefined,
+				},
 			});
 		}
 	}

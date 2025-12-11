@@ -2,6 +2,7 @@ import {
 	FARMING_ATTRIBUTE_SHARDS,
 	getShardFortune,
 	getShardLevel,
+	getShardsForLevel,
 	getShardsForNextLevel,
 } from '../../constants/attributes.js';
 import type { Crop } from '../../constants/crops.js';
@@ -48,6 +49,11 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					category: UpgradeCategory.Skill,
 					wiki: FARMING_LEVEL.wiki,
 					cost: nextCost,
+					meta: {
+						type: 'skill',
+						key: 'farmingLevel',
+						value: current + 1,
+					},
 				},
 			];
 		},
@@ -110,6 +116,11 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					category: UpgradeCategory.Anita,
 					wiki: ANITA_FORTUNE_UPGRADE.wiki,
 					cost: nextCost,
+					meta: {
+						type: 'skill',
+						key: 'anitaBonus',
+						value: current + 1,
+					},
 				},
 			];
 		},
@@ -133,6 +144,11 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					action: UpgradeAction.Purchase,
 					category: UpgradeCategory.Plot,
 					cost: plotUpgrade.cost,
+					meta: {
+						type: 'plot',
+						id: plotUpgrade.plotId,
+						value: (player.options.plots?.length ?? player.options.plotsUnlocked ?? 0) + 1,
+					},
 				},
 			];
 		},
@@ -159,6 +175,11 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					api: false,
 					category: UpgradeCategory.CommunityCenter,
 					wiki: COMMUNITY_CENTER_UPGRADE.wiki,
+					meta: {
+						type: 'skill',
+						key: 'communityCenter',
+						value: current + 1,
+					},
 				},
 			];
 		},
@@ -219,6 +240,10 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 								CROPIE_TALISMAN: 1,
 							},
 						},
+						meta: {
+							type: 'buy_item',
+							id: 'CROPIE_TALISMAN',
+						},
 					},
 				];
 			}
@@ -250,6 +275,11 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 						items: {
 							REFINED_DARK_CACAO_TRUFFLE: 1,
 						},
+					},
+					meta: {
+						type: 'setting',
+						key: 'refinedTruffles',
+						value: consumed + 1,
 					},
 				},
 			];
@@ -293,6 +323,10 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 						category: UpgradeCategory.Item,
 						wiki: FARMING_ACCESSORIES_INFO.POWER_RELIC?.wiki,
 						cost: FARMING_ACCESSORIES_INFO.POWER_RELIC?.cost,
+						meta: {
+							type: 'buy_item',
+							id: 'POWER_RELIC',
+						},
 					},
 				];
 
@@ -305,7 +339,10 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		wiki: () => 'https://wiki.hypixel.net/Magic_8_Ball',
 		max: () => 25,
 		active: () => {
-			return { active: true, reason: 'Magic 8 Ball only has a 20% chance to be active each season.' };
+			return {
+				active: true,
+				reason: 'Magic 8 Ball only has a 20% chance to be active each season.',
+			};
 		},
 		current: (player) => {
 			const accessory = player.accessories.find((a) => a.info.skyblockId === 'MAGIC_8_BALL');
@@ -327,6 +364,10 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 							items: {
 								MAGIC_8_BALL: 1,
 							},
+						},
+						meta: {
+							type: 'buy_item',
+							id: 'MAGIC_8_BALL',
 						},
 					},
 				];
@@ -401,6 +442,11 @@ function mapShardSource(
 						items: {
 							[shard.skyblockId]: nextCost,
 						},
+					},
+					meta: {
+						type: 'attribute',
+						key: id,
+						value: getShardsForLevel(shard.rarity, level),
 					},
 				},
 			];

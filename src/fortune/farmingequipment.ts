@@ -215,8 +215,9 @@ export class FarmingEquipment extends UpgradeableBase {
 
 	static fakeItem(info: UpgradeableInfo, options?: PlayerOptions): FarmingEquipment | undefined {
 		const fake: EliteItemDto = {
-			name: 'Fake Item',
+			name: '[Fake] ' + info.name,
 			skyblockId: info.skyblockId,
+			uuid: crypto.randomUUID(),
 			lore: [],
 			attributes: {},
 			enchantments: {},

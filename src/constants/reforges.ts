@@ -607,6 +607,7 @@ export const REFORGES: Partial<Record<string, Reforge>> = {
 };
 
 export const STAT_ICONS: Record<Stat, string> = {
+	[Stat.FishingSpeed]: '☂',
 	[Stat.Strength]: '❁',
 	[Stat.Health]: '❤',
 	[Stat.Defense]: '❈',

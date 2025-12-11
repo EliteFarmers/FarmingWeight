@@ -157,6 +157,28 @@ export interface UpgradeInfo<T = number> {
 	improvements?: UpgradeInfoImprovement<T>[];
 }
 
+export interface UpgradeMeta {
+	id?: string;
+	itemUuid?: string;
+	type?:
+		| 'enchant'
+		| 'item'
+		| 'reforge'
+		| 'gem'
+		| 'skill'
+		| 'accessory'
+		| 'plot'
+		| 'attribute'
+		| 'crop_upgrade'
+		| 'setting'
+		| 'unlock'
+		| 'buy_item';
+	key?: string; // For enchants/stats keys
+	value?: number | string; // New value/level
+	slotIndex?: number; // For gems
+	slot?: string; // For gems
+}
+
 export interface FortuneUpgrade {
 	title: string;
 	onto?: {
@@ -177,6 +199,7 @@ export interface FortuneUpgrade {
 	wiki?: string;
 	conflictKey?: string;
 	improvements?: FortuneUpgradeImprovement[];
+	meta?: UpgradeMeta;
 	// upgrade: Upgrade;
 }
 

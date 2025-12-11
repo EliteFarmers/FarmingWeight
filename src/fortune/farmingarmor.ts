@@ -134,6 +134,66 @@ export class ArmorSet {
 		this.setEquipment(this.equipmentPieces);
 	}
 
+	updateArmorSlot(piece: FarmingArmor) {
+		// Update the pieces array
+		const idx = this.pieces.findIndex(
+			(p) => p.item.uuid === piece.item.uuid || p.item.skyblockId === piece.item.skyblockId
+		);
+		if (idx >= 0) {
+			this.pieces[idx] = piece;
+		} else {
+			this.pieces.push(piece);
+		}
+
+		// Update the specific slot
+		switch (piece.slot) {
+			case GearSlot.Helmet:
+				this.helmet = piece;
+				break;
+			case GearSlot.Chestplate:
+				this.chestplate = piece;
+				break;
+			case GearSlot.Leggings:
+				this.leggings = piece;
+				break;
+			case GearSlot.Boots:
+				this.boots = piece;
+				break;
+		}
+
+		this.recalculateFamilies();
+	}
+
+	updateEquipmentSlot(piece: FarmingEquipment) {
+		// Update the equipmentPieces array
+		const idx = this.equipmentPieces.findIndex(
+			(p) => p.item.uuid === piece.item.uuid || p.item.skyblockId === piece.item.skyblockId
+		);
+		if (idx >= 0) {
+			this.equipmentPieces[idx] = piece;
+		} else {
+			this.equipmentPieces.push(piece);
+		}
+
+		// Update the specific slot
+		switch (piece.slot) {
+			case GearSlot.Necklace:
+				this.necklace = piece;
+				break;
+			case GearSlot.Cloak:
+				this.cloak = piece;
+				break;
+			case GearSlot.Belt:
+				this.belt = piece;
+				break;
+			case GearSlot.Gloves:
+				this.gloves = piece;
+				break;
+		}
+
+		this.recalculateFamilies();
+	}
+
 	getPiece(slot: GearSlot): FarmingArmor | FarmingEquipment | undefined {
 		switch (slot) {
 			case GearSlot.Helmet:
@@ -567,8 +627,9 @@ export class FarmingArmor extends UpgradeableBase {
 
 	static fakeItem(info: UpgradeableInfo, options?: PlayerOptions): FarmingArmor | undefined {
 		const fake: EliteItemDto = {
-			name: 'Fake Item',
+			name: '[Fake] ' + info.name,
 			skyblockId: info.skyblockId,
+			uuid: crypto.randomUUID(),
 			lore: [],
 			attributes: {},
 			enchantments: {},

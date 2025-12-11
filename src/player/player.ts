@@ -61,32 +61,51 @@ export class FarmingPlayer {
 	}
 
 	constructor(options: PlayerOptions) {
+		this.setOptions(options);
+	}
+
+	setOptions(options: PlayerOptions) {
 		this.options = options;
 
-		options.pets ??= [];
-		if (options.pets[0] instanceof FarmingPet) {
-			this.pets = (options.pets as FarmingPet[]).sort((a, b) => b.fortune - a.fortune);
-			for (const pet of this.pets) pet.setOptions(options);
+		this.populatePets();
+		this.populateTools();
+		this.populateArmor();
+		this.populateEquipment();
+		this.populateActiveAccessories();
+
+		this.permFortune = this.getGeneralFortune();
+		this.tempFortune = this.getTempFortune();
+	}
+
+	populatePets() {
+		this.options.pets ??= [];
+		if (this.options.pets[0] instanceof FarmingPet) {
+			this.pets = (this.options.pets as FarmingPet[]).sort((a, b) => b.fortune - a.fortune);
+			for (const pet of this.pets) pet.setOptions(this.options);
 		} else {
-			this.pets = FarmingPet.fromArray(options.pets as EliteItemDto[], options);
+			this.pets = FarmingPet.fromArray(this.options.pets as EliteItemDto[], this.options);
 		}
 
 		this.selectedPet = this.options.selectedPet;
+	}
 
-		options.tools ??= [];
-		if (options.tools[0] instanceof FarmingTool) {
-			this.tools = options.tools as FarmingTool[];
-			for (const tool of this.tools) tool.setOptions(options);
+	populateTools() {
+		this.options.tools ??= [];
+		if (this.options.tools[0] instanceof FarmingTool) {
+			this.tools = this.options.tools as FarmingTool[];
+			for (const tool of this.tools) tool.setOptions(this.options);
 			this.tools.sort((a, b) => b.fortune - a.fortune);
 		} else {
-			this.tools = FarmingTool.fromArray(options.tools as EliteItemDto[], options);
+			this.tools = FarmingTool.fromArray(this.options.tools as EliteItemDto[], this.options);
 		}
 
 		this.selectedTool = this.options.selectedTool ?? this.tools[0];
+	}
 
-		options.armor ??= [];
-		if (options.armor instanceof ArmorSet) {
-			this.armorSet = options.armor;
+	populateArmor() {
+		this.options.armor ??= [];
+		if (this.options.armor instanceof ArmorSet) {
+			this.armorSet = this.options.armor;
 
 			this.armor = this.armorSet.pieces;
 			this.armor.sort((a, b) => b.potential - a.potential);
@@ -94,40 +113,41 @@ export class FarmingPlayer {
 			this.equipment = this.armorSet.equipmentPieces;
 			this.equipment.sort((a, b) => b.fortune - a.fortune);
 
-			this.armorSet.setOptions(options);
-		} else if (options.armor[0] instanceof FarmingArmor) {
-			this.armor = (options.armor as FarmingArmor[]).sort((a, b) => b.potential - a.potential);
-			for (const a of this.armor) a.setOptions(options);
+			this.armorSet.setOptions(this.options);
+		} else if (this.options.armor[0] instanceof FarmingArmor) {
+			this.armor = (this.options.armor as FarmingArmor[]).sort((a, b) => b.potential - a.potential);
+			for (const a of this.armor) a.setOptions(this.options);
 			this.armorSet = new ArmorSet(this.armor);
 		} else {
-			this.armor = FarmingArmor.fromArray(options.armor as EliteItemDto[], options);
+			this.armor = FarmingArmor.fromArray(this.options.armor as EliteItemDto[], this.options);
 			this.armorSet = new ArmorSet(this.armor);
 		}
+	}
 
-		options.equipment ??= [];
-		if (options.equipment[0] instanceof FarmingEquipment) {
-			this.equipment = (options.equipment as FarmingEquipment[]).sort((a, b) => b.fortune - a.fortune);
-			for (const e of this.equipment) e.setOptions(options);
+	populateEquipment() {
+		this.options.equipment ??= [];
+		if (this.options.equipment[0] instanceof FarmingEquipment) {
+			this.equipment = (this.options.equipment as FarmingEquipment[]).sort((a, b) => b.fortune - a.fortune);
+			for (const e of this.equipment) e.setOptions(this.options);
 		} else {
-			this.equipment = FarmingEquipment.fromArray(options.equipment as EliteItemDto[], options);
+			this.equipment = FarmingEquipment.fromArray(this.options.equipment as EliteItemDto[], this.options);
 		}
 
 		// Load in equipment to armor set if it's empty
 		if (this.armorSet.equipment.filter((e) => e).length === 0) {
 			this.armorSet.setEquipment(this.equipment);
 		}
+	}
 
-		options.accessories ??= [];
+	populateActiveAccessories() {
+		this.options.accessories ??= [];
 		this.activeAccessories = [];
 
-		if (options.accessories[0] instanceof FarmingAccessory) {
-			this.accessories = (options.accessories as FarmingAccessory[]).sort((a, b) => b.fortune - a.fortune);
+		if (this.options.accessories[0] instanceof FarmingAccessory) {
+			this.accessories = (this.options.accessories as FarmingAccessory[]).sort((a, b) => b.fortune - a.fortune);
 		} else {
-			this.accessories = FarmingAccessory.fromArray(options.accessories as EliteItemDto[]);
+			this.accessories = FarmingAccessory.fromArray(this.options.accessories as EliteItemDto[]);
 		}
-
-		this.permFortune = this.getGeneralFortune();
-		this.tempFortune = this.getTempFortune();
 	}
 
 	changeArmor(armor: FarmingArmor[]) {
@@ -517,6 +537,246 @@ export class FarmingPlayer {
 
 	getSelectedCropTool(crop: Crop) {
 		return this.selectedTool?.crop === crop ? this.selectedTool : this.getBestTool(crop);
+	}
+
+	applyUpgrade(upgrade: FortuneUpgrade) {
+		if (!upgrade.meta) return;
+		const { type, itemUuid, key, value, id } = upgrade.meta;
+
+		if (itemUuid) {
+			const candidates = [...this.tools, ...this.armor, ...this.equipment, ...this.accessories];
+			const target = candidates.find((i) => i.item.uuid === itemUuid);
+
+			if (target) {
+				if (type === 'enchant' && key) {
+					target.item.enchantments ??= {};
+					target.item.enchantments[key] = Number(value);
+				} else if (type === 'reforge' && id) {
+					target.item.attributes ??= {};
+					target.item.attributes.modifier = id;
+					// Re-initialize to update logic
+					if (target instanceof FarmingTool) {
+						const idx = this.tools.indexOf(target);
+						if (idx >= 0) {
+							this.tools[idx] = new FarmingTool(target.item, this.options);
+						}
+					} else if (target instanceof FarmingArmor) {
+						const idx = this.armor.indexOf(target);
+						if (idx >= 0) {
+							const updatedPiece = new FarmingArmor(target.item, this.options);
+							this.armor[idx] = updatedPiece;
+							this.armorSet.updateArmorSlot(updatedPiece);
+						}
+					} else if (target instanceof FarmingEquipment) {
+						const idx = this.equipment.indexOf(target);
+						if (idx >= 0) {
+							const updatedPiece = new FarmingEquipment(target.item, this.options);
+							this.equipment[idx] = updatedPiece;
+							this.armorSet.updateEquipmentSlot(updatedPiece);
+						}
+					} else if (target instanceof FarmingAccessory) {
+						const idx = this.accessories.indexOf(target);
+						if (idx >= 0) {
+							this.accessories[idx] = new FarmingAccessory(target.item, this.options);
+						}
+					}
+				} else if (type === 'item' && id === 'farming_for_dummies_count') {
+					target.item.attributes ??= {};
+					target.item.attributes.farming_for_dummies_count = String(value);
+				} else if (type === 'gem' && upgrade.meta.slot && value) {
+					target.item.gems ??= {};
+					target.item.gems[upgrade.meta.slot] = String(value);
+				} else if (type === 'item' && id === 'rarity_upgrades' && value) {
+					target.item.attributes ??= {};
+					target.item.attributes.rarity_upgrades = String(value);
+					// Recomb affects rarity, which affects stats. Need to reload tool.
+					if (target instanceof FarmingTool) {
+						const idx = this.tools.indexOf(target);
+						if (idx >= 0) {
+							this.tools[idx] = new FarmingTool(target.item, this.options);
+						}
+					} else if (target instanceof FarmingArmor) {
+						const idx = this.armor.indexOf(target);
+						if (idx >= 0) {
+							const updatedPiece = new FarmingArmor(target.item, this.options);
+							this.armor[idx] = updatedPiece;
+							this.armorSet.updateArmorSlot(updatedPiece);
+						}
+					} else if (target instanceof FarmingEquipment) {
+						const idx = this.equipment.indexOf(target);
+						if (idx >= 0) {
+							const updatedPiece = new FarmingEquipment(target.item, this.options);
+							this.equipment[idx] = updatedPiece;
+							this.armorSet.updateEquipmentSlot(updatedPiece);
+						}
+					} else if (target instanceof FarmingAccessory) {
+						const idx = this.accessories.indexOf(target);
+						if (idx >= 0) {
+							this.accessories[idx] = new FarmingAccessory(target.item, this.options);
+						}
+					}
+				} else if (type === 'buy_item' && id) {
+					// Tier upgrade: replace the old item with a new one
+					const newItem = getFakeItem(id);
+					if (newItem) {
+						// Transfer enchantments, attributes, gems from old item
+						newItem.item.enchantments = {
+							...newItem.item.enchantments,
+							...target.item.enchantments,
+						};
+						newItem.item.attributes = {
+							...newItem.item.attributes,
+							...target.item.attributes,
+						};
+						newItem.item.gems = {
+							...newItem.item.gems,
+							...target.item.gems,
+						};
+
+						if (target instanceof FarmingTool && newItem instanceof FarmingTool) {
+							const idx = this.tools.indexOf(target);
+							if (idx >= 0) {
+								this.tools[idx] = new FarmingTool(newItem.item, this.options);
+							}
+						} else if (target instanceof FarmingArmor && newItem instanceof FarmingArmor) {
+							const idx = this.armor.indexOf(target);
+							if (idx >= 0) {
+								const updatedPiece = new FarmingArmor(newItem.item, this.options);
+								this.armor[idx] = updatedPiece;
+								this.armorSet.updateArmorSlot(updatedPiece);
+							}
+						} else if (target instanceof FarmingEquipment && newItem instanceof FarmingEquipment) {
+							const idx = this.equipment.indexOf(target);
+							if (idx >= 0) {
+								const updatedPiece = new FarmingEquipment(newItem.item, this.options);
+								this.equipment[idx] = updatedPiece;
+								this.armorSet.updateEquipmentSlot(updatedPiece);
+							}
+						} else if (target instanceof FarmingAccessory && newItem instanceof FarmingAccessory) {
+							const idx = this.accessories.indexOf(target);
+							if (idx >= 0) {
+								this.accessories[idx] = new FarmingAccessory(newItem.item, this.options);
+							}
+						}
+						this.permFortune = this.getGeneralFortune();
+					}
+				}
+			}
+		} else if (type === 'skill') {
+			if (key === 'farmingLevel' && value) {
+				this.options.farmingLevel = Number(value);
+			} else if (key === 'anitaBonus' && value) {
+				this.options.anitaBonus = Number(value);
+			} else if (key === 'communityCenter' && value) {
+				this.options.communityCenter = Number(value);
+			}
+			this.permFortune = this.getGeneralFortune();
+		} else if (type === 'plot' && (value || id)) {
+			this.options.plotsUnlocked = Number(value);
+			// Also add to plots array if using id (the plot name)
+			if (id) {
+				this.options.plots ??= [];
+				if (!this.options.plots.includes(id)) {
+					this.options.plots.push(id);
+				}
+			}
+			this.permFortune = this.getGeneralFortune();
+		} else if (type === 'attribute' && key && value) {
+			this.options.attributes ??= {};
+			this.options.attributes[key] = Number(value);
+			this.permFortune = this.getGeneralFortune();
+		} else if (type === 'crop_upgrade' && key && value) {
+			this.options.cropUpgrades ??= {};
+			// @ts-ignore
+			this.options.cropUpgrades[key] = Number(value);
+			this.permFortune = this.getGeneralFortune();
+		} else if (type === 'setting' && key && value) {
+			if (key === 'cocoaFortuneUpgrade') {
+				this.options.cocoaFortuneUpgrade = Number(value);
+			}
+			this.permFortune = this.getGeneralFortune();
+		} else if (type === 'unlock' && id) {
+			if (id === 'personal_best') {
+				this.options.personalBestsUnlocked = true;
+			}
+			this.permFortune = this.getGeneralFortune();
+		} else if (type === 'buy_item' && id) {
+			const newItem = getFakeItem(id);
+			if (newItem) {
+				if (newItem instanceof FarmingTool) {
+					const oldIdx = itemUuid ? this.tools.findIndex((t) => t.item.uuid === itemUuid) : -1;
+					if (oldIdx >= 0) {
+						const oldItem = this.tools[oldIdx]!;
+						// Transfer enchantments, attributes, gems from old item
+						newItem.item.enchantments = {
+							...newItem.item.enchantments,
+							...oldItem.item.enchantments,
+						};
+						newItem.item.attributes = {
+							...newItem.item.attributes,
+							...oldItem.item.attributes,
+						};
+						newItem.item.gems = { ...newItem.item.gems, ...oldItem.item.gems };
+						// Re-instantiate to recalculate fortune with transferred properties
+						this.tools[oldIdx] = new FarmingTool(newItem.item, this.options);
+					} else {
+						this.tools.push(newItem);
+					}
+				} else if (newItem instanceof FarmingArmor) {
+					const oldIdx = itemUuid ? this.armor.findIndex((a) => a.item.uuid === itemUuid) : -1;
+					if (oldIdx >= 0) {
+						const oldItem = this.armor[oldIdx]!;
+						newItem.item.enchantments = {
+							...newItem.item.enchantments,
+							...oldItem.item.enchantments,
+						};
+						newItem.item.attributes = {
+							...newItem.item.attributes,
+							...oldItem.item.attributes,
+						};
+						newItem.item.gems = { ...newItem.item.gems, ...oldItem.item.gems };
+						this.armor[oldIdx] = new FarmingArmor(newItem.item, this.options);
+					} else {
+						this.armor.push(newItem);
+					}
+				} else if (newItem instanceof FarmingEquipment) {
+					const oldIdx = itemUuid ? this.equipment.findIndex((e) => e.item.uuid === itemUuid) : -1;
+					if (oldIdx >= 0) {
+						const oldItem = this.equipment[oldIdx]!;
+						newItem.item.enchantments = {
+							...newItem.item.enchantments,
+							...oldItem.item.enchantments,
+						};
+						newItem.item.attributes = {
+							...newItem.item.attributes,
+							...oldItem.item.attributes,
+						};
+						newItem.item.gems = { ...newItem.item.gems, ...oldItem.item.gems };
+						this.equipment[oldIdx] = new FarmingEquipment(newItem.item, this.options);
+					} else {
+						this.equipment.push(newItem);
+					}
+				} else if (newItem instanceof FarmingAccessory) {
+					const oldIdx = itemUuid ? this.accessories.findIndex((a) => a.item.uuid === itemUuid) : -1;
+					if (oldIdx >= 0) {
+						const oldItem = this.accessories[oldIdx]!;
+						newItem.item.enchantments = {
+							...newItem.item.enchantments,
+							...oldItem.item.enchantments,
+						};
+						newItem.item.attributes = {
+							...newItem.item.attributes,
+							...oldItem.item.attributes,
+						};
+						newItem.item.gems = { ...newItem.item.gems, ...oldItem.item.gems };
+						this.accessories[oldIdx] = new FarmingAccessory(newItem.item, this.options);
+					} else {
+						this.accessories.push(newItem);
+					}
+				}
+				this.permFortune = this.getGeneralFortune();
+			}
+		}
 	}
 }
 

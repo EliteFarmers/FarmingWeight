@@ -86,4 +86,13 @@ export const FARMING_ACCESSORIES_INFO: Partial<Record<string, ItemDefinition>> =
 		},
 		maxRarity: Rarity.Mythic,
 	},
+	MAGIC_8_BALL: {
+		skyblockId: 'MAGIC_8_BALL',
+		name: 'Magic 8 Ball',
+		wiki: 'https://wiki.hypixel.net/Magic_8_Ball',
+		maxRarity: Rarity.Epic,
+		baseStats: {
+			[Stat.FarmingFortune]: 0, // Effect is special
+		},
+	},
 };

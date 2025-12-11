@@ -90,6 +90,11 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 						name: tool.item.name,
 						skyblockId: tool.item.skyblockId,
 					},
+					meta: {
+						itemUuid: tool.item.uuid ?? undefined,
+						type: 'reforge',
+						id: reforge.name.toLowerCase().replaceAll(' ', '_'),
+					},
 					cost: reforge.stone?.id
 						? {
 								items: {
@@ -155,6 +160,12 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 					onto: {
 						name: tool.item.name,
 						skyblockId: tool.item.skyblockId,
+					},
+					meta: {
+						itemUuid: tool.item.uuid ?? undefined,
+						type: 'item',
+						id: 'farming_for_dummies_count',
+						value: count + 1,
 					},
 				},
 			] as FortuneUpgrade[];

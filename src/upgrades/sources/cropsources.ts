@@ -10,7 +10,10 @@ import { getCropDisplayName, getItemIdFromCrop } from '../../util/names.js';
 import { getFakeItem, ITEM_REGISTRY } from '../itemregistry.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
 
-export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer; crop: Crop }>[] = [
+export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
+	player: FarmingPlayer;
+	crop: Crop;
+}>[] = [
 	{
 		name: 'Farming Tool',
 		exists: () => true,
@@ -94,6 +97,11 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 					wiki: GARDEN_CROP_UPGRADES.wiki,
 					category: UpgradeCategory.Misc,
 					cost: GARDEN_CROP_UPGRADES.upgradeCosts?.[level + 1],
+					meta: {
+						type: 'crop_upgrade',
+						key: crop,
+						value: level + 1,
+					},
 				},
 			];
 		},
@@ -118,6 +126,11 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 					repeatable: COCOA_FORTUNE_UPGRADE.maxLevel - level,
 					wiki: COCOA_FORTUNE_UPGRADE.wiki,
 					category: UpgradeCategory.Misc,
+					meta: {
+						type: 'setting',
+						key: 'cocoaFortuneUpgrade',
+						value: level + 1,
+					},
 				},
 			];
 		},
@@ -203,6 +216,10 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{ player: FarmingPlayer;
 						medals: {
 							gold: 2,
 						},
+					},
+					meta: {
+						type: 'unlock',
+						id: 'personal_best',
 					},
 				},
 			];
