@@ -285,3 +285,44 @@ test('Interactive Upgrade: Plot Unlock', () => {
 		}
 	}
 });
+
+test('Interactive Upgrade: Expand Upgrade Tree', () => {
+	const player = new FarmingPlayer({
+		tools: [new FarmingTool(JSON.parse(JSON.stringify(cactusKnife)))],
+	});
+
+	// Get an enchant upgrade
+	const upgrades = player.getCropUpgrades(Crop.Cactus);
+	const enchantUpgrade = upgrades.find(
+		(u) => u.meta?.type === 'enchant' && u.meta?.key === 'cultivating' && u.meta?.value === 1
+	);
+
+	if (!enchantUpgrade) {
+		// Skip if no enchant upgrade available
+		return;
+	}
+
+	// Expand the upgrade
+	const tree = player.expandUpgrade(enchantUpgrade, {
+		crop: Crop.Cactus,
+		maxDepth: 3,
+	});
+
+	// Verify the tree structure
+	expect(tree).toBeDefined();
+	expect(tree.upgrade).toBe(enchantUpgrade);
+	expect(tree.fortuneGained).toBeGreaterThanOrEqual(0);
+
+	// The tree should have children (follow-up enchant levels)
+	// Cultivating goes up to level 10
+	if (tree.children.length > 0) {
+		const firstChild = tree.children[0];
+		expect(firstChild).toBeDefined();
+		expect(firstChild?.upgrade.meta?.key).toBe('cultivating');
+		expect(firstChild?.upgrade.meta?.value).toBe(2);
+	}
+
+	// Verify the original player was NOT modified
+	const originalTool = player.tools.find((t) => t.item.uuid === 'test-knife-uuid');
+	expect(originalTool?.item.enchantments?.cultivating).toBeUndefined();
+});

@@ -203,6 +203,15 @@ export interface FortuneUpgrade {
 	// upgrade: Upgrade;
 }
 
+export interface UpgradeTreeNode {
+	upgrade: FortuneUpgrade;
+	fortuneBefore: number;
+	fortuneAfter: number;
+	fortuneGained: number;
+	totalCost?: UpgradeCost;
+	children: UpgradeTreeNode[];
+}
+
 export interface Upgrade {
 	id: string;
 	reason: UpgradeReason;

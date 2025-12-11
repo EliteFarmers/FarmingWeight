@@ -11,7 +11,7 @@ import {
 } from '../constants/specific.js';
 import { Stat } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
-import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
+import { type FortuneUpgrade, UpgradeAction, UpgradeCategory, type UpgradeTreeNode } from '../constants/upgrades.js';
 import { FarmingAccessory } from '../fortune/farmingaccessory.js';
 import { ArmorSet, FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingEquipment } from '../fortune/farmingequipment.js';
@@ -777,6 +777,183 @@ export class FarmingPlayer {
 				this.permFortune = this.getGeneralFortune();
 			}
 		}
+	}
+
+	/**
+	 * Creates a deep clone of this FarmingPlayer that can be modified without affecting the original.
+	 */
+	clone(): FarmingPlayer {
+		const cloneItems = <T extends { item: EliteItemDto }>(items: T[]): EliteItemDto[] => {
+			return items.map((item) => ({
+				...item.item,
+				enchantments: { ...item.item.enchantments },
+				attributes: { ...item.item.attributes },
+				gems: { ...item.item.gems },
+				lore: [...(item.item.lore ?? [])],
+			}));
+		};
+
+		const clonedOptions: PlayerOptions = {
+			...this.options,
+			tools: cloneItems(this.tools),
+			armor: cloneItems(this.armor),
+			equipment: cloneItems(this.equipment),
+			accessories: cloneItems(this.accessories),
+			pets: this.pets.map((p) => ({ ...p.pet })),
+			cropUpgrades: { ...this.options.cropUpgrades },
+			milestones: { ...this.options.milestones },
+			exportableCrops: { ...this.options.exportableCrops },
+			personalBests: { ...this.options.personalBests },
+			collection: { ...this.options.collection },
+			bestiaryKills: { ...this.options.bestiaryKills },
+			attributes: { ...this.options.attributes },
+			plots: [...(this.options.plots ?? [])],
+		};
+
+		return new FarmingPlayer(clonedOptions);
+	}
+
+	/**
+	 * Expands an upgrade into a tree of follow-up upgrades.
+	 * This applies the upgrade on a cloned player and recursively finds upgrades
+	 * for the same target item.
+	 */
+	expandUpgrade(
+		upgrade: FortuneUpgrade,
+		options?: {
+			maxDepth?: number;
+			crop?: Crop;
+		}
+	): UpgradeTreeNode {
+		const { maxDepth = 10, crop } = options ?? {};
+		const visited = new Set<string>();
+
+		return this.buildUpgradeTree(upgrade, 0, maxDepth, crop, visited);
+	}
+
+	private buildUpgradeTree(
+		upgrade: FortuneUpgrade,
+		depth: number,
+		maxDepth: number,
+		crop: Crop | undefined,
+		visited: Set<string>
+	): UpgradeTreeNode {
+		// Create unique key for this upgrade to detect cycles
+		const upgradeKey = this.getUpgradeKey(upgrade);
+		if (visited.has(upgradeKey)) {
+			// Return a leaf node if we've seen this exact upgrade before
+			return {
+				upgrade,
+				fortuneBefore: this.fortune,
+				fortuneAfter: this.fortune,
+				fortuneGained: 0,
+				totalCost: upgrade.cost,
+				children: [],
+			};
+		}
+		visited.add(upgradeKey);
+
+		// Clone player and apply upgrade
+		const clonedPlayer = this.clone();
+		const fortuneBefore = clonedPlayer.fortune + (crop ? clonedPlayer.getCropFortune(crop).fortune : 0);
+
+		clonedPlayer.applyUpgrade(upgrade);
+
+		const fortuneAfter = clonedPlayer.fortune + (crop ? clonedPlayer.getCropFortune(crop).fortune : 0);
+		const fortuneGained = fortuneAfter - fortuneBefore;
+
+		const node: UpgradeTreeNode = {
+			upgrade,
+			fortuneBefore,
+			fortuneAfter,
+			fortuneGained,
+			totalCost: upgrade.cost,
+			children: [],
+		};
+
+		// Stop recursion at max depth
+		if (depth >= maxDepth) {
+			return node;
+		}
+
+		// Find follow-up upgrades for the same target
+		const followUpUpgrades = this.getFollowUpUpgrades(clonedPlayer, upgrade, crop);
+
+		// Build children (using the cloned player's state)
+		for (const followUp of followUpUpgrades) {
+			const childNode = clonedPlayer.buildUpgradeTree(followUp, depth + 1, maxDepth, crop, new Set(visited));
+			node.children.push(childNode);
+		}
+
+		// Sort children by fortune gained (highest first)
+		node.children.sort((a, b) => b.fortuneGained - a.fortuneGained);
+
+		return node;
+	}
+
+	private getUpgradeKey(upgrade: FortuneUpgrade): string {
+		const meta = upgrade.meta;
+		if (!meta) return `${upgrade.title}`;
+
+		const parts = [meta.type ?? '', meta.id ?? '', meta.itemUuid ?? '', meta.key ?? '', String(meta.value ?? '')];
+		return parts.join(':');
+	}
+
+	private getFollowUpUpgrades(player: FarmingPlayer, appliedUpgrade: FortuneUpgrade, crop?: Crop): FortuneUpgrade[] {
+		const meta = appliedUpgrade.meta;
+		if (!meta) return [];
+
+		const itemUuid = meta.itemUuid;
+		const upgrades: FortuneUpgrade[] = [];
+
+		if (itemUuid) {
+			// Item-specific upgrade - find upgrades for the same item
+			const target =
+				player.tools.find((t) => t.item.uuid === itemUuid) ??
+				player.armor.find((a) => a.item.uuid === itemUuid) ??
+				player.equipment.find((e) => e.item.uuid === itemUuid) ??
+				player.accessories.find((a) => a.item.uuid === itemUuid);
+
+			if (target && 'getUpgrades' in target && typeof target.getUpgrades === 'function') {
+				const itemUpgrades = target.getUpgrades() as FortuneUpgrade[];
+				// Filter to only include upgrades of the same type (enchant chains, tier upgrades, etc.)
+				for (const u of itemUpgrades) {
+					if (u.meta?.type === meta.type && u.meta?.key === meta.key) {
+						upgrades.push(u);
+					}
+				}
+			}
+		} else if (meta.type === 'skill' || meta.type === 'plot' || meta.type === 'attribute') {
+			// General upgrades - find the next level of the same upgrade type
+			const generalUpgrades = player.getUpgrades();
+			for (const u of generalUpgrades) {
+				if (u.meta?.type === meta.type && u.meta?.key === meta.key) {
+					upgrades.push(u);
+				}
+			}
+		} else if (meta.type === 'crop_upgrade' && crop) {
+			// Crop-specific upgrades
+			const cropUpgrades = player.getCropUpgrades(crop);
+			for (const u of cropUpgrades) {
+				if (u.meta?.type === meta.type && u.meta?.key === meta.key) {
+					upgrades.push(u);
+				}
+			}
+		} else if (meta.type === 'buy_item' && meta.id) {
+			// Item tier upgrade - look for the next tier upgrade on the new item
+			const newItemId = meta.id;
+			const target =
+				player.tools.find((t) => t.item.skyblockId === newItemId) ??
+				player.armor.find((a) => a.item.skyblockId === newItemId) ??
+				player.equipment.find((e) => e.item.skyblockId === newItemId) ??
+				player.accessories.find((a) => a.item.skyblockId === newItemId);
+
+			if (target && 'getUpgrades' in target && typeof target.getUpgrades === 'function') {
+				upgrades.push(...(target.getUpgrades() as FortuneUpgrade[]));
+			}
+		}
+
+		return upgrades;
 	}
 }
 
