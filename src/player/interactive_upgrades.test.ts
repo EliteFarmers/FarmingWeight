@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import { Stat } from '../constants/stats.js';
+import { FarmingArmor } from '../fortune/farmingarmor.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import { FarmingPlayer } from './player.js';
@@ -328,4 +329,65 @@ test('Interactive Upgrade: Expand Upgrade Tree', () => {
 	// Verify the original player was NOT modified
 	const originalTool = player.tools.find((t) => t.item.uuid === 'test-knife-uuid');
 	expect(originalTool?.item.enchantments?.cultivating).toBeUndefined();
+});
+
+const squashHelmet: EliteItemDto = {
+	id: 301,
+	count: 1,
+	skyblockId: 'SQUASH_HELMET',
+	uuid: 'test-squash-helmet-uuid',
+	name: '§aSquash Helmet',
+	lore: [],
+	enchantments: {},
+	attributes: {},
+};
+
+test('Interactive Upgrade: Item Tier Upgrade Shows New Item Follow-ups', () => {
+	const player = new FarmingPlayer({
+		armor: [new FarmingArmor(JSON.parse(JSON.stringify(squashHelmet)))],
+	});
+
+	// Get the tier upgrade from SQUASH_HELMET to FERMENTO_HELMET
+	const armorPiece = player.armor.find((a) => a.item.uuid === 'test-squash-helmet-uuid');
+	expect(armorPiece).toBeDefined();
+
+	const upgrades = armorPiece!.getUpgrades();
+	const tierUpgrade = upgrades.find((u) => u.meta?.type === 'buy_item' && u.meta?.id === 'FERMENTO_HELMET');
+
+	expect(tierUpgrade).toBeDefined();
+	expect(tierUpgrade!.meta?.type).toBe('buy_item');
+	expect(tierUpgrade!.meta?.id).toBe('FERMENTO_HELMET');
+
+	// Expand the upgrade tree
+	const tree = player.expandUpgrade(tierUpgrade!, {
+		maxDepth: 2,
+		stats: [Stat.FarmingFortune],
+	});
+
+	// Verify the tree structure
+	expect(tree).toBeDefined();
+	expect(tree.upgrade).toBe(tierUpgrade);
+
+	// The upgrade from SQUASH_HELMET (25 fortune) to FERMENTO_HELMET (30 fortune) should gain 5 fortune
+	expect(tree.statsGained[Stat.FarmingFortune]).toBeGreaterThan(0);
+
+	// The tree should have children that are upgrades for FERMENTO_HELMET
+	// These could include gem slots, reforge, recombobulate, pesterminator enchant, etc.
+	expect(tree.children.length).toBeGreaterThan(0);
+
+	// Verify that at least one child upgrade targets the new FERMENTO_HELMET item
+	// (it could be gem, reforge, or pesterminator enchant)
+	const hasNewItemUpgrade = tree.children.some((child) => {
+		const meta = child.upgrade.meta;
+		// Follow-up upgrades should reference the new item (found by skyblockId on the cloned player)
+		// or be general item upgrades like gems, reforge, or enchants
+		return meta?.type === 'gem' || meta?.type === 'reforge' || meta?.type === 'enchant';
+	});
+
+	expect(hasNewItemUpgrade).toBe(true);
+
+	// Verify the original player was NOT modified - should still have SQUASH_HELMET
+	const originalArmor = player.armor.find((a) => a.item.uuid === 'test-squash-helmet-uuid');
+	expect(originalArmor).toBeDefined();
+	expect(originalArmor?.item.skyblockId).toBe('SQUASH_HELMET');
 });

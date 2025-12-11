@@ -632,6 +632,8 @@ export class FarmingPlayer {
 							...newItem.item.gems,
 							...target.item.gems,
 						};
+						// Preserve the old item's UUID so the item remains trackable
+						newItem.item.uuid = target.item.uuid;
 
 						if (target instanceof FarmingTool && newItem instanceof FarmingTool) {
 							const idx = this.tools.indexOf(target);
@@ -960,7 +962,21 @@ export class FarmingPlayer {
 		const itemUuid = meta.itemUuid;
 		const upgrades: FortuneUpgrade[] = [];
 
-		if (itemUuid) {
+		// Handle buy_item specially - these are item tier upgrades
+		// After applying, we want ALL upgrades for the new item, not filtered by type
+		// The new item preserves the old UUID, but we search by skyblockId to find the upgraded tier
+		if (meta.type === 'buy_item' && meta.id) {
+			const newItemId = meta.id;
+			const target =
+				player.tools.find((t) => t.item.skyblockId === newItemId) ??
+				player.armor.find((a) => a.item.skyblockId === newItemId) ??
+				player.equipment.find((e) => e.item.skyblockId === newItemId) ??
+				player.accessories.find((a) => a.item.skyblockId === newItemId);
+
+			if (target && 'getUpgrades' in target && typeof target.getUpgrades === 'function') {
+				upgrades.push(...(target.getUpgrades() as FortuneUpgrade[]));
+			}
+		} else if (itemUuid) {
 			// Item-specific upgrade - find upgrades for the same item
 			const target =
 				player.tools.find((t) => t.item.uuid === itemUuid) ??
@@ -992,18 +1008,6 @@ export class FarmingPlayer {
 				if (u.meta?.type === meta.type && u.meta?.key === meta.key) {
 					upgrades.push(u);
 				}
-			}
-		} else if (meta.type === 'buy_item' && meta.id) {
-			// Item tier upgrade - look for the next tier upgrade on the new item
-			const newItemId = meta.id;
-			const target =
-				player.tools.find((t) => t.item.skyblockId === newItemId) ??
-				player.armor.find((a) => a.item.skyblockId === newItemId) ??
-				player.equipment.find((e) => e.item.skyblockId === newItemId) ??
-				player.accessories.find((a) => a.item.skyblockId === newItemId);
-
-			if (target && 'getUpgrades' in target && typeof target.getUpgrades === 'function') {
-				upgrades.push(...(target.getUpgrades() as FortuneUpgrade[]));
 			}
 		}
 
