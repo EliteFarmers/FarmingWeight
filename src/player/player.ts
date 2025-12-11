@@ -987,8 +987,13 @@ export class FarmingPlayer {
 			if (target && 'getUpgrades' in target && typeof target.getUpgrades === 'function') {
 				const itemUpgrades = target.getUpgrades() as FortuneUpgrade[];
 				// Filter to only include upgrades of the same type (enchant chains, tier upgrades, etc.)
+				// For gem upgrades, also match on slot to only show follow-ups for that specific slot
 				for (const u of itemUpgrades) {
 					if (u.meta?.type === meta.type && u.meta?.key === meta.key) {
+						// For gem upgrades, also require matching slot
+						if (meta.type === 'gem' && meta.slot && u.meta?.slot !== meta.slot) {
+							continue;
+						}
 						upgrades.push(u);
 					}
 				}
