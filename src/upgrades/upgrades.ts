@@ -71,6 +71,7 @@ export function getSelfFortuneUpgrade(
 					type: 'buy_item',
 					id: nextInfo.skyblockId,
 				},
+				conflictKey: 'item_tier',
 			} satisfies FortuneUpgrade,
 		};
 	} else if (nextItem && nextInfo && !(nextItem.reason === UpgradeReason.Situational && !nextItem.preferred)) {
@@ -102,6 +103,7 @@ export function getSelfFortuneUpgrade(
 							? undefined
 							: (upgradeable.item.uuid ?? undefined),
 				},
+				conflictKey: 'item_tier',
 			} satisfies FortuneUpgrade,
 		};
 	}
@@ -208,6 +210,7 @@ export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUp
 			id: 'rarity_upgrades',
 			value: 1,
 		},
+		conflictKey: 'recombobulate',
 	} satisfies FortuneUpgrade;
 
 	// Gemstone fortune increases with rarity
@@ -356,6 +359,7 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 			},
 			action: UpgradeAction.Apply,
 			category: UpgradeCategory.Gem,
+			conflictKey: `gem:${slotId}`,
 			meta: {
 				type: 'gem',
 				slot: slotId,
@@ -390,6 +394,7 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 		const nextFortune = getPeridotGemFortune(upgradeable.rarity, nextGem);
 
 		if (nextFortune > currentFortune) {
+			const slotId = 'PERIDOT_' + i;
 			result.push({
 				title: getGemRarityName(nextGem) + ' Peridot Gemstone',
 				cost: {
@@ -407,9 +412,10 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 				},
 				action: UpgradeAction.Apply,
 				category: UpgradeCategory.Gem,
+				conflictKey: `gem:${slotId}`,
 				meta: {
 					type: 'gem',
-					slot: 'PERIDOT_' + i,
+					slot: slotId,
 					value: nextGem,
 					itemUuid: upgradeable.item.uuid ?? undefined,
 				},

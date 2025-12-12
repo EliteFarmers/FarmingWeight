@@ -50,6 +50,7 @@ export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: strin
 					? UpgradeAction.Apply
 					: UpgradeAction.LevelUp,
 			category: UpgradeCategory.Enchant,
+			conflictKey: `enchant:${enchantId}`,
 			cost: {
 				items: {
 					[enchantNameToId(enchant) + '_1']: 1,
@@ -119,6 +120,7 @@ export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: strin
 		},
 		action: normalNext ? UpgradeAction.Apply : UpgradeAction.LevelUp,
 		category: UpgradeCategory.Enchant,
+		conflictKey: `enchant:${enchantId}`,
 		cost: cost,
 		wiki: enchant.wiki,
 		onto: {

@@ -391,3 +391,237 @@ test('Interactive Upgrade: Item Tier Upgrade Shows New Item Follow-ups', () => {
 	expect(originalArmor).toBeDefined();
 	expect(originalArmor?.item.skyblockId).toBe('SQUASH_HELMET');
 });
+
+test('Interactive Upgrade: Equipment Purchase Shows Follow-up Upgrades', () => {
+	// Create a player with no equipment to test purchasing from empty slot
+	const player = new FarmingPlayer({});
+
+	// Get the armor set progress to find equipment purchase upgrades
+	const progress = player.armorSet.getProgress();
+	const cloakProgress = progress.find((p) => p.name === 'Cloak');
+
+	expect(cloakProgress).toBeDefined();
+	expect(cloakProgress?.upgrades).toBeDefined();
+	expect(cloakProgress!.upgrades!.length).toBeGreaterThan(0);
+
+	// The upgrade should be a purchase upgrade with proper meta
+	const purchaseUpgrade = cloakProgress!.upgrades![0];
+	expect(purchaseUpgrade.meta).toBeDefined();
+	expect(purchaseUpgrade.meta?.type).toBe('buy_item');
+	expect(purchaseUpgrade.meta?.id).toBeDefined();
+
+	// Expand the upgrade tree
+	const tree = player.expandUpgrade(purchaseUpgrade, {
+		maxDepth: 2,
+		stats: [Stat.FarmingFortune],
+	});
+
+	// Verify the tree structure
+	expect(tree).toBeDefined();
+	expect(tree.upgrade).toBe(purchaseUpgrade);
+
+	// The purchase upgrade should gain fortune (or 0 if equipment has no fortune)
+	expect(tree.statsGained[Stat.FarmingFortune] ?? 0).toBeGreaterThanOrEqual(0);
+
+	// After purchasing equipment, children should show follow-up upgrades
+	// like enchants (green_thumb), reforges (rooted, squeaky), etc.
+	expect(tree.children.length).toBeGreaterThan(0);
+
+	// Verify at least one child is an enchant, reforge, or other item upgrade
+	const hasFollowUp = tree.children.some((child) => {
+		const meta = child.upgrade.meta;
+		return meta?.type === 'enchant' || meta?.type === 'reforge' || meta?.type === 'buy_item';
+	});
+
+	expect(hasFollowUp).toBe(true);
+});
+
+test('Upgrade Tree: Conflict Keys Prevent Duplicate Upgrade Types in Children', () => {
+	// Test that when a reforge is applied at the root, child item upgrades don't suggest more reforges
+	const player = new FarmingPlayer({
+		armor: [new FarmingArmor(JSON.parse(JSON.stringify(squashHelmet)))],
+	});
+
+	// Get a reforge upgrade for the helmet
+	const armorPiece = player.armor.find((a) => a.item.uuid === 'test-squash-helmet-uuid');
+	expect(armorPiece).toBeDefined();
+
+	const upgrades = armorPiece!.getUpgrades();
+	const reforgeUpgrade = upgrades.find((u) => u.meta?.type === 'reforge');
+
+	if (!reforgeUpgrade) {
+		return; // Skip if no reforge available
+	}
+
+	// Verify the reforge has a conflict key
+	expect(reforgeUpgrade.conflictKey).toBe('reforge');
+
+	// Expand the upgrade tree
+	const tree = player.expandUpgrade(reforgeUpgrade, {
+		maxDepth: 3,
+		stats: [Stat.FarmingFortune],
+	});
+
+	// Helper to recursively find all upgrades in the tree
+	function collectAllUpgrades(node: typeof tree, depth = 0): Array<{ upgrade: typeof node.upgrade; depth: number }> {
+		const result = [{ upgrade: node.upgrade, depth }];
+		for (const child of node.children) {
+			result.push(...collectAllUpgrades(child, depth + 1));
+		}
+		return result;
+	}
+
+	const allUpgrades = collectAllUpgrades(tree);
+
+	// There should only be ONE reforge upgrade in the entire tree (the root)
+	const reforgeUpgrades = allUpgrades.filter((u) => u.upgrade.conflictKey === 'reforge');
+	expect(reforgeUpgrades.length).toBe(1);
+	expect(reforgeUpgrades[0].depth).toBe(0); // Should be at root only
+
+	// If there are children (e.g., item tier upgrades), they should not contain reforge upgrades
+	for (const child of tree.children) {
+		expect(child.upgrade.conflictKey).not.toBe('reforge');
+	}
+});
+
+test('Upgrade Tree: Armor Piece Purchase Shows Complete Follow-up Tree', () => {
+	// Create a player with no armor to test purchasing from empty slot
+	const player = new FarmingPlayer({});
+
+	// Get the armor set progress to find armor purchase upgrades
+	const progress = player.armorSet.getProgress();
+	const helmetProgress = progress.find((p) => p.name === 'Helmet');
+
+	expect(helmetProgress).toBeDefined();
+	expect(helmetProgress?.upgrades).toBeDefined();
+	expect(helmetProgress!.upgrades!.length).toBeGreaterThan(0);
+
+	// The upgrade should be a purchase upgrade with proper meta
+	const purchaseUpgrade = helmetProgress!.upgrades![0];
+	expect(purchaseUpgrade.meta).toBeDefined();
+	expect(purchaseUpgrade.meta?.type).toBe('buy_item');
+	expect(purchaseUpgrade.meta?.id).toBeDefined();
+
+	// Verify the purchase upgrade has a slot-specific conflict key
+	expect(purchaseUpgrade.conflictKey).toBe('item_purchase:Helmet');
+
+	// Expand the upgrade tree
+	const tree = player.expandUpgrade(purchaseUpgrade, {
+		maxDepth: 2,
+		stats: [Stat.FarmingFortune],
+	});
+
+	// Verify the tree structure
+	expect(tree).toBeDefined();
+	expect(tree.upgrade).toBe(purchaseUpgrade);
+
+	// Should have children for the newly purchased item
+	expect(tree.children.length).toBeGreaterThan(0);
+
+	// Should have at least one of: enchant, reforge, gem, or item_tier (next tier)
+	const hasExpectedType = tree.children.some((child) => {
+		const type = child.upgrade.meta?.type;
+		return type === 'enchant' || type === 'reforge' || type === 'gem' || type === 'buy_item';
+	});
+
+	expect(hasExpectedType).toBe(true);
+
+	// The children should include item_tier upgrades for further tiers
+	// (e.g., Squash Helmet -> Fermento Helmet)
+	const hasItemTierChild = tree.children.some((c) => c.upgrade.conflictKey === 'item_tier');
+
+	// This should be true because after purchasing Squash Helmet,
+	// we should see an upgrade to Fermento Helmet as a child
+	expect(hasItemTierChild).toBe(true);
+});
+
+test('Upgrade Tree: Recombobulate Only Appears Once Per Item Chain', () => {
+	// Test that recombobulate doesn't appear multiple times when traversing tier upgrades
+	const player = new FarmingPlayer({
+		armor: [new FarmingArmor(JSON.parse(JSON.stringify(squashHelmet)))],
+	});
+
+	// Get the recombobulate upgrade for the helmet
+	const armorPiece = player.armor.find((a) => a.item.uuid === 'test-squash-helmet-uuid');
+	expect(armorPiece).toBeDefined();
+
+	const upgrades = armorPiece!.getUpgrades();
+	const recombUpgrade = upgrades.find((u) => u.action === 'recombobulate');
+
+	if (!recombUpgrade) {
+		return; // Skip if no recomb available
+	}
+
+	// Verify the recomb has the correct conflict key
+	expect(recombUpgrade.conflictKey).toBe('recombobulate');
+
+	// Expand the upgrade tree with depth to capture tier upgrades and their children
+	const tree = player.expandUpgrade(recombUpgrade, {
+		maxDepth: 3,
+		stats: [Stat.FarmingFortune],
+	});
+
+	// Helper to recursively collect all upgrades with their depths
+	function collectAllUpgrades(node: typeof tree, depth = 0): Array<{ upgrade: typeof node.upgrade; depth: number }> {
+		const result = [{ upgrade: node.upgrade, depth }];
+		for (const child of node.children) {
+			result.push(...collectAllUpgrades(child, depth + 1));
+		}
+		return result;
+	}
+
+	const allUpgrades = collectAllUpgrades(tree);
+	const recombUpgrades = allUpgrades.filter((u) => u.upgrade.conflictKey === 'recombobulate');
+
+	// The root is the recomb itself, so there should be exactly 1
+	expect(recombUpgrades.length).toBe(1);
+	expect(recombUpgrades[0].depth).toBe(0); // Should only be at root
+});
+
+test('Upgrade Tree: Tier Upgrade Children Should Not Include Recomb When Parent Chain Has It', () => {
+	const squashWithReforge: EliteItemDto = {
+		id: 301,
+		count: 1,
+		skyblockId: 'SQUASH_HELMET',
+		uuid: 'test-squash-reforge-uuid',
+		name: '§aMossy Squash Helmet',
+		lore: [],
+		enchantments: {},
+		attributes: { modifier: 'mossy' },
+	};
+
+	const player = new FarmingPlayer({
+		armor: [new FarmingArmor(squashWithReforge)],
+	});
+
+	// Get the tier upgrade for the helmet (Squash -> Fermento)
+	const armorPiece = player.armor.find((a) => a.item.uuid === 'test-squash-reforge-uuid');
+	expect(armorPiece).toBeDefined();
+
+	const upgrades = armorPiece!.getUpgrades();
+
+	// First verify that Squash WITH REFORGE has a recomb upgrade available
+	const squashRecomb = upgrades.find((u) => u.conflictKey === 'recombobulate');
+	expect(squashRecomb).toBeDefined(); // Squash with reforge should have recomb available
+
+	const tierUpgrade = upgrades.find((u) => u.meta?.type === 'buy_item' && u.meta?.id === 'FERMENTO_HELMET');
+
+	if (!tierUpgrade) {
+		return; // Skip if no tier upgrade available
+	}
+
+	// Expand the upgrade tree
+	const tree = player.expandUpgrade(tierUpgrade, {
+		maxDepth: 2,
+		stats: [Stat.FarmingFortune],
+	});
+
+	// The tier upgrade should have children - upgrades for Fermento
+	expect(tree.children.length).toBeGreaterThan(0);
+
+	// Check if any child has a recomb upgrade
+	const recombChild = tree.children.find((c) => c.upgrade.conflictKey === 'recombobulate');
+
+	// This should be undefined because recomb is a one-time upgrade
+	expect(recombChild).toBeUndefined();
+});

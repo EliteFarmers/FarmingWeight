@@ -835,8 +835,9 @@ export class FarmingPlayer {
 	): UpgradeTreeNode {
 		const { maxDepth = 10, crop, stats = [Stat.FarmingFortune] } = options ?? {};
 		const visited = new Set<string>();
+		const usedConflictKeys = new Set<string>();
 
-		return this.buildUpgradeTree(upgrade, 0, maxDepth, crop, visited, stats);
+		return this.buildUpgradeTree(upgrade, 0, maxDepth, crop, visited, usedConflictKeys, stats);
 	}
 
 	private buildUpgradeTree(
@@ -845,6 +846,7 @@ export class FarmingPlayer {
 		maxDepth: number,
 		crop: Crop | undefined,
 		visited: Set<string>,
+		usedConflictKeys: Set<string>,
 		stats: Stat[]
 	): UpgradeTreeNode {
 		// Create unique key for this upgrade to detect cycles
@@ -886,8 +888,34 @@ export class FarmingPlayer {
 			return node;
 		}
 
-		// Find follow-up upgrades for the same target
-		const followUpUpgrades = this.getFollowUpUpgrades(clonedPlayer, upgrade, crop);
+		const childConflictKeys = new Set(usedConflictKeys);
+		if (upgrade.conflictKey) {
+			childConflictKeys.add(upgrade.conflictKey);
+		}
+
+		// For buy_item (tier) upgrades, also include conflict keys from the original item's upgrades.
+		// This prevents one-time upgrades like recombobulate from appearing on tier-upgraded items,
+		// since those upgrades carry over.
+		if (upgrade.meta?.type === 'buy_item' && upgrade.meta?.itemUuid) {
+			const originalItem =
+				this.tools.find((t) => t.item.uuid === upgrade.meta?.itemUuid) ??
+				this.armor.find((a) => a.item.uuid === upgrade.meta?.itemUuid) ??
+				this.equipment.find((e) => e.item.uuid === upgrade.meta?.itemUuid) ??
+				this.accessories.find((a) => a.item.uuid === upgrade.meta?.itemUuid);
+
+			if (originalItem && 'getUpgrades' in originalItem && typeof originalItem.getUpgrades === 'function') {
+				for (const originalUpgrade of originalItem.getUpgrades() as FortuneUpgrade[]) {
+					if (originalUpgrade.conflictKey) {
+						childConflictKeys.add(originalUpgrade.conflictKey);
+					}
+				}
+			}
+		}
+
+		// Find follow-up upgrades for the same target, excluding those with already-used conflict keys
+		const followUpUpgrades = this.getFollowUpUpgrades(clonedPlayer, upgrade, crop).filter(
+			(u) => !u.conflictKey || !childConflictKeys.has(u.conflictKey)
+		);
 
 		// Build children (using the cloned player's state)
 		for (const followUp of followUpUpgrades) {
@@ -897,6 +925,7 @@ export class FarmingPlayer {
 				maxDepth,
 				crop,
 				new Set(visited),
+				childConflictKeys,
 				stats
 			);
 			node.children.push(childNode);

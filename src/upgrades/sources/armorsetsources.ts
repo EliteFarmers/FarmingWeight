@@ -121,6 +121,7 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 					stats: fakeItem?.getStats() ?? {},
 					wiki: itemToPurchase.wiki,
 					category: UpgradeCategory.Item,
+					conflictKey: `item_purchase:${slot}`,
 					onto: {
 						slot: slot as GearSlot,
 					},
@@ -131,6 +132,10 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 								},
 							}
 						: undefined,
+					meta: {
+						type: 'buy_item',
+						id: itemToPurchase.skyblockId,
+					},
 				},
 			];
 		},

@@ -85,6 +85,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 					},
 					action: UpgradeAction.Apply,
 					category: UpgradeCategory.Reforge,
+					conflictKey: 'reforge',
 					optional:
 						(reforge === REFORGES.bountiful && tool.reforge === REFORGES.blessed) ||
 						(reforge === REFORGES.blessed && tool.reforge === REFORGES.bountiful),
@@ -156,6 +157,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 					},
 					action: UpgradeAction.Apply,
 					category: UpgradeCategory.Item,
+					conflictKey: 'farming_for_dummies',
 					repeatable: 5 - count,
 					wiki: 'https://wiki.hypixel.net/Farming_For_Dummies',
 					cost: {
@@ -224,6 +226,7 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 					},
 					action: UpgradeAction.Unlock,
 					category: UpgradeCategory.Misc,
+					conflictKey: 'axed_perk',
 					wiki: 'https://wiki.hypixel.net/Essence#Forest_Essence_',
 					cost: {
 						items: {
