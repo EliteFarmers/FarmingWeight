@@ -47,9 +47,19 @@ export const GEAR_FORTUNE_SOURCES: DynamicFortuneSource<FarmingArmor | FarmingEq
 		},
 		maxStat: (gear, stat) => {
 			const maxRarity = (gear.getLastItemUpgrade()?.info.maxRarity ?? gear.info.maxRarity) as Rarity;
-			return gear.type === ReforgeTarget.Equipment
-				? (REFORGES.rooted?.tiers[maxRarity]?.stats?.[stat] ?? 0)
-				: (REFORGES.mossy?.tiers[maxRarity]?.stats?.[stat] ?? 0);
+			const current = gear.reforgeStats?.stats?.[stat] ?? 0;
+
+			let best = 0;
+			for (const reforge of Object.values(REFORGES)) {
+				if (!reforge || !reforge.appliesTo.includes(gear.type)) continue;
+				// Keep "max" aligned with what we can suggest/cost (stone-based).
+				if (!reforge.stone?.id) continue;
+				const tier = reforge.tiers?.[maxRarity];
+				const val = tier?.stats?.[stat] ?? 0;
+				if (val > best) best = val;
+			}
+
+			return Math.max(best, current);
 		},
 		currentStat: (gear, stat) => {
 			return gear.reforgeStats?.stats?.[stat] ?? 0;

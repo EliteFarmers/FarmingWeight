@@ -25,16 +25,12 @@ test('Interactive Upgrade: Enchantments', () => {
 		tools: [new FarmingTool(JSON.parse(JSON.stringify(cactusKnife)))],
 	});
 
-	// 1. Initial State: No Dedication
 	let upgrades = player.getCropUpgrades(Crop.Cactus);
-	// Dedication 1 might not show up if cost is weird or something?
-	// Harvesting is safer.
+
 	let enchantUpgrade = upgrades.find(
 		(u) => u.meta?.type === 'enchant' && u.meta?.key === 'harvesting' && u.meta?.value === 1
 	);
 
-	// If Harvesting not found, maybe level req? Harvesting req level 2. Tool has no level info?
-	// Use 'dedication'. Min level 1.
 	if (!enchantUpgrade) {
 		enchantUpgrade = upgrades.find(
 			(u) => u.meta?.type === 'enchant' && u.meta?.key === 'dedication' && u.meta?.value === 1
@@ -42,19 +38,15 @@ test('Interactive Upgrade: Enchantments', () => {
 	}
 
 	expect(enchantUpgrade).toBeDefined();
-	// expect(enchantUpgrade?.title).toMatch(/Dedication 1|Harvesting 1/);
 
 	const upgradeName = enchantUpgrade!.title;
 	const upgradeKey = enchantUpgrade!.meta!.key!;
 
-	// 2. Apply
 	player.applyUpgrade(enchantUpgrade!);
 
-	// Verify internal state
 	const tool = player.tools.find((t) => t.item.uuid === 'test-knife-uuid');
 	expect(tool?.item.enchantments?.[upgradeKey]).toBe(1);
 
-	// 3. Get Upgrades again
 	upgrades = player.getCropUpgrades(Crop.Cactus);
 	const nextUpgrade = upgrades.find(
 		(u) => u.meta?.type === 'enchant' && u.meta?.key === upgradeKey && u.meta?.value === 2
@@ -70,7 +62,6 @@ test('Interactive Upgrade: Farming For Dummies', () => {
 		tools: [new FarmingTool(JSON.parse(JSON.stringify(cactusKnife)))],
 	});
 
-	// 1. Initial State: 0 FFD
 	let upgrades = player.getCropUpgrades(Crop.Cactus);
 	let ffdUpgrade = upgrades.find((u) => u.title === 'Farming For Dummies');
 
@@ -78,14 +69,14 @@ test('Interactive Upgrade: Farming For Dummies', () => {
 	expect(ffdUpgrade?.meta?.id).toBe('farming_for_dummies_count');
 	expect(ffdUpgrade?.meta?.value).toBe(1);
 
-	// 2. Apply FFD
+	// Apply FFD
 	player.applyUpgrade(ffdUpgrade!);
 
 	// Verify state
 	const tool = player.tools.find((t) => t.item.uuid === 'test-knife-uuid');
 	expect(tool?.item.attributes?.['farming_for_dummies_count']).toBe('1');
 
-	// 3. Next Upgrade
+	// Next Upgrade
 	upgrades = player.getCropUpgrades(Crop.Cactus);
 	ffdUpgrade = upgrades.find((u) => u.title === 'Farming For Dummies');
 	expect(ffdUpgrade).toBeDefined();
@@ -93,13 +84,10 @@ test('Interactive Upgrade: Farming For Dummies', () => {
 });
 
 test('Interactive Upgrade: Reforge', () => {
-	// Cactus Knife is a Hoe, so Blessed is applicable.
-
 	const player = new FarmingPlayer({
 		tools: [new FarmingTool(JSON.parse(JSON.stringify(cactusKnife)))],
 	});
 
-	// 1. Initial: No reforge
 	const upgrades = player.getCropUpgrades(Crop.Cactus);
 	const blessedUpgrade = upgrades.find((u) => u.meta?.type === 'reforge' && u.meta?.id === 'blessed');
 
@@ -108,21 +96,14 @@ test('Interactive Upgrade: Reforge', () => {
 	if (blessedUpgrade) {
 		player.applyUpgrade(blessedUpgrade);
 
-		// Verify
 		const tool = player.tools.find((t) => t.item.uuid === 'test-knife-uuid');
-		// attributes.modifier should be 'blessed' (lowercase) or 'BLESSED'?
-		// Usually lower case or whatever internal ID is.
-		// toolsources.ts uses "reforge.name.toLowerCase().replaceAll(' ', '_')".
-		// Bountiful -> bountiful. Blessed -> blessed.
 		expect(tool?.item.attributes?.modifier).toBe('blessed');
 
-		// Verify re-instantiation logic (tool.reforge should be defined)
 		expect(tool?.reforge?.name).toBe('Blessed');
 	}
 });
 
 test('Interactive Upgrade: Chain Upgrades', () => {
-	// 1. Initial: Farming Level 50
 	const player = new FarmingPlayer({
 		farmingLevel: 50,
 		tools: [new FarmingTool(JSON.parse(JSON.stringify(cactusKnife)))],
@@ -150,7 +131,7 @@ test('Interactive Upgrade: Chain Upgrades', () => {
 		player.applyUpgrade(toolUpgrade);
 		const tool = player.tools.find((t) => t.item.uuid === 'test-knife-uuid');
 		expect(tool?.item.enchantments?.['harvesting']).toBe(1);
-	} // If not found, ignore (maybe dedication is suggested instead)
+	}
 });
 
 test('Interactive Upgrade: Crop Upgrades and Others', () => {
@@ -313,14 +294,10 @@ test('Interactive Upgrade: Expand Upgrade Tree', () => {
 		stats: [Stat.FarmingFortune],
 	});
 
-	// Verify the tree structure
 	expect(tree).toBeDefined();
 	expect(tree.upgrade).toBe(enchantUpgrade);
-	// statsGained may be undefined if no fortune gain (empty object if no change)
 	expect(tree.statsGained[Stat.FarmingFortune] ?? 0).toBeGreaterThanOrEqual(0);
 
-	// The tree should have children (follow-up enchant levels)
-	// Cultivating goes up to level 10
 	if (tree.children.length > 0) {
 		const firstChild = tree.children[0];
 		expect(firstChild).toBeDefined();
@@ -328,7 +305,6 @@ test('Interactive Upgrade: Expand Upgrade Tree', () => {
 		expect(firstChild?.upgrade.meta?.value).toBe(2);
 	}
 
-	// Verify the original player was NOT modified
 	const originalTool = player.tools.find((t) => t.item.uuid === 'test-knife-uuid');
 	expect(originalTool?.item.enchantments?.cultivating).toBeUndefined();
 });
@@ -370,19 +346,11 @@ test('Interactive Upgrade: Item Tier Upgrade Shows New Item Follow-ups', () => {
 	expect(tree).toBeDefined();
 	expect(tree.upgrade).toBe(tierUpgrade);
 
-	// The upgrade from SQUASH_HELMET (25 fortune) to FERMENTO_HELMET (30 fortune) should gain 5 fortune
 	expect(tree.statsGained[Stat.FarmingFortune]).toBeGreaterThan(0);
-
-	// The tree should have children that are upgrades for FERMENTO_HELMET
-	// These could include gem slots, reforge, recombobulate, pesterminator enchant, etc.
 	expect(tree.children.length).toBeGreaterThan(0);
 
-	// Verify that at least one child upgrade targets the new FERMENTO_HELMET item
-	// (it could be gem, reforge, or pesterminator enchant)
 	const hasNewItemUpgrade = tree.children.some((child) => {
 		const meta = child.upgrade.meta;
-		// Follow-up upgrades should reference the new item (found by skyblockId on the cloned player)
-		// or be general item upgrades like gems, reforge, or enchants
 		return meta?.type === 'gem' || meta?.type === 'reforge' || meta?.type === 'enchant';
 	});
 
@@ -487,10 +455,8 @@ test('Upgrade Tree: Conflict Keys Prevent Duplicate Upgrade Types in Children', 
 });
 
 test('Upgrade Tree: Armor Piece Purchase Shows Complete Follow-up Tree', () => {
-	// Create a player with no armor to test purchasing from empty slot
 	const player = new FarmingPlayer({});
 
-	// Get the armor set progress to find armor purchase upgrades
 	const progress = player.armorSet.getProgress();
 	const helmetProgress = progress.find((p) => p.name === 'Helmet');
 
@@ -498,26 +464,20 @@ test('Upgrade Tree: Armor Piece Purchase Shows Complete Follow-up Tree', () => {
 	expect(helmetProgress?.upgrades).toBeDefined();
 	expect(helmetProgress!.upgrades!.length).toBeGreaterThan(0);
 
-	// The upgrade should be a purchase upgrade with proper meta
 	const purchaseUpgrade = helmetProgress!.upgrades![0];
 	expect(purchaseUpgrade.meta).toBeDefined();
 	expect(purchaseUpgrade.meta?.type).toBe('buy_item');
 	expect(purchaseUpgrade.meta?.id).toBeDefined();
 
-	// Verify the purchase upgrade has a slot-specific conflict key
 	expect(purchaseUpgrade.conflictKey).toBe('item_purchase:Helmet');
 
-	// Expand the upgrade tree
 	const tree = player.expandUpgrade(purchaseUpgrade, {
 		maxDepth: 2,
 		stats: [Stat.FarmingFortune],
 	});
 
-	// Verify the tree structure
 	expect(tree).toBeDefined();
 	expect(tree.upgrade).toBe(purchaseUpgrade);
-
-	// Should have children for the newly purchased item
 	expect(tree.children.length).toBeGreaterThan(0);
 
 	// Should have at least one of: enchant, reforge, gem, or item_tier (next tier)
@@ -528,19 +488,13 @@ test('Upgrade Tree: Armor Piece Purchase Shows Complete Follow-up Tree', () => {
 
 	expect(hasExpectedType).toBe(true);
 
-	// The children should include item_tier upgrades for further tiers
-	// (e.g., Squash Helmet -> Fermento Helmet)
 	const hasItemTierChild = tree.children.some((c) => c.upgrade.conflictKey?.startsWith('item_tier:'));
-
-	// This should be true because after purchasing Squash Helmet,
-	// we should see an upgrade to Fermento Helmet as a child
 	expect(hasItemTierChild).toBe(true);
 });
 
 test('Upgrade Tree: Tier Upgrades Show Skill Requirements', () => {
 	const player = new FarmingPlayer({});
 
-	// 1. Initial purchase (Farm Armor)
 	const progress = player.armorSet.getProgress();
 	const helmetProgress = progress.find((p) => p.name === 'Helmet');
 	const purchaseUpgrade = helmetProgress!.upgrades!.find((u) => u.conflictKey === 'item_purchase:Helmet')!;
@@ -548,11 +502,8 @@ test('Upgrade Tree: Tier Upgrades Show Skill Requirements', () => {
 	expect(purchaseUpgrade).toBeDefined();
 	expect(purchaseUpgrade?.title).toBe('Farm Armor Helmet');
 	expect(purchaseUpgrade?.skillReq).toBeDefined();
-	expect(purchaseUpgrade?.skillReq?.[Skill.Farming]).toBe(10); // Farm Armor req
+	expect(purchaseUpgrade?.skillReq?.[Skill.Farming]).toBe(10);
 
-	// 2. Expand to see Melon upgrade
-	// Need to expand deep enough to reach Melon
-	// tree: Buy Farm (root) -> (children) -> Upgrade to Melon
 	const tree = player.expandUpgrade(purchaseUpgrade, {
 		maxDepth: 5,
 		stats: [Stat.FarmingFortune],
@@ -560,23 +511,19 @@ test('Upgrade Tree: Tier Upgrades Show Skill Requirements', () => {
 
 	const melonUpgrade = tree.children.find((c) => c.upgrade.meta?.id === 'MELON_HELMET');
 	expect(melonUpgrade).toBeDefined();
-	// Melon armor req is 25
 	expect(melonUpgrade!.upgrade?.skillReq?.[Skill.Farming]).toBe(25);
 
-	// 3. Expand Melon to see Cropie upgrade
 	const cropieUpgrade = melonUpgrade?.children.find((c) => c.upgrade.meta?.id === 'CROPIE_HELMET');
 	expect(cropieUpgrade).toBeDefined();
-	// Cropie armor req is 30
+
 	expect(cropieUpgrade!.upgrade?.skillReq?.[Skill.Farming]).toBe(30);
 });
 
 test('Upgrade Tree: Recombobulate Only Appears Once Per Item Chain', () => {
-	// Test that recombobulate doesn't appear multiple times when traversing tier upgrades
 	const player = new FarmingPlayer({
 		armor: [new FarmingArmor(JSON.parse(JSON.stringify(squashHelmet)))],
 	});
 
-	// Get the recombobulate upgrade for the helmet
 	const armorPiece = player.armor.find((a) => a.item.uuid === 'test-squash-helmet-uuid');
 	expect(armorPiece).toBeDefined();
 
@@ -584,19 +531,16 @@ test('Upgrade Tree: Recombobulate Only Appears Once Per Item Chain', () => {
 	const recombUpgrade = upgrades.find((u) => u.action === 'recombobulate');
 
 	if (!recombUpgrade) {
-		return; // Skip if no recomb available
+		return;
 	}
 
-	// Verify the recomb has the correct conflict key
 	expect(recombUpgrade.conflictKey).toBe('recombobulate');
 
-	// Expand the upgrade tree with depth to capture tier upgrades and their children
 	const tree = player.expandUpgrade(recombUpgrade, {
 		maxDepth: 3,
 		stats: [Stat.FarmingFortune],
 	});
 
-	// Helper to recursively collect all upgrades with their depths
 	function collectAllUpgrades(node: typeof tree, depth = 0): Array<{ upgrade: typeof node.upgrade; depth: number }> {
 		const result = [{ upgrade: node.upgrade, depth }];
 		for (const child of node.children) {
@@ -608,9 +552,8 @@ test('Upgrade Tree: Recombobulate Only Appears Once Per Item Chain', () => {
 	const allUpgrades = collectAllUpgrades(tree);
 	const recombUpgrades = allUpgrades.filter((u) => u.upgrade.conflictKey === 'recombobulate');
 
-	// The root is the recomb itself, so there should be exactly 1
 	expect(recombUpgrades.length).toBe(1);
-	expect(recombUpgrades[0].depth).toBe(0); // Should only be at root
+	expect(recombUpgrades[0].depth).toBe(0);
 });
 
 test('Upgrade Tree: Tier Upgrade Shows All Available Upgrades For New Item', () => {
@@ -644,20 +587,14 @@ test('Upgrade Tree: Tier Upgrade Shows All Available Upgrades For New Item', () 
 		stats: [Stat.FarmingFortune],
 	});
 
-	// Children should only include upgrades UNIQUE to Fermento
-	// (not available on Squash). Fermento has 2 gem slots, Squash has 1.
-	// So only PERIDOT_1 (Fermento's extra gem slot) should appear.
 	expect(tree.children.length).toBe(1);
 
-	// Should NOT have recomb - it was available on Squash (do it there instead, it carries over)
 	const hasRecomb = tree.children.some((c) => c.upgrade.conflictKey === 'recombobulate');
 	expect(hasRecomb).toBe(false);
 
-	// Should NOT have Pesterminator 1 - it was available on Squash
 	const hasPest1 = tree.children.some((c) => c.upgrade.conflictKey === 'enchant:pesterminator:1');
 	expect(hasPest1).toBe(false);
 
-	// Should have Fermento's unique gem slot (PERIDOT_1 that Squash doesn't have)
 	const hasUniqueGem = tree.children.some((c) => c.upgrade.conflictKey?.includes('PERIDOT_1'));
 	expect(hasUniqueGem).toBe(true);
 });
@@ -702,7 +639,6 @@ test('Interactive Upgrade: Lotus Necklace Green Thumb Chain', () => {
 	const necklace = player.equipment.find((e) => e.item.uuid === '1ab0455d-10a4-4a4e-b8b8-a4b76b720e02');
 	expect(necklace).toBeDefined();
 
-	// 1. Get Upgrades - Should suggest Green Thumb 1
 	const upgrades = necklace!.getUpgrades();
 	const greenThumb1 = upgrades.find(
 		(u) => u.meta?.type === 'enchant' && u.meta?.key === 'green_thumb' && u.meta?.value === 1
@@ -711,9 +647,6 @@ test('Interactive Upgrade: Lotus Necklace Green Thumb Chain', () => {
 	expect(greenThumb1).toBeDefined();
 
 	if (!greenThumb1) return;
-
-	// 2. Expand Upgrade Tree - Should show chain up to 5
-	// Note: Green Thumb max level is 5
 	const tree = player.expandUpgrade(greenThumb1, {
 		maxDepth: 10,
 		stats: [Stat.FarmingFortune],
@@ -722,11 +655,9 @@ test('Interactive Upgrade: Lotus Necklace Green Thumb Chain', () => {
 	expect(tree).toBeDefined();
 	expect(tree.upgrade).toBe(greenThumb1);
 
-	// Helper to find child by key/value
 	const findChild = (node: typeof tree, val: number) =>
 		node.children.find((c) => c.upgrade.meta?.key === 'green_thumb' && c.upgrade.meta?.value === val);
 
-	// Check chain: 1 -> 2 -> 3 -> 4 -> 5
 	let currentVal = 2;
 	let currentNode = tree;
 

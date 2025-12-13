@@ -34,14 +34,19 @@ export const ARMOR_SET_FORTUNE_SOURCES: DynamicFortuneSource<ArmorSet>[] = [
 		.map<DynamicFortuneSource<ArmorSet>>(gearslot),
 	{
 		name: 'Equipment Set Bonus',
-		exists: (set) =>
-			set.equipmentSetBonuses.length > 0 &&
-			(ARMOR_SET_BONUS.PESTHUNTERS?.stats[4]?.[Stat.FarmingFortune] ?? 0) > 0,
+		exists: (set) => set.equipmentSetBonuses.length > 0,
 		wiki: () => 'https://wiki.hypixel.net/Pesthunter%27s_Gloves',
-		max: () => ARMOR_SET_BONUS.PESTHUNTERS?.stats[4]?.[Stat.FarmingFortune] ?? 0,
-		current: (set) =>
+		max: () => 0,
+		current: () => 0,
+		maxStat: (_set, stat) => {
+			return Math.max(
+				...Object.values(ARMOR_SET_BONUS.PESTHUNTERS?.stats ?? {}).map((stats) => stats?.[stat] ?? 0),
+				0
+			);
+		},
+		currentStat: (set, stat) =>
 			set.equipmentSetBonuses.reduce((acc, bonus) => {
-				return acc + (bonus.bonus.stats[bonus.count]?.[Stat.FarmingFortune] ?? 0);
+				return acc + (bonus.bonus.stats[bonus.count]?.[stat] ?? 0);
 			}, 0),
 	},
 ];
@@ -74,21 +79,49 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 
 			return maxed;
 		},
+		maxStat: (set, stat) => {
+			const fake = getFakeItem(info.startingItem);
+			const fakeProgress = fake?.getProgress(true, [stat]) ?? [];
+			const fakeMax = fakeProgress.reduce(
+				(acc, p) => acc + (p.stats?.[stat]?.max ?? (stat === Stat.FarmingFortune ? p.maxFortune : 0)),
+				0
+			);
+
+			const currentItem = set.getPiece(slot as GearSlot);
+			if (currentItem) {
+				const currentProgress = currentItem.getProgress(false, [stat]);
+				const currentMax = currentProgress.reduce(
+					(acc, p) => acc + (p.stats?.[stat]?.max ?? (stat === Stat.FarmingFortune ? p.maxFortune : 0)),
+					0
+				);
+				if (currentMax > fakeMax) return currentMax;
+			}
+
+			return fakeMax;
+		},
 		current: (set) => {
 			const item = set.getPiece(slot as GearSlot);
 			const progress = item?.getProgress();
 			return progress?.reduce((acc, p) => acc + p.fortune, 0) ?? 0;
 		},
-		progress: (set) => {
+		currentStat: (set, stat) => {
 			const item = set.getPiece(slot as GearSlot);
-			if (item) return item.getProgress();
+			const progress = item?.getProgress(false, [stat]) ?? [];
+			return progress.reduce(
+				(acc, p) => acc + (p.stats?.[stat]?.current ?? (stat === Stat.FarmingFortune ? p.fortune : 0)),
+				0
+			);
+		},
+		progress: (set, stats) => {
+			const item = set.getPiece(slot as GearSlot);
+			if (item) return item.getProgress(false, stats);
 
 			const fake =
 				info.target === ReforgeTarget.Armor
 					? getFakeItem<FarmingArmor>(info.startingItem)
 					: getFakeItem<FarmingEquipment>(info.startingItem);
 
-			return fake?.getProgress(true) ?? [];
+			return fake?.getProgress(true, stats) ?? [];
 		},
 		info: (set) => {
 			const piece = set.getPiece(slot as GearSlot);

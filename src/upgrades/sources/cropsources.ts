@@ -32,12 +32,28 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 			const progress = tool?.getProgress();
 			return progress?.reduce((acc, p) => acc + p.fortune, 0) ?? 0;
 		},
-		progress: ({ player, crop }) => {
+		maxStat: ({ crop }, stat) => {
+			const fake = getFakeItem<FarmingTool>(CROP_INFO[crop].startingTool);
+			const progress = fake?.getProgress(true, [stat]) ?? [];
+			return progress.reduce(
+				(acc, p) => acc + (p.stats?.[stat]?.max ?? (stat === Stat.FarmingFortune ? p.maxFortune : 0)),
+				0
+			);
+		},
+		currentStat: ({ player, crop }, stat) => {
 			const tool = player.getSelectedCropTool(crop);
-			if (tool) return tool.getProgress();
+			const progress = tool?.getProgress(false, [stat]) ?? [];
+			return progress.reduce(
+				(acc, p) => acc + (p.stats?.[stat]?.current ?? (stat === Stat.FarmingFortune ? p.fortune : 0)),
+				0
+			);
+		},
+		progress: ({ player, crop }, stats) => {
+			const tool = player.getSelectedCropTool(crop);
+			if (tool) return tool.getProgress(false, stats);
 
 			const fake = getFakeItem<FarmingTool>(CROP_INFO[crop].startingTool);
-			return fake?.getProgress(true) ?? [];
+			return fake?.getProgress(true, stats) ?? [];
 		},
 		info: ({ player, crop }) => {
 			const tool = player.selectedTool?.crop === crop ? player.selectedTool : player.getSelectedCropTool(crop);

@@ -111,6 +111,18 @@ export function getSourceProgress<T extends object>(
 			}
 		}
 
+		// Keep legacy progress output clean: skip sources that contribute nothing
+		// (but preserve stat-aware or upgrade-bearing sources).
+		if (
+			progress.maxFortune === 0 &&
+			progress.fortune === 0 &&
+			!progress.stats &&
+			!progress.upgrades &&
+			!progress.progress
+		) {
+			continue;
+		}
+
 		result.push(progress);
 	}
 

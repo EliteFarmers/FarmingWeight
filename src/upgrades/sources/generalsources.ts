@@ -13,6 +13,7 @@ import {
 	PEST_BESTIARY_SOURCE,
 	REFINED_TRUFFLE_SOURCE,
 	UNLOCKED_PLOTS,
+	WRIGGLING_LARVA_SOURCE,
 } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
@@ -299,6 +300,8 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		current: (player) => {
 			return (player.options.refinedTruffles ?? 0) * REFINED_TRUFFLE_SOURCE.fortunePerLevel;
 		},
+		maxStat: (_player, stat) => getFortune(REFINED_TRUFFLE_SOURCE.maxLevel, REFINED_TRUFFLE_SOURCE, stat),
+		currentStat: (player, stat) => getFortune(player.options.refinedTruffles ?? 0, REFINED_TRUFFLE_SOURCE, stat),
 		upgrades: (player) => {
 			const consumed = player.options.refinedTruffles ?? 0;
 			if (consumed >= 5) return [];
@@ -322,6 +325,44 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 					meta: {
 						type: 'setting',
 						key: 'refinedTruffles',
+						value: consumed + 1,
+					},
+				},
+			];
+		},
+	},
+	{
+		name: WRIGGLING_LARVA_SOURCE.name,
+		wiki: () => WRIGGLING_LARVA_SOURCE.wiki,
+		exists: () => true,
+		max: () => 0,
+		current: () => 0,
+		maxStat: (_player, stat) => getFortune(WRIGGLING_LARVA_SOURCE.maxLevel, WRIGGLING_LARVA_SOURCE, stat),
+		currentStat: (player, stat) => getFortune(player.options.wrigglingLarva ?? 0, WRIGGLING_LARVA_SOURCE, stat),
+		upgrades: (player, stats) => {
+			if (!stats?.includes(Stat.BonusPestChance)) return [];
+			const consumed = player.options.wrigglingLarva ?? 0;
+			if (consumed >= 5) return [];
+
+			return [
+				{
+					title: 'Wriggling Larva',
+					increase: 0,
+					stats: {
+						[Stat.BonusPestChance]: WRIGGLING_LARVA_SOURCE.statsPerLevel?.[Stat.BonusPestChance] ?? 0,
+					},
+					action: UpgradeAction.Consume,
+					repeatable: 5 - consumed,
+					wiki: WRIGGLING_LARVA_SOURCE.wiki,
+					category: UpgradeCategory.Item,
+					cost: {
+						items: {
+							WRIGGLING_LARVA: 1,
+						},
+					},
+					meta: {
+						type: 'setting',
+						key: 'wrigglingLarva',
 						value: consumed + 1,
 					},
 				},

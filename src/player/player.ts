@@ -8,6 +8,7 @@ import {
 	FARMING_LEVEL,
 	GARDEN_CROP_UPGRADES,
 	UNLOCKED_PLOTS,
+	WRIGGLING_LARVA_SOURCE,
 } from '../constants/specific.js';
 import { Stat } from '../constants/stats.js';
 import { TEMPORARY_FORTUNE, type TemporaryFarmingFortune } from '../constants/tempfortune.js';
@@ -378,6 +379,16 @@ export class FarmingPlayer {
 			}
 		}
 
+		// Wriggling Larva
+		if (stat === Stat.BonusPestChance) {
+			const used = Math.min(5, this.options.wrigglingLarva ?? 0);
+			const val = getFortune(used, WRIGGLING_LARVA_SOURCE, stat);
+			if (val > 0) {
+				breakdown['Wriggling Larva'] = val;
+				sum += val;
+			}
+		}
+
 		// Attribute Shards
 		for (const [shardId, value] of Object.entries(this.attributes)) {
 			const shard = FARMING_ATTRIBUTE_SHARDS[shardId as keyof typeof FARMING_ATTRIBUTE_SHARDS];
@@ -513,8 +524,13 @@ export class FarmingPlayer {
 		};
 	}
 
-	getCropProgress(crop: Crop) {
-		return getSourceProgress<{ crop: Crop; player: FarmingPlayer }>({ crop, player: this }, CROP_FORTUNE_SOURCES);
+	getCropProgress(crop: Crop, stats?: Stat[]) {
+		return getSourceProgress<{ crop: Crop; player: FarmingPlayer }>(
+			{ crop, player: this },
+			CROP_FORTUNE_SOURCES,
+			false,
+			stats
+		);
 	}
 
 	getRates(crop: Crop, blocksBroken: number): ReturnType<typeof calculateDetailedDrops> {

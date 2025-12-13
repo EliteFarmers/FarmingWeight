@@ -1018,6 +1018,138 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 			[Skill.Farming]: 40,
 		},
 	},
+	MUSHROOM_HELMET: {
+		skyblockId: 'MUSHROOM_HELMET',
+		name: 'Mushroom Helmet',
+		wiki: 'https://wiki.hypixel.net/Mushroom_Armor',
+		upgrade: {
+			id: 'BIOHAZARD_HELMET',
+			reason: UpgradeReason.NextTier,
+		},
+		family: 'MUSHROOM_ARMOR',
+		slot: GearSlot.Helmet,
+		maxRarity: Rarity.Epic,
+		baseStats: {
+			// Placeholder
+			[Stat.BonusPestChance]: 16.5,
+		},
+		skillReq: {
+			[Skill.Farming]: 7,
+		},
+	},
+	MUSHROOM_CHESTPLATE: {
+		skyblockId: 'MUSHROOM_CHESTPLATE',
+		name: 'Mushroom Chestplate',
+		wiki: 'https://wiki.hypixel.net/Mushroom_Armor',
+		upgrade: {
+			id: 'BIOHAZARD_CHESTPLATE',
+			reason: UpgradeReason.NextTier,
+		},
+		family: 'MUSHROOM_ARMOR',
+		slot: GearSlot.Chestplate,
+		maxRarity: Rarity.Epic,
+		baseStats: {
+			// Placeholder
+			[Stat.BonusPestChance]: 16.5,
+		},
+		skillReq: {
+			[Skill.Farming]: 7,
+		},
+	},
+	MUSHROOM_LEGGINGS: {
+		skyblockId: 'MUSHROOM_LEGGINGS',
+		name: 'Mushroom Leggings',
+		wiki: 'https://wiki.hypixel.net/Mushroom_Armor',
+		upgrade: {
+			id: 'BIOHAZARD_LEGGINGS',
+			reason: UpgradeReason.NextTier,
+		},
+		family: 'MUSHROOM_ARMOR',
+		slot: GearSlot.Leggings,
+		maxRarity: Rarity.Epic,
+		baseStats: {
+			// Placeholder
+			[Stat.BonusPestChance]: 16.5,
+		},
+		skillReq: {
+			[Skill.Farming]: 7,
+		},
+	},
+	MUSHROOM_BOOTS: {
+		skyblockId: 'MUSHROOM_BOOTS',
+		name: 'Mushroom Boots',
+		wiki: 'https://wiki.hypixel.net/Mushroom_Armor',
+		upgrade: {
+			id: 'BIOHAZARD_BOOTS',
+			reason: UpgradeReason.NextTier,
+		},
+		family: 'MUSHROOM_ARMOR',
+		slot: GearSlot.Boots,
+		maxRarity: Rarity.Epic,
+		baseStats: {
+			// Placeholder
+			[Stat.BonusPestChance]: 16.5,
+		},
+		skillReq: {
+			[Skill.Farming]: 7,
+		},
+	},
+	BIOHAZARD_HELMET: {
+		skyblockId: 'BIOHAZARD_HELMET',
+		name: 'Biohazard Helmet',
+		wiki: 'https://wiki.hypixel.net/Biohazard_Armor',
+		family: 'BIOHAZARD_ARMOR',
+		slot: GearSlot.Helmet,
+		maxRarity: Rarity.Epic,
+		baseStats: {
+			[Stat.BonusPestChance]: 16.5,
+		},
+		skillReq: {
+			[Skill.Farming]: 7,
+		},
+	},
+	BIOHAZARD_CHESTPLATE: {
+		skyblockId: 'BIOHAZARD_CHESTPLATE',
+		name: 'Biohazard Chestplate',
+		wiki: 'https://wiki.hypixel.net/Biohazard_Armor',
+		family: 'BIOHAZARD_ARMOR',
+		slot: GearSlot.Chestplate,
+		maxRarity: Rarity.Epic,
+		baseStats: {
+			[Stat.BonusPestChance]: 16.5,
+		},
+		skillReq: {
+			[Skill.Farming]: 7,
+		},
+	},
+	BIOHAZARD_LEGGINGS: {
+		skyblockId: 'BIOHAZARD_LEGGINGS',
+		name: 'Biohazard Leggings',
+		wiki: 'https://wiki.hypixel.net/Biohazard_Armor',
+		family: 'BIOHAZARD_ARMOR',
+		slot: GearSlot.Leggings,
+		maxRarity: Rarity.Epic,
+		baseStats: {
+			[Stat.BonusPestChance]: 16.5,
+		},
+		skillReq: {
+			[Skill.Farming]: 7,
+		},
+	},
+	BIOHAZARD_BOOTS: {
+		skyblockId: 'BIOHAZARD_BOOTS',
+		name: 'Biohazard Boots',
+		wiki: 'https://wiki.hypixel.net/Biohazard_Armor',
+		family: 'BIOHAZARD_ARMOR',
+		slot: GearSlot.Boots,
+		maxRarity: Rarity.Epic,
+		baseStats: {
+			[Stat.BonusPestChance]: 16.5,
+		},
+		skillReq: {
+			[Skill.Farming]: 7,
+		},
+	},
 };
 
 export type ArmorSetBonusStats = Partial<Record<number, Partial<Record<Stat, number>>>>;
