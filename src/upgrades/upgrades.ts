@@ -13,13 +13,7 @@ import { GemRarity } from '../fortune/item.js';
 import type { Upgradeable, UpgradeableInfo } from '../fortune/upgradeable.js';
 import type { UpgradeableBase } from '../fortune/upgradeablebase.js';
 import { FARMING_TOOLS, type FarmingToolInfo } from '../items/tools.js';
-import {
-	getGemRarityName,
-	getNextGemRarity,
-	getPeridotFortune,
-	getPeridotGemFortune,
-	getPeridotGems,
-} from '../util/gems.js';
+import { getGemRarityName, getNextGemRarity, getPeridotFortune, getPeridotGemFortune } from '../util/gems.js';
 import { nextRarity } from '../util/itemstats.js';
 import { getUpgradeableEnchants } from './enchantupgrades.js';
 import { getFakeItem } from './itemregistry.js';
@@ -58,20 +52,24 @@ export function getSelfFortuneUpgrade(
 				action: UpgradeAction.Purchase,
 				purchase: nextInfo.skyblockId,
 				category: UpgradeCategory.Item,
-				cost: nextItem.cost ?? {
-					items: {
-						[nextInfo.skyblockId]: 1,
-					},
+				cost: {
+					...(nextItem.cost ?? {
+						items: {
+							[nextInfo.skyblockId]: 1,
+						},
+					}),
 				},
+				skillReq: nextInfo.skillReq,
 				onto: {
 					name: upgradeable.item.name,
 					skyblockId: upgradeable.item.skyblockId,
+					newSkyblockId: nextInfo.skyblockId,
 				},
 				meta: {
 					type: 'buy_item',
 					id: nextInfo.skyblockId,
 				},
-				conflictKey: 'item_tier',
+				conflictKey: `item_tier:${nextInfo.skyblockId}`,
 			} satisfies FortuneUpgrade,
 		};
 	} else if (nextItem && nextInfo && !(nextItem.reason === UpgradeReason.Situational && !nextItem.preferred)) {
@@ -86,14 +84,18 @@ export function getSelfFortuneUpgrade(
 				action: nextItem.reason === UpgradeReason.Situational ? UpgradeAction.Purchase : UpgradeAction.Upgrade,
 				purchase: nextItem.reason === UpgradeReason.Situational ? nextItem.id : undefined,
 				category: UpgradeCategory.Item,
-				cost: nextItem.cost ?? {
-					items: {
-						[nextItem.id]: 1,
-					},
+				cost: {
+					...(nextItem.cost ?? {
+						items: {
+							[nextItem.id]: 1,
+						},
+					}),
 				},
+				skillReq: nextInfo.skillReq,
 				onto: {
 					name: upgradeable.item.name,
 					skyblockId: upgradeable.item.skyblockId,
+					newSkyblockId: nextInfo.skyblockId,
 				},
 				meta: {
 					type: 'buy_item',
@@ -103,7 +105,7 @@ export function getSelfFortuneUpgrade(
 							? undefined
 							: (upgradeable.item.uuid ?? undefined),
 				},
-				conflictKey: 'item_tier',
+				conflictKey: `item_tier:${nextItem.id}`,
 			} satisfies FortuneUpgrade,
 		};
 	}
@@ -313,8 +315,6 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 	const peridotSlots = upgradeable.info.gemSlots?.filter((s) => s.slot_type === 'PERIDOT');
 	if (!peridotSlots || peridotSlots.length < 1) return [];
 
-	const unlockedSlots = getPeridotGems(upgradeable.item);
-
 	const result = [] as FortuneUpgrade[];
 
 	// Add entries for applying missing gems
@@ -359,7 +359,7 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 			},
 			action: UpgradeAction.Apply,
 			category: UpgradeCategory.Gem,
-			conflictKey: `gem:${slotId}`,
+			conflictKey: `gem:${slotId}:${GemRarity.Fine}`,
 			meta: {
 				type: 'gem',
 				slot: slotId,
@@ -382,19 +382,23 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 	// getPeridotGems implementation in `src/util/gems.ts` iterates slots PERIDOT_0, PERIDOT_1...
 	// So `unlockedSlots[i]` corresponds to `PERIDOT_i`.
 
-	for (let i = 0; i < unlockedSlots.length; i++) {
-		const gem = unlockedSlots[i];
-		if (gem === undefined) continue;
-		if (gem === GemRarity.Perfect) continue;
+	// Add entries for upgrading existing gems
+	const gems = upgradeable.item.gems ?? {};
+	for (const [slotId, gem] of Object.entries(gems)) {
+		if (!slotId.startsWith('PERIDOT')) continue;
+
+		const gemRarity = gem as GemRarity | null;
+
+		if (gemRarity === undefined) continue;
+		if (gemRarity === GemRarity.Perfect) continue;
 
 		// Start at Fine if the gem is null (not applied)
 		// Flawed and Rough gems are not really worth applying
-		const nextGem = gem === null ? GemRarity.Fine : getNextGemRarity(gem);
-		const currentFortune = getPeridotGemFortune(upgradeable.rarity, gem);
+		const nextGem = gemRarity === null ? GemRarity.Fine : getNextGemRarity(gemRarity);
+		const currentFortune = getPeridotGemFortune(upgradeable.rarity, gemRarity);
 		const nextFortune = getPeridotGemFortune(upgradeable.rarity, nextGem);
 
 		if (nextFortune > currentFortune) {
-			const slotId = 'PERIDOT_' + i;
 			result.push({
 				title: getGemRarityName(nextGem) + ' Peridot Gemstone',
 				cost: {
@@ -412,7 +416,7 @@ export function getUpgradeableGems(upgradeable: Upgradeable): FortuneUpgrade[] {
 				},
 				action: UpgradeAction.Apply,
 				category: UpgradeCategory.Gem,
-				conflictKey: `gem:${slotId}`,
+				conflictKey: `gem:${slotId}:${nextGem}`,
 				meta: {
 					type: 'gem',
 					slot: slotId,

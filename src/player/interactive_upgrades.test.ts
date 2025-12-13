@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest';
 import { Stat } from '../constants/stats.js';
 import { FarmingArmor } from '../fortune/farmingarmor.js';
+import { FarmingEquipment } from '../fortune/farmingequipment.js';
 import { FarmingTool } from '../fortune/farmingtool.js';
 import type { EliteItemDto } from '../fortune/item.js';
 import { FarmingPlayer } from './player.js';
@@ -17,6 +18,7 @@ const cactusKnife: EliteItemDto = {
 };
 
 import { Crop } from '../constants/crops.js';
+import { Skill } from '../constants/skills.js';
 
 test('Interactive Upgrade: Enchantments', () => {
 	const player = new FarmingPlayer({
@@ -528,11 +530,44 @@ test('Upgrade Tree: Armor Piece Purchase Shows Complete Follow-up Tree', () => {
 
 	// The children should include item_tier upgrades for further tiers
 	// (e.g., Squash Helmet -> Fermento Helmet)
-	const hasItemTierChild = tree.children.some((c) => c.upgrade.conflictKey === 'item_tier');
+	const hasItemTierChild = tree.children.some((c) => c.upgrade.conflictKey?.startsWith('item_tier:'));
 
 	// This should be true because after purchasing Squash Helmet,
 	// we should see an upgrade to Fermento Helmet as a child
 	expect(hasItemTierChild).toBe(true);
+});
+
+test('Upgrade Tree: Tier Upgrades Show Skill Requirements', () => {
+	const player = new FarmingPlayer({});
+
+	// 1. Initial purchase (Farm Armor)
+	const progress = player.armorSet.getProgress();
+	const helmetProgress = progress.find((p) => p.name === 'Helmet');
+	const purchaseUpgrade = helmetProgress!.upgrades!.find((u) => u.conflictKey === 'item_purchase:Helmet')!;
+
+	expect(purchaseUpgrade).toBeDefined();
+	expect(purchaseUpgrade?.title).toBe('Farm Armor Helmet');
+	expect(purchaseUpgrade?.skillReq).toBeDefined();
+	expect(purchaseUpgrade?.skillReq?.[Skill.Farming]).toBe(10); // Farm Armor req
+
+	// 2. Expand to see Melon upgrade
+	// Need to expand deep enough to reach Melon
+	// tree: Buy Farm (root) -> (children) -> Upgrade to Melon
+	const tree = player.expandUpgrade(purchaseUpgrade, {
+		maxDepth: 5,
+		stats: [Stat.FarmingFortune],
+	});
+
+	const melonUpgrade = tree.children.find((c) => c.upgrade.meta?.id === 'MELON_HELMET');
+	expect(melonUpgrade).toBeDefined();
+	// Melon armor req is 25
+	expect(melonUpgrade!.upgrade?.skillReq?.[Skill.Farming]).toBe(25);
+
+	// 3. Expand Melon to see Cropie upgrade
+	const cropieUpgrade = melonUpgrade?.children.find((c) => c.upgrade.meta?.id === 'CROPIE_HELMET');
+	expect(cropieUpgrade).toBeDefined();
+	// Cropie armor req is 30
+	expect(cropieUpgrade!.upgrade?.skillReq?.[Skill.Farming]).toBe(30);
 });
 
 test('Upgrade Tree: Recombobulate Only Appears Once Per Item Chain', () => {
@@ -578,7 +613,7 @@ test('Upgrade Tree: Recombobulate Only Appears Once Per Item Chain', () => {
 	expect(recombUpgrades[0].depth).toBe(0); // Should only be at root
 });
 
-test('Upgrade Tree: Tier Upgrade Children Should Not Include Recomb When Parent Chain Has It', () => {
+test('Upgrade Tree: Tier Upgrade Shows All Available Upgrades For New Item', () => {
 	const squashWithReforge: EliteItemDto = {
 		id: 301,
 		count: 1,
@@ -594,34 +629,294 @@ test('Upgrade Tree: Tier Upgrade Children Should Not Include Recomb When Parent 
 		armor: [new FarmingArmor(squashWithReforge)],
 	});
 
-	// Get the tier upgrade for the helmet (Squash -> Fermento)
 	const armorPiece = player.armor.find((a) => a.item.uuid === 'test-squash-reforge-uuid');
 	expect(armorPiece).toBeDefined();
 
 	const upgrades = armorPiece!.getUpgrades();
-
-	// First verify that Squash WITH REFORGE has a recomb upgrade available
-	const squashRecomb = upgrades.find((u) => u.conflictKey === 'recombobulate');
-	expect(squashRecomb).toBeDefined(); // Squash with reforge should have recomb available
-
 	const tierUpgrade = upgrades.find((u) => u.meta?.type === 'buy_item' && u.meta?.id === 'FERMENTO_HELMET');
 
 	if (!tierUpgrade) {
-		return; // Skip if no tier upgrade available
+		return;
 	}
 
-	// Expand the upgrade tree
 	const tree = player.expandUpgrade(tierUpgrade, {
-		maxDepth: 2,
+		maxDepth: 10,
 		stats: [Stat.FarmingFortune],
 	});
 
-	// The tier upgrade should have children - upgrades for Fermento
-	expect(tree.children.length).toBeGreaterThan(0);
+	// Children should only include upgrades UNIQUE to Fermento
+	// (not available on Squash). Fermento has 2 gem slots, Squash has 1.
+	// So only PERIDOT_1 (Fermento's extra gem slot) should appear.
+	expect(tree.children.length).toBe(1);
 
-	// Check if any child has a recomb upgrade
-	const recombChild = tree.children.find((c) => c.upgrade.conflictKey === 'recombobulate');
+	// Should NOT have recomb - it was available on Squash (do it there instead, it carries over)
+	const hasRecomb = tree.children.some((c) => c.upgrade.conflictKey === 'recombobulate');
+	expect(hasRecomb).toBe(false);
 
-	// This should be undefined because recomb is a one-time upgrade
-	expect(recombChild).toBeUndefined();
+	// Should NOT have Pesterminator 1 - it was available on Squash
+	const hasPest1 = tree.children.some((c) => c.upgrade.conflictKey === 'enchant:pesterminator:1');
+	expect(hasPest1).toBe(false);
+
+	// Should have Fermento's unique gem slot (PERIDOT_1 that Squash doesn't have)
+	const hasUniqueGem = tree.children.some((c) => c.upgrade.conflictKey?.includes('PERIDOT_1'));
+	expect(hasUniqueGem).toBe(true);
+});
+
+test('Interactive Upgrade: Lotus Necklace Green Thumb Chain', () => {
+	const squeakyLotusNecklace: EliteItemDto = {
+		id: 397,
+		count: 1,
+		skyblockId: 'LOTUS_NECKLACE',
+		uuid: '1ab0455d-10a4-4a4e-b8b8-a4b76b720e02',
+		name: '§9Squeaky Lotus Necklace',
+		lore: [
+			'§9§lRARE NECKLACE',
+			'',
+			'§2Pests §7by §a2.5%§7.',
+			'§7Decreases the spawn cooldown of §2ൠ',
+			'§9Squeaky Bonus',
+			'',
+			'§7Next Upgrade: §6+9☘ §8(§a194§7/§c250§8)',
+			'§7Piece Bonus: §6+8☘',
+			'',
+			'§7gain §6☘ Farming Fortune§7.',
+			'§7Complete §aGarden Visitor Offers §7to',
+			'§6Piece Bonus: Salesperson',
+			'',
+			'§7Farming Fortune: §6+11 §9(+6)',
+			'§7Bonus Pest Chance: §2+1% §9(+1%)',
+			'§7Health: §c+10',
+		],
+		enchantments: null,
+		attributes: {
+			modifier: 'squeaky',
+			timestamp: '1754452468250',
+		},
+	};
+
+	const player = new FarmingPlayer({
+		equipment: [new FarmingEquipment(JSON.parse(JSON.stringify(squeakyLotusNecklace)))],
+	});
+
+	// Verify initial state
+	const necklace = player.equipment.find((e) => e.item.uuid === '1ab0455d-10a4-4a4e-b8b8-a4b76b720e02');
+	expect(necklace).toBeDefined();
+
+	// 1. Get Upgrades - Should suggest Green Thumb 1
+	const upgrades = necklace!.getUpgrades();
+	const greenThumb1 = upgrades.find(
+		(u) => u.meta?.type === 'enchant' && u.meta?.key === 'green_thumb' && u.meta?.value === 1
+	);
+
+	expect(greenThumb1).toBeDefined();
+
+	if (!greenThumb1) return;
+
+	// 2. Expand Upgrade Tree - Should show chain up to 5
+	// Note: Green Thumb max level is 5
+	const tree = player.expandUpgrade(greenThumb1, {
+		maxDepth: 10,
+		stats: [Stat.FarmingFortune],
+	});
+
+	expect(tree).toBeDefined();
+	expect(tree.upgrade).toBe(greenThumb1);
+
+	// Helper to find child by key/value
+	const findChild = (node: typeof tree, val: number) =>
+		node.children.find((c) => c.upgrade.meta?.key === 'green_thumb' && c.upgrade.meta?.value === val);
+
+	// Check chain: 1 -> 2 -> 3 -> 4 -> 5
+	let currentVal = 2;
+	let currentNode = tree;
+
+	while (currentVal <= 5) {
+		const nextNode = findChild(currentNode, currentVal);
+		expect(nextNode).toBeDefined();
+		if (!nextNode) break;
+
+		// Verify increment
+		expect(nextNode.upgrade.meta?.value).toBe(currentVal);
+
+		currentNode = nextNode;
+		currentVal++;
+	}
+});
+
+import { ArmorSet } from '../fortune/farmingarmor.js';
+
+test('Equipment in ArmorSet Preserved After Clone', () => {
+	const lotusNecklace: EliteItemDto = {
+		id: 397,
+		count: 1,
+		skyblockId: 'LOTUS_NECKLACE',
+		uuid: 'armorset-test-uuid',
+		name: '§9Lotus Necklace',
+		lore: [],
+		enchantments: {},
+		attributes: { modifier: 'squeaky' },
+	};
+
+	const equipment = FarmingEquipment.fromArray([lotusNecklace]);
+	const armorSet = new ArmorSet([], equipment);
+
+	const player = new FarmingPlayer({
+		armor: armorSet,
+		uniqueVisitors: 37,
+	});
+
+	expect(player.equipment.length).toBe(1);
+	expect(player.equipment[0]?.item.uuid).toBe('armorset-test-uuid');
+
+	const cloned = player.clone();
+	expect(cloned.equipment.length).toBe(1);
+	expect(cloned.equipment[0]?.item.uuid).toBe('armorset-test-uuid');
+});
+
+test('Gem Upgrade Chain Preserves Slot ID', () => {
+	const fermentoHelmet: EliteItemDto = {
+		id: 301,
+		count: 1,
+		skyblockId: 'FERMENTO_HELMET',
+		uuid: 'gem-chain-test-uuid',
+		name: '§aFermento Helmet',
+		lore: [],
+		enchantments: {},
+		attributes: { modifier: 'mossy' },
+		gems: {},
+	};
+
+	const player = new FarmingPlayer({
+		armor: [new FarmingArmor(fermentoHelmet)],
+	});
+
+	const armor = player.armor.find((a) => a.item.uuid === 'gem-chain-test-uuid');
+	expect(armor).toBeDefined();
+
+	const fineGem0 = armor!.getUpgrades().find((u) => u.meta?.type === 'gem' && u.meta?.slot === 'PERIDOT_0');
+	expect(fineGem0).toBeDefined();
+
+	const cloned = player.clone();
+	cloned.applyUpgrade(fineGem0!);
+
+	const clonedArmor = cloned.armor.find((a) => a.item.uuid === 'gem-chain-test-uuid');
+	const flawlessGem0 = clonedArmor!
+		.getUpgrades()
+		.find((u) => u.meta?.type === 'gem' && u.meta?.slot === 'PERIDOT_0' && u.title?.includes('Flawless'));
+
+	expect(flawlessGem0).toBeDefined();
+	expect(flawlessGem0?.meta?.slot).toBe('PERIDOT_0');
+});
+
+test('Tier Upgrade Children Include Gem Upgrade Chain', () => {
+	const squashHelmet: EliteItemDto = {
+		id: 301,
+		count: 1,
+		skyblockId: 'SQUASH_HELMET',
+		uuid: 'tier-gem-chain-uuid',
+		name: '§aSquash Helmet',
+		lore: [],
+		enchantments: {},
+		attributes: { modifier: 'mossy' },
+		gems: {},
+	};
+
+	const player = new FarmingPlayer({
+		armor: [new FarmingArmor(squashHelmet)],
+	});
+
+	const armor = player.armor.find((a) => a.item.uuid === 'tier-gem-chain-uuid');
+	const tierUpgrade = armor!
+		.getUpgrades()
+		.find((u) => u.meta?.type === 'buy_item' && u.meta?.id === 'FERMENTO_HELMET');
+	expect(tierUpgrade).toBeDefined();
+
+	const tree = player.expandUpgrade(tierUpgrade!, {
+		maxDepth: 5,
+		stats: [Stat.FarmingFortune],
+	});
+
+	const gemChild = tree.children.find((c) => c.upgrade.conflictKey?.includes('PERIDOT_1'));
+	expect(gemChild).toBeDefined();
+
+	const flawlessChild = gemChild!.children.find((c) => c.upgrade.title?.includes('Flawless'));
+	expect(flawlessChild).toBeDefined();
+
+	const perfectChild = flawlessChild!.children.find((c) => c.upgrade.title?.includes('Perfect'));
+	expect(perfectChild).toBeDefined();
+});
+
+test('Enchant Chain Works with Zero Fortune Increase', () => {
+	const lotusNecklace: EliteItemDto = {
+		id: 397,
+		count: 1,
+		skyblockId: 'LOTUS_NECKLACE',
+		uuid: 'zero-fortune-test-uuid',
+		name: '§9Lotus Necklace',
+		lore: [],
+		enchantments: {},
+		attributes: { modifier: 'squeaky' },
+	};
+
+	const player = new FarmingPlayer({
+		equipment: [new FarmingEquipment(lotusNecklace)],
+	});
+
+	const necklace = player.equipment.find((e) => e.item.uuid === 'zero-fortune-test-uuid');
+	const greenThumb1 = necklace!
+		.getUpgrades()
+		.find((u) => u.meta?.type === 'enchant' && u.meta?.key === 'green_thumb' && u.meta?.value === 1);
+	expect(greenThumb1).toBeDefined();
+	expect(greenThumb1!.increase).toBe(0);
+
+	const tree = player.expandUpgrade(greenThumb1!, {
+		maxDepth: 5,
+		stats: [Stat.FarmingFortune],
+	});
+
+	const greenThumb2Child = tree.children.find(
+		(c) => c.upgrade.meta?.key === 'green_thumb' && c.upgrade.meta?.value === 2
+	);
+	expect(greenThumb2Child).toBeDefined();
+});
+
+test('Include All Tier Upgrade Children Option', () => {
+	const squashHelmet: EliteItemDto = {
+		id: 301,
+		count: 1,
+		skyblockId: 'SQUASH_HELMET',
+		uuid: 'include-all-test-uuid',
+		name: '§aSquash Helmet',
+		lore: [],
+		enchantments: {},
+		attributes: { modifier: 'mossy' },
+		gems: {},
+	};
+
+	const player = new FarmingPlayer({
+		armor: [new FarmingArmor(squashHelmet)],
+	});
+
+	const armor = player.armor.find((a) => a.item.uuid === 'include-all-test-uuid');
+	const tierUpgrade = armor!
+		.getUpgrades()
+		.find((u) => u.meta?.type === 'buy_item' && u.meta?.id === 'FERMENTO_HELMET');
+	expect(tierUpgrade).toBeDefined();
+
+	const treeFiltered = player.expandUpgrade(tierUpgrade!, {
+		maxDepth: 2,
+		stats: [Stat.FarmingFortune],
+		includeAllTierUpgradeChildren: false,
+	});
+
+	const treeAll = player.expandUpgrade(tierUpgrade!, {
+		maxDepth: 2,
+		stats: [Stat.FarmingFortune],
+		includeAllTierUpgradeChildren: true,
+	});
+
+	expect(treeAll.children.length).toBeGreaterThan(treeFiltered.children.length);
+
+	const hasRecomb = treeAll.children.some((c) => c.upgrade.conflictKey === 'recombobulate');
+	expect(hasRecomb).toBe(true);
 });

@@ -139,6 +139,7 @@ export interface UpgradeInfo<T = number> {
 	onto?: {
 		name?: string | null;
 		skyblockId?: string | null;
+		newSkyblockId?: string | null;
 		slot?: GearSlot;
 	};
 	max?: T;
@@ -184,6 +185,7 @@ export interface FortuneUpgrade {
 	onto?: {
 		name?: string | null;
 		skyblockId?: string | null;
+		newSkyblockId?: string | null;
 		slot?: GearSlot;
 	};
 	max?: number;
@@ -210,6 +212,7 @@ export interface FortuneUpgrade {
 	conflictKey?: string;
 	improvements?: FortuneUpgradeImprovement[];
 	meta?: UpgradeMeta;
+	skillReq?: Partial<Record<string, number>> | undefined;
 }
 
 export interface UpgradeTreeNode {

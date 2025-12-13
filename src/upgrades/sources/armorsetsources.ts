@@ -1,6 +1,6 @@
 import { ReforgeTarget } from '../../constants/reforges.js';
 import { Stat } from '../../constants/stats.js';
-import { UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
+import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import type { ArmorSet, FarmingArmor } from '../../fortune/farmingarmor.js';
 import type { FarmingEquipment } from '../../fortune/farmingequipment.js';
 import type { UpgradeableInfo } from '../../fortune/upgradeable.js';
@@ -112,32 +112,36 @@ function gearslot([slot, info]: [string, GearSlotInfo]): DynamicFortuneSource<Ar
 
 			const fakeItem = getFakeItem(itemToPurchase.skyblockId);
 
-			return [
-				{
-					title: itemToPurchase.name,
-					action: UpgradeAction.Purchase,
-					purchase: fakeItem?.item.skyblockId ?? undefined,
-					increase: fakeItem?.getFortune() ?? 0,
-					stats: fakeItem?.getStats() ?? {},
-					wiki: itemToPurchase.wiki,
-					category: UpgradeCategory.Item,
-					conflictKey: `item_purchase:${slot}`,
-					onto: {
-						slot: slot as GearSlot,
-					},
-					cost: fakeItem?.item.skyblockId
-						? {
-								items: {
-									[fakeItem.item.skyblockId]: 1,
-								},
-							}
-						: undefined,
-					meta: {
-						type: 'buy_item',
-						id: itemToPurchase.skyblockId,
-					},
+			const upgrade: FortuneUpgrade = {
+				title: itemToPurchase.name,
+				action: UpgradeAction.Purchase,
+				purchase: fakeItem?.item.skyblockId ?? undefined,
+				increase: fakeItem?.getFortune() ?? 0,
+				stats: fakeItem?.getStats() ?? {},
+				wiki: itemToPurchase.wiki,
+				category: UpgradeCategory.Item,
+				conflictKey: `item_purchase:${slot}`,
+				onto: {
+					slot: slot as GearSlot,
+					newSkyblockId: itemToPurchase.skyblockId,
 				},
-			];
+				cost: fakeItem?.item.skyblockId
+					? {
+							items: {
+								[fakeItem.item.skyblockId]: 1,
+							},
+						}
+					: undefined,
+				meta: {
+					type: 'buy_item',
+					id: itemToPurchase.skyblockId,
+				},
+			};
+
+			if (itemToPurchase.skillReq) {
+				upgrade.skillReq = itemToPurchase.skillReq;
+			}
+			return [upgrade];
 		},
 	};
 }

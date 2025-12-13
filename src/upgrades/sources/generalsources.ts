@@ -259,6 +259,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 							type: 'buy_item',
 							id: 'CROPIE_TALISMAN',
 						},
+						conflictKey: 'accessory:CROPIE_TALISMAN',
 					},
 				];
 			}
@@ -348,6 +349,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 							type: 'buy_item',
 							id: 'POWER_RELIC',
 						},
+						conflictKey: 'accessory:POWER_RELIC',
 					},
 				];
 
@@ -393,6 +395,7 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 							type: 'buy_item',
 							id: 'MAGIC_8_BALL',
 						},
+						conflictKey: 'accessory:MAGIC_8_BALL',
 					},
 				];
 

@@ -18,6 +18,7 @@ export interface UpgradeableInfo {
 	baseStats?: Partial<Record<Stat, number>>;
 	cost?: UpgradeCost;
 	computedStats?: (opt: PlayerOptions) => Partial<Record<Stat, number>>;
+	skillReq?: Partial<Record<string, number>>;
 }
 
 export interface Upgradeable {

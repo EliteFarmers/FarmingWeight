@@ -370,10 +370,10 @@ export class FarmingTool extends UpgradeableBase {
 
 	static fakeItem(info: UpgradeableInfo, options?: PlayerOptions): FarmingTool | undefined {
 		const fake: EliteItemDto = {
-			name: '[Fake] ' + info.name,
+			name: info.name,
 			skyblockId: info.skyblockId,
 			uuid: crypto.randomUUID(),
-			lore: [],
+			lore: ['This is a fake item used for upgrade calculations!'],
 			attributes: {},
 			enchantments: {},
 		};

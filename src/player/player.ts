@@ -126,6 +126,16 @@ export class FarmingPlayer {
 
 	populateEquipment() {
 		this.options.equipment ??= [];
+
+		// If equipment was already set by populateArmor (from ArmorSet), don't overwrite it
+		if (this.equipment && this.equipment.length > 0) {
+			// Load in equipment to armor set if it's empty
+			if (this.armorSet.equipment.filter((e) => e).length === 0) {
+				this.armorSet.setEquipment(this.equipment);
+			}
+			return;
+		}
+
 		if (this.options.equipment[0] instanceof FarmingEquipment) {
 			this.equipment = (this.options.equipment as FarmingEquipment[]).sort((a, b) => b.fortune - a.fortune);
 			for (const e of this.equipment) e.setOptions(this.options);
@@ -551,6 +561,32 @@ export class FarmingPlayer {
 				if (type === 'enchant' && key) {
 					target.item.enchantments ??= {};
 					target.item.enchantments[key] = Number(value);
+					// Re-instantiate to update enchantment-based logic
+					if (target instanceof FarmingTool) {
+						const idx = this.tools.indexOf(target);
+						if (idx >= 0) {
+							this.tools[idx] = new FarmingTool(target.item, this.options);
+						}
+					} else if (target instanceof FarmingArmor) {
+						const idx = this.armor.indexOf(target);
+						if (idx >= 0) {
+							const updatedPiece = new FarmingArmor(target.item, this.options);
+							this.armor[idx] = updatedPiece;
+							this.armorSet.updateArmorSlot(updatedPiece);
+						}
+					} else if (target instanceof FarmingEquipment) {
+						const idx = this.equipment.indexOf(target);
+						if (idx >= 0) {
+							const updatedPiece = new FarmingEquipment(target.item, this.options);
+							this.equipment[idx] = updatedPiece;
+							this.armorSet.updateEquipmentSlot(updatedPiece);
+						}
+					} else if (target instanceof FarmingAccessory) {
+						const idx = this.accessories.indexOf(target);
+						if (idx >= 0) {
+							this.accessories[idx] = new FarmingAccessory(target.item, this.options);
+						}
+					}
 				} else if (type === 'reforge' && id) {
 					target.item.attributes ??= {};
 					target.item.attributes.modifier = id;
@@ -583,9 +619,42 @@ export class FarmingPlayer {
 				} else if (type === 'item' && id === 'farming_for_dummies_count') {
 					target.item.attributes ??= {};
 					target.item.attributes.farming_for_dummies_count = String(value);
+					// Re-instantiate so getUpgrades reflects the updated FFD count
+					if (target instanceof FarmingTool) {
+						const idx = this.tools.indexOf(target);
+						if (idx >= 0) {
+							this.tools[idx] = new FarmingTool(target.item, this.options);
+						}
+					}
 				} else if (type === 'gem' && upgrade.meta.slot && value) {
 					target.item.gems ??= {};
 					target.item.gems[upgrade.meta.slot] = String(value);
+					// Re-instantiate so getUpgrades reflects the updated gem
+					if (target instanceof FarmingTool) {
+						const idx = this.tools.indexOf(target);
+						if (idx >= 0) {
+							this.tools[idx] = new FarmingTool(target.item, this.options);
+						}
+					} else if (target instanceof FarmingArmor) {
+						const idx = this.armor.indexOf(target);
+						if (idx >= 0) {
+							const updatedPiece = new FarmingArmor(target.item, this.options);
+							this.armor[idx] = updatedPiece;
+							this.armorSet.updateArmorSlot(updatedPiece);
+						}
+					} else if (target instanceof FarmingEquipment) {
+						const idx = this.equipment.indexOf(target);
+						if (idx >= 0) {
+							const updatedPiece = new FarmingEquipment(target.item, this.options);
+							this.equipment[idx] = updatedPiece;
+							this.armorSet.updateEquipmentSlot(updatedPiece);
+						}
+					} else if (target instanceof FarmingAccessory) {
+						const idx = this.accessories.indexOf(target);
+						if (idx >= 0) {
+							this.accessories[idx] = new FarmingAccessory(target.item, this.options);
+						}
+					}
 				} else if (type === 'item' && id === 'rarity_upgrades' && value) {
 					target.item.attributes ??= {};
 					target.item.attributes.rarity_upgrades = String(value);
@@ -824,6 +893,7 @@ export class FarmingPlayer {
 	 * @param options.maxDepth - Maximum recursion depth (default: 10)
 	 * @param options.crop - Crop for crop-specific fortune calculations
 	 * @param options.stats - Stats to track (default: [Stat.FarmingFortune])
+	 * @param options.includeAllTierUpgradeChildren - If true, first-level children of tier upgrades include ALL available upgrades for the new item (default: false)
 	 */
 	expandUpgrade(
 		upgrade: FortuneUpgrade,
@@ -831,13 +901,28 @@ export class FarmingPlayer {
 			maxDepth?: number;
 			crop?: Crop;
 			stats?: Stat[];
+			includeAllTierUpgradeChildren?: boolean;
 		}
 	): UpgradeTreeNode {
-		const { maxDepth = 10, crop, stats = [Stat.FarmingFortune] } = options ?? {};
+		const {
+			maxDepth = 10,
+			crop,
+			stats = [Stat.FarmingFortune],
+			includeAllTierUpgradeChildren = false,
+		} = options ?? {};
 		const visited = new Set<string>();
 		const usedConflictKeys = new Set<string>();
 
-		return this.buildUpgradeTree(upgrade, 0, maxDepth, crop, visited, usedConflictKeys, stats);
+		return this.buildUpgradeTree(
+			upgrade,
+			0,
+			maxDepth,
+			crop,
+			visited,
+			usedConflictKeys,
+			stats,
+			includeAllTierUpgradeChildren
+		);
 	}
 
 	private buildUpgradeTree(
@@ -847,7 +932,8 @@ export class FarmingPlayer {
 		crop: Crop | undefined,
 		visited: Set<string>,
 		usedConflictKeys: Set<string>,
-		stats: Stat[]
+		stats: Stat[],
+		includeAllTierUpgradeChildren: boolean
 	): UpgradeTreeNode {
 		// Create unique key for this upgrade to detect cycles
 		const upgradeKey = this.getUpgradeKey(upgrade);
@@ -888,15 +974,18 @@ export class FarmingPlayer {
 			return node;
 		}
 
+		// Add current upgrade's conflict key for children to prevent duplicates in siblings
 		const childConflictKeys = new Set(usedConflictKeys);
 		if (upgrade.conflictKey) {
 			childConflictKeys.add(upgrade.conflictKey);
 		}
 
-		// For buy_item (tier) upgrades, also include conflict keys from the original item's upgrades.
-		// This prevents one-time upgrades like recombobulate from appearing on tier-upgraded items,
-		// since those upgrades carry over.
-		if (upgrade.meta?.type === 'buy_item' && upgrade.meta?.itemUuid) {
+		// For buy_item (tier) upgrades, also add conflict keys from the original item's available upgrades.
+		// This prevents duplicate suggestions - if Squash has Pesterminator 1 available,
+		// Fermento's children shouldn't also suggest Pesterminator 1 (do it on Squash instead, it carries over).
+		// When includeAllTierUpgradeChildren is true and depth is 0, skip this filtering to show ALL upgrades.
+		const skipTierFiltering = includeAllTierUpgradeChildren && depth === 0;
+		if (!skipTierFiltering && upgrade.meta?.type === 'buy_item' && upgrade.meta?.itemUuid) {
 			const originalItem =
 				this.tools.find((t) => t.item.uuid === upgrade.meta?.itemUuid) ??
 				this.armor.find((a) => a.item.uuid === upgrade.meta?.itemUuid) ??
@@ -926,7 +1015,8 @@ export class FarmingPlayer {
 				crop,
 				new Set(visited),
 				childConflictKeys,
-				stats
+				stats,
+				includeAllTierUpgradeChildren
 			);
 			node.children.push(childNode);
 		}
