@@ -20,6 +20,7 @@ import { getFakeItem, registerItem } from '../upgrades/itemregistry.js';
 import { ARMOR_SET_FORTUNE_SOURCES } from '../upgrades/sources/armorsetsources.js';
 import { GEAR_FORTUNE_SOURCES } from '../upgrades/sources/gearsources.js';
 import { getLastItemUpgradeableTo, getSelfFortuneUpgrade, getUpgradeableRarityUpgrade } from '../upgrades/upgrades.js';
+import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
 import { getFortuneFromEnchant, getStatFromEnchant } from '../util/enchants.js';
 import { getGemStat, getPeridotFortune } from '../util/gems.js';
 import { FarmingEquipment } from './farmingequipment.js';
@@ -399,18 +400,16 @@ export class ArmorSet {
 		return count;
 	}
 
-	getProgress(zeroed = false) {
-		return getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, zeroed);
+	getProgress(zeroed = false, stats?: Stat[]) {
+		return getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, zeroed, stats);
 	}
 
-	getUpgrades() {
-		const upgrades = getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, false).flatMap(
+	getUpgrades(options?: { stat?: Stat }) {
+		const stats = options?.stat ? [options.stat] : undefined;
+		const upgrades = getSourceProgress<ArmorSet>(this, ARMOR_SET_FORTUNE_SOURCES, false, stats).flatMap(
 			(source) => source.upgrades ?? []
 		);
-
-		upgrades.sort((a, b) => b.increase - a.increase);
-
-		return upgrades;
+		return filterAndSortUpgrades(upgrades, options);
 	}
 
 	getPieceProgress(slot: GearSlot) {
@@ -580,13 +579,18 @@ export class FarmingArmor extends UpgradeableBase {
 		return sum;
 	}
 
-	getUpgrades(): FortuneUpgrade[] {
+	getUpgrades(options?: { stat?: Stat }): FortuneUpgrade[] {
 		const { deadEnd, upgrade: self } = getSelfFortuneUpgrade(this) ?? {};
-		if (deadEnd && self) return [self];
+		if (deadEnd && self) return filterAndSortUpgrades([self], options);
 
-		const upgrades = getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, false).flatMap(
-			(source) => source.upgrades ?? []
-		);
+		const stats = options?.stat ? [options.stat] : undefined;
+
+		const upgrades = getSourceProgress<FarmingArmor | FarmingEquipment>(
+			this,
+			GEAR_FORTUNE_SOURCES,
+			false,
+			stats
+		).flatMap((source) => source.upgrades ?? []);
 
 		if (self) {
 			upgrades.push(self);
@@ -597,9 +601,7 @@ export class FarmingArmor extends UpgradeableBase {
 			upgrades.push(rarityUpgrade);
 		}
 
-		upgrades.sort((a, b) => b.increase - a.increase);
-
-		return upgrades;
+		return filterAndSortUpgrades(upgrades, options);
 	}
 
 	getItemUpgrade() {
@@ -610,8 +612,8 @@ export class FarmingArmor extends UpgradeableBase {
 		return getLastItemUpgradeableTo(this, FARMING_ARMOR_INFO);
 	}
 
-	getProgress(zeroed = false): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zeroed);
+	getProgress(zeroed = false, stats?: Stat[]): FortuneSourceProgress[] {
+		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zeroed, stats);
 	}
 
 	static isValid(item: EliteItemDto): boolean {

@@ -25,6 +25,7 @@ import { getSourceProgress } from '../upgrades/getsourceprogress.js';
 import { getFakeItem } from '../upgrades/itemregistry.js';
 import { CROP_FORTUNE_SOURCES } from '../upgrades/sources/cropsources.js';
 import { GENERAL_FORTUNE_SOURCES } from '../upgrades/sources/generalsources.js';
+import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
 import { getCropDisplayName, getItemIdFromCrop } from '../util/names.js';
 import { fortuneFromPestBestiary } from '../util/pests.js';
 import { calculateDetailedDrops } from '../util/ratecalc.js';
@@ -182,22 +183,21 @@ export class FarmingPlayer {
 		this.permFortune = this.getGeneralFortune();
 	}
 
-	getProgress() {
-		return getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES);
+	getProgress(stats?: Stat[]) {
+		return getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES, false, stats);
 	}
 
-	getUpgrades() {
-		const upgrades = getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES).flatMap(
+	getUpgrades(options?: { stat?: Stat }) {
+		const stats = options?.stat ? [options.stat] : undefined;
+		const upgrades = getSourceProgress<FarmingPlayer>(this, GENERAL_FORTUNE_SOURCES, false, stats).flatMap(
 			(source) => source.upgrades ?? []
 		);
 
-		const armorSetUpgrades = this.armorSet.getUpgrades();
+		const armorSetUpgrades = this.armorSet.getUpgrades(options);
 		if (armorSetUpgrades.length > 0) {
 			upgrades.push(...armorSetUpgrades);
 		}
-
-		upgrades.sort((a, b) => b.increase - a.increase);
-		return upgrades;
+		return filterAndSortUpgrades(upgrades, options);
 	}
 
 	getCropUpgrades(crop?: Crop, tool?: FarmingTool) {
@@ -1002,7 +1002,8 @@ export class FarmingPlayer {
 		}
 
 		// Find follow-up upgrades for the same target, excluding those with already-used conflict keys
-		const followUpUpgrades = this.getFollowUpUpgrades(clonedPlayer, upgrade, crop).filter(
+		const primaryStat = stats[0] ?? Stat.FarmingFortune;
+		const followUpUpgrades = this.getFollowUpUpgrades(clonedPlayer, upgrade, crop, primaryStat).filter(
 			(u) => !u.conflictKey || !childConflictKeys.has(u.conflictKey)
 		);
 
@@ -1021,10 +1022,10 @@ export class FarmingPlayer {
 			node.children.push(childNode);
 		}
 
-		// Sort children by farming fortune gained (primary stat, highest first)
+		// Sort children by primary stat gained (highest first)
 		node.children.sort((a, b) => {
-			const aGain = a.statsGained[Stat.FarmingFortune] ?? 0;
-			const bGain = b.statsGained[Stat.FarmingFortune] ?? 0;
+			const aGain = a.statsGained[primaryStat] ?? 0;
+			const bGain = b.statsGained[primaryStat] ?? 0;
 			return bGain - aGain;
 		});
 
@@ -1074,7 +1075,12 @@ export class FarmingPlayer {
 		return parts.join(':');
 	}
 
-	private getFollowUpUpgrades(player: FarmingPlayer, appliedUpgrade: FortuneUpgrade, crop?: Crop): FortuneUpgrade[] {
+	private getFollowUpUpgrades(
+		player: FarmingPlayer,
+		appliedUpgrade: FortuneUpgrade,
+		crop: Crop | undefined,
+		primaryStat: Stat
+	): FortuneUpgrade[] {
 		const meta = appliedUpgrade.meta;
 		if (!meta) return [];
 
@@ -1093,7 +1099,7 @@ export class FarmingPlayer {
 				player.accessories.find((a) => a.item.skyblockId === newItemId);
 
 			if (target && 'getUpgrades' in target && typeof target.getUpgrades === 'function') {
-				upgrades.push(...(target.getUpgrades() as FortuneUpgrade[]));
+				upgrades.push(...(target.getUpgrades({ stat: primaryStat }) as FortuneUpgrade[]));
 			}
 		} else if (itemUuid) {
 			// Item-specific upgrade - find upgrades for the same item
@@ -1104,7 +1110,7 @@ export class FarmingPlayer {
 				player.accessories.find((a) => a.item.uuid === itemUuid);
 
 			if (target && 'getUpgrades' in target && typeof target.getUpgrades === 'function') {
-				const itemUpgrades = target.getUpgrades() as FortuneUpgrade[];
+				const itemUpgrades = target.getUpgrades({ stat: primaryStat }) as FortuneUpgrade[];
 				// Filter to only include upgrades of the same type (enchant chains, tier upgrades, etc.)
 				// For gem upgrades, also match on slot to only show follow-ups for that specific slot
 				for (const u of itemUpgrades) {
@@ -1119,7 +1125,7 @@ export class FarmingPlayer {
 			}
 		} else if (meta.type === 'skill' || meta.type === 'plot' || meta.type === 'attribute') {
 			// General upgrades - find the next level of the same upgrade type
-			const generalUpgrades = player.getUpgrades();
+			const generalUpgrades = player.getUpgrades({ stat: primaryStat });
 			for (const u of generalUpgrades) {
 				if (u.meta?.type === meta.type && u.meta?.key === meta.key) {
 					upgrades.push(u);

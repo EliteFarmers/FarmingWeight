@@ -3,7 +3,9 @@ import { Rarity, REFORGES, type Reforge, type ReforgeTarget, type ReforgeTier } 
 import { Stat } from '../constants/stats.js';
 import type { FortuneSourceProgress, FortuneUpgrade, Upgrade } from '../constants/upgrades.js';
 import type { PlayerOptions } from '../player/playeroptions.js';
+import { getItemProgress } from '../upgrades/progress.js';
 import { getItemUpgrades, getLastItemUpgradeableTo, getNextItemUpgradeableTo } from '../upgrades/upgrades.js';
+import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
 import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
 import type { EliteItemDto } from './item.js';
 import type { Upgradeable, UpgradeableInfo } from './upgradeable.js';
@@ -82,12 +84,13 @@ export class UpgradeableBase implements Upgradeable {
 		return this.info.computedStats?.(this.options) ?? {};
 	}
 
-	getUpgrades(): FortuneUpgrade[] {
-		return getItemUpgrades(this);
+	getUpgrades(options?: { stat?: Stat }): FortuneUpgrade[] {
+		const upgrades = getItemUpgrades(this, options);
+		return filterAndSortUpgrades(upgrades, options);
 	}
 
-	getProgress(): FortuneSourceProgress[] {
-		return [];
+	getProgress(_zeroed?: boolean, _stats?: Stat[]): FortuneSourceProgress[] {
+		return [getItemProgress(this)];
 	}
 
 	getItemUpgrade(): Upgrade | undefined {

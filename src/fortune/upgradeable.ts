@@ -38,8 +38,8 @@ export interface Upgradeable {
 	getFortune(): number;
 	getStat(stat: Stat): number;
 	getStats(): Partial<Record<Stat, number>>;
-	getUpgrades(): FortuneUpgrade[];
+	getUpgrades(options?: { stat?: Stat }): FortuneUpgrade[];
 	getItemUpgrade(): Upgrade | undefined;
 	getLastItemUpgrade(): { upgrade: Upgrade; info: UpgradeableInfo } | undefined;
-	getProgress(zeroed: boolean): FortuneSourceProgress[];
+	getProgress(zeroed?: boolean, stats?: Stat[]): FortuneSourceProgress[];
 }

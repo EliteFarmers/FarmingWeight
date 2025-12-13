@@ -32,6 +32,20 @@ export interface FortuneSourceProgress {
 	name: string;
 	fortune: number;
 	ratio: number;
+	/**
+	 * Optional per-stat progress. When present, consumers should prefer this
+	 * over the legacy `fortune/maxFortune/ratio` fields.
+	 */
+	stats?: Partial<
+		Record<
+			Stat,
+			{
+				current: number;
+				max: number;
+				ratio: number;
+			}
+		>
+	>;
 	maxLevel?: number;
 	fortunePerLevel?: number;
 	maxFortune: number;
@@ -47,6 +61,7 @@ export interface FortuneSourceProgress {
 		active: boolean;
 		reason?: string;
 		fortune?: number;
+		stats?: Partial<Record<Stat, number>>;
 	};
 }
 

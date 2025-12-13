@@ -18,7 +18,7 @@ import { nextRarity } from '../util/itemstats.js';
 import { getUpgradeableEnchants } from './enchantupgrades.js';
 import { getFakeItem } from './itemregistry.js';
 
-export function getItemUpgrades(upgradeable: Upgradeable): FortuneUpgrade[] {
+export function getItemUpgrades(upgradeable: Upgradeable, options?: { stat?: Stat }): FortuneUpgrade[] {
 	const { deadEnd, upgrade } = getSelfFortuneUpgrade(upgradeable) ?? {};
 	if (deadEnd) return [upgrade] as FortuneUpgrade[];
 
@@ -26,9 +26,9 @@ export function getItemUpgrades(upgradeable: Upgradeable): FortuneUpgrade[] {
 
 	upgrades.push(upgrade);
 	upgrades.push(getUpgradeableRarityUpgrade(upgradeable));
-	upgrades.push(...getUpgradeableEnchants(upgradeable));
+	upgrades.push(...getUpgradeableEnchants(upgradeable, options?.stat ?? Stat.FarmingFortune));
 	upgrades.push(...getUpgradeableGems(upgradeable));
-	upgrades.push(...getUpgradeableReforges(upgradeable));
+	upgrades.push(...getUpgradeableReforges(upgradeable, options?.stat ? [options.stat] : undefined));
 
 	return upgrades.filter((u) => u) as FortuneUpgrade[];
 }
@@ -253,8 +253,10 @@ export function getUpgradeableRarityUpgrade(upgradeable: Upgradeable): FortuneUp
 	return result;
 }
 
-export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade[] {
-	const currentFortune = upgradeable.reforgeStats?.stats?.[Stat.FarmingFortune] ?? 0;
+export function getUpgradeableReforges(upgradeable: Upgradeable, stats?: Stat[]): FortuneUpgrade[] {
+	const primaryStat = stats?.[0] ?? Stat.FarmingFortune;
+	const currentPrimary = upgradeable.reforgeStats?.stats?.[primaryStat] ?? 0;
+	const currentStats = upgradeable.reforgeStats?.stats ?? {};
 	const result: FortuneUpgrade[] = [];
 
 	for (const reforge of Object.values(REFORGES)) {
@@ -267,19 +269,28 @@ export function getUpgradeableReforges(upgradeable: Upgradeable): FortuneUpgrade
 		) {
 			continue;
 		}
+		// Only suggest reforges with an explicit reforge stone (keeps output consistent and costable)
+		if (!reforge.stone?.id) continue;
 		const tier = reforge.tiers[upgradeable.rarity];
-		if (!tier || !tier.stats?.[Stat.FarmingFortune]) continue;
+		if (!tier || !tier.stats) continue;
 
-		const reforgeFortune = tier.stats[Stat.FarmingFortune];
-		// Skip if the reforge doesn't increase farming fortune
-		if (reforgeFortune <= currentFortune) continue;
+		const nextPrimary = tier.stats?.[primaryStat] ?? 0;
+		// Skip if the reforge doesn't improve the selected stat
+		if (nextPrimary <= currentPrimary) continue;
+
+		const deltaStats: Partial<Record<Stat, number>> = {};
+		for (const stat of Object.values(Stat)) {
+			const before = currentStats?.[stat] ?? 0;
+			const after = tier.stats?.[stat] ?? 0;
+			const diff = after - before;
+			if (diff !== 0) deltaStats[stat] = diff;
+		}
+		const increase = deltaStats[Stat.FarmingFortune] ?? 0;
 
 		result.push({
 			title: 'Reforge to ' + reforge.name,
-			increase: reforgeFortune - currentFortune,
-			stats: {
-				[Stat.FarmingFortune]: reforgeFortune - currentFortune,
-			},
+			increase,
+			stats: deltaStats,
 			action: UpgradeAction.Apply,
 			category: UpgradeCategory.Reforge,
 			conflictKey: 'reforge',

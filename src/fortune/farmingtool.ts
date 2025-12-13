@@ -9,6 +9,7 @@ import { getSourceProgress } from '../upgrades/getsourceprogress.js';
 import { registerItem } from '../upgrades/itemregistry.js';
 import { TOOL_FORTUNE_SOURCES } from '../upgrades/sources/toolsources.js';
 import { getSelfFortuneUpgrade, getUpgradeableRarityUpgrade } from '../upgrades/upgrades.js';
+import { filterAndSortUpgrades } from '../upgrades/upgradeutils.js';
 import { getFortuneFromEnchant, getStatFromEnchant } from '../util/enchants.js';
 import { getGemStat, getPeridotFortune } from '../util/gems.js';
 import { getRarityFromLore, previousRarity } from '../util/itemstats.js';
@@ -66,15 +67,17 @@ export class FarmingTool extends UpgradeableBase {
 		this.rebuildTool(item, options);
 	}
 
-	getProgress(zeroed = false): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, zeroed);
+	getProgress(zeroed = false, stats?: Stat[]): FortuneSourceProgress[] {
+		return getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, zeroed, stats);
 	}
 
-	getUpgrades(): FortuneUpgrade[] {
+	getUpgrades(options?: { stat?: Stat }): FortuneUpgrade[] {
 		const { deadEnd, upgrade: self } = getSelfFortuneUpgrade(this) ?? {};
-		if (deadEnd && self) return [self];
+		if (deadEnd && self) return filterAndSortUpgrades([self], options);
 
-		const upgrades = getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, false).flatMap(
+		const stats = options?.stat ? [options.stat] : undefined;
+
+		const upgrades = getSourceProgress<FarmingTool>(this, TOOL_FORTUNE_SOURCES, false, stats).flatMap(
 			(source) => source.upgrades ?? []
 		);
 
@@ -87,9 +90,7 @@ export class FarmingTool extends UpgradeableBase {
 			upgrades.push(rarityUpgrade);
 		}
 
-		upgrades.sort((a, b) => b.increase - a.increase);
-
-		return upgrades;
+		return filterAndSortUpgrades(upgrades, options);
 	}
 
 	setOptions(options: PlayerOptions) {

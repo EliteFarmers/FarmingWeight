@@ -42,8 +42,8 @@ export class FarmingEquipment extends UpgradeableBase {
 		this.getFortune();
 	}
 
-	getProgress(zereod = false): FortuneSourceProgress[] {
-		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zereod);
+	getProgress(zereod = false, stats?: Stat[]): FortuneSourceProgress[] {
+		return getSourceProgress<FarmingArmor | FarmingEquipment>(this, GEAR_FORTUNE_SOURCES, zereod, stats);
 	}
 
 	setOptions(options: PlayerOptions) {

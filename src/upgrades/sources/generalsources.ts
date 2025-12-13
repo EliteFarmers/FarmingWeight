@@ -22,8 +22,26 @@ import type { FarmingPlayer } from '../../player/player.js';
 import { getNextPlotCost } from '../../util/garden.js';
 import { fortuneFromPestBestiary } from '../../util/pests.js';
 import type { CalculateCropDetailedDropsOptions } from '../../util/ratecalc.js';
+import { getFortune } from '../getfortune.js';
 import { getSourceProgress } from '../getsourceprogress.js';
 import type { DynamicFortuneSource } from './dynamicfortunesources.js';
+
+function getLevelDeltaStats(
+	currentLevel: number,
+	nextLevel: number,
+	source: { fortunePerLevel: number; statsPerLevel?: Partial<Record<Stat, number>> }
+): Partial<Record<Stat, number>> {
+	const result: Partial<Record<Stat, number>> = {};
+	// Always include FarmingFortune
+	const ff = (source.fortunePerLevel ?? 0) * (nextLevel - currentLevel);
+	if (ff !== 0) result[Stat.FarmingFortune] = ff;
+	for (const [k, per] of Object.entries(source.statsPerLevel ?? {})) {
+		const stat = k as Stat;
+		const diff = (per ?? 0) * (nextLevel - currentLevel);
+		if (diff !== 0) result[stat] = diff;
+	}
+	return result;
+}
 
 export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 	{
@@ -34,6 +52,8 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		current: (player) => {
 			return (player.options.farmingLevel ?? 0) * FARMING_LEVEL.fortunePerLevel;
 		},
+		maxStat: (_player, stat) => getFortune(FARMING_LEVEL.maxLevel, FARMING_LEVEL, stat),
+		currentStat: (player, stat) => getFortune(player.options.farmingLevel, FARMING_LEVEL, stat),
 		upgrades: (player) => {
 			const current = player.options.farmingLevel ?? 0;
 			if (current < 50 || current >= FARMING_LEVEL.maxLevel) return [];
@@ -41,13 +61,12 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			const nextCost = FARMING_LEVEL.upgradeCosts?.[current + 1];
 			if (!nextCost) return [];
 
+			const stats = getLevelDeltaStats(current, current + 1, FARMING_LEVEL);
 			return [
 				{
 					title: FARMING_LEVEL.name + ' ' + (current + 1),
-					increase: FARMING_LEVEL.fortunePerLevel,
-					stats: {
-						[Stat.FarmingFortune]: FARMING_LEVEL.fortunePerLevel,
-					},
+					increase: stats[Stat.FarmingFortune] ?? 0,
+					stats,
 					action: UpgradeAction.LevelUp,
 					category: UpgradeCategory.Skill,
 					wiki: FARMING_LEVEL.wiki,
@@ -83,8 +102,8 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 				.flatMap((shard) => shard.upgrades?.(player))
 				.filter(Boolean) as FortuneUpgrade[];
 		},
-		progress: (player) => {
-			return getSourceProgress<FarmingPlayer>(player, ATTRIBUTE_FORTUNE_SOURCES);
+		progress: (player, stats) => {
+			return getSourceProgress<FarmingPlayer>(player, ATTRIBUTE_FORTUNE_SOURCES, false, stats);
 		},
 	},
 	{
@@ -104,6 +123,8 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		current: (player) => {
 			return (player.options.anitaBonus ?? 0) * ANITA_FORTUNE_UPGRADE.fortunePerLevel;
 		},
+		maxStat: (_player, stat) => getFortune(ANITA_FORTUNE_UPGRADE.maxLevel, ANITA_FORTUNE_UPGRADE, stat),
+		currentStat: (player, stat) => getFortune(player.options.anitaBonus, ANITA_FORTUNE_UPGRADE, stat),
 		upgrades: (player) => {
 			const current = player.options.anitaBonus ?? 0;
 			if (current >= ANITA_FORTUNE_UPGRADE.maxLevel) return [];
@@ -111,13 +132,12 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			const nextCost = ANITA_FORTUNE_UPGRADE.upgradeCosts?.[current + 1];
 			if (!nextCost) return [];
 
+			const stats = getLevelDeltaStats(current, current + 1, ANITA_FORTUNE_UPGRADE);
 			return [
 				{
 					title: ANITA_FORTUNE_UPGRADE.name,
-					increase: ANITA_FORTUNE_UPGRADE.fortunePerLevel,
-					stats: {
-						[Stat.FarmingFortune]: ANITA_FORTUNE_UPGRADE.fortunePerLevel,
-					},
+					increase: stats[Stat.FarmingFortune] ?? 0,
+					stats,
 					action: UpgradeAction.Upgrade,
 					category: UpgradeCategory.Anita,
 					wiki: ANITA_FORTUNE_UPGRADE.wiki,
@@ -139,24 +159,27 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		current: (player) => {
 			return (player.options.plots?.length ?? player.options.plotsUnlocked ?? 0) * UNLOCKED_PLOTS.fortunePerLevel;
 		},
+		maxStat: (_player, stat) => getFortune(UNLOCKED_PLOTS.maxLevel, UNLOCKED_PLOTS, stat),
+		currentStat: (player, stat) =>
+			getFortune(player.options.plots?.length ?? player.options.plotsUnlocked, UNLOCKED_PLOTS, stat),
 		upgrades: (player) => {
 			const plotUpgrade = getNextPlotCost(player.options.plots ?? []);
 			if (!plotUpgrade) return [];
+			const current = player.options.plots?.length ?? player.options.plotsUnlocked ?? 0;
+			const stats = getLevelDeltaStats(current, current + 1, UNLOCKED_PLOTS);
 
 			return [
 				{
 					title: 'Plot ' + plotUpgrade.plot?.name,
-					increase: UNLOCKED_PLOTS.fortunePerLevel,
-					stats: {
-						[Stat.FarmingFortune]: UNLOCKED_PLOTS.fortunePerLevel,
-					},
+					increase: stats[Stat.FarmingFortune] ?? 0,
+					stats,
 					action: UpgradeAction.Purchase,
 					category: UpgradeCategory.Plot,
 					cost: plotUpgrade.cost,
 					meta: {
 						type: 'plot',
 						id: plotUpgrade.plotId,
-						value: (player.options.plots?.length ?? player.options.plotsUnlocked ?? 0) + 1,
+						value: current + 1,
 					},
 				},
 			];
@@ -171,17 +194,18 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		current: (player) => {
 			return (player.options.communityCenter ?? 0) * COMMUNITY_CENTER_UPGRADE.fortunePerLevel;
 		},
+		maxStat: (_player, stat) => getFortune(COMMUNITY_CENTER_UPGRADE.maxLevel, COMMUNITY_CENTER_UPGRADE, stat),
+		currentStat: (player, stat) => getFortune(player.options.communityCenter, COMMUNITY_CENTER_UPGRADE, stat),
 		upgrades: (player) => {
 			const current = player.options.communityCenter ?? 0;
 			if (current >= COMMUNITY_CENTER_UPGRADE.maxLevel) return [];
+			const stats = getLevelDeltaStats(current, current + 1, COMMUNITY_CENTER_UPGRADE);
 
 			return [
 				{
 					title: COMMUNITY_CENTER_UPGRADE.name,
-					increase: COMMUNITY_CENTER_UPGRADE.fortunePerLevel,
-					stats: {
-						[Stat.FarmingFortune]: COMMUNITY_CENTER_UPGRADE.fortunePerLevel,
-					},
+					increase: stats[Stat.FarmingFortune] ?? 0,
+					stats,
 					action: UpgradeAction.Upgrade,
 					repeatable: COMMUNITY_CENTER_UPGRADE.maxLevel - current,
 					api: false,

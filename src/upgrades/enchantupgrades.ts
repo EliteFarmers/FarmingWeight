@@ -2,21 +2,25 @@ import { EnchantTierProcurement, FARMING_ENCHANTS, type FarmingEnchant } from '.
 import { Stat } from '../constants/stats.js';
 import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../constants/upgrades.js';
 import type { Upgradeable } from '../fortune/upgradeable.js';
-import { getFortuneFromEnchant } from '../util/enchants.js';
+import { getMaxStatFromEnchant, getStatFromEnchant } from '../util/enchants.js';
 
-export function getUpgradeableEnchants(upgradeable: Upgradeable): FortuneUpgrade[] {
+export function getUpgradeableEnchants(upgradeable: Upgradeable, stat: Stat = Stat.FarmingFortune): FortuneUpgrade[] {
 	if (!upgradeable.type) return [];
 
 	const result = [] as FortuneUpgrade[];
 
 	for (const enchantId in FARMING_ENCHANTS) {
-		result.push(...getUpgradeableEnchant(upgradeable, enchantId));
+		result.push(...getUpgradeableEnchant(upgradeable, enchantId, stat));
 	}
 
 	return result;
 }
 
-export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: string): FortuneUpgrade[] {
+export function getUpgradeableEnchant(
+	upgradeable: Upgradeable,
+	enchantId: string,
+	stat: Stat = Stat.FarmingFortune
+): FortuneUpgrade[] {
 	const enchant = FARMING_ENCHANTS[enchantId];
 	if (!upgradeable.type || !enchant) return [];
 
@@ -29,21 +33,28 @@ export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: strin
 
 	const applied = upgradeable.item.enchantments?.[enchantId];
 
+	// If this enchant can never affect the selected stat, skip it entirely.
+	const maxForStat = getMaxStatFromEnchant(enchant, stat, upgradeable.options, upgradeable.crop);
+	if (maxForStat <= 0) return result;
+	const currentForStat = applied
+		? getStatFromEnchant(applied, enchant, stat, upgradeable.options, upgradeable.crop)
+		: 0;
+	if (maxForStat <= currentForStat) return result;
+
 	// If the enchantment is not applied, add an entry for applying it
 	if (!applied) {
 		const procurement = enchant.levels[enchant.minLevel]?.procurement;
+		const deltaStats: Partial<Record<Stat, number>> = {};
+		for (const stat of Object.values(Stat)) {
+			const val = getStatFromEnchant(enchant.minLevel, enchant, stat, upgradeable.options, upgradeable.crop);
+			if (val !== 0) deltaStats[stat] = val;
+		}
+		const increase = deltaStats[Stat.FarmingFortune] ?? 0;
 
 		result.push({
 			title: enchant.name + ' 1',
-			increase: getFortuneFromEnchant(enchant.minLevel, enchant, upgradeable.options, upgradeable.crop),
-			stats: {
-				[Stat.FarmingFortune]: getFortuneFromEnchant(
-					enchant.minLevel,
-					enchant,
-					upgradeable.options,
-					upgradeable.crop
-				),
-			},
+			increase,
+			stats: deltaStats,
 			wiki: enchant.wiki,
 			action:
 				!procurement || procurement === EnchantTierProcurement.Normal
@@ -75,8 +86,14 @@ export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: strin
 	if (applied >= enchant.maxLevel) return result;
 
 	// Add an entry for upgrading the enchantment
-	const currentFortune = getFortuneFromEnchant(applied, enchant, upgradeable.options, upgradeable.crop);
-	const nextFortune = getFortuneFromEnchant(applied + 1, enchant, upgradeable.options, upgradeable.crop);
+	const deltaStats: Partial<Record<Stat, number>> = {};
+	for (const stat of Object.values(Stat)) {
+		const before = getStatFromEnchant(applied, enchant, stat, upgradeable.options, upgradeable.crop);
+		const after = getStatFromEnchant(applied + 1, enchant, stat, upgradeable.options, upgradeable.crop);
+		const diff = after - before;
+		if (diff !== 0) deltaStats[stat] = diff;
+	}
+	const increase = deltaStats[Stat.FarmingFortune] ?? 0;
 
 	const nextEnchant = enchant.levels[applied + 1];
 	if (!nextEnchant) return result;
@@ -114,10 +131,8 @@ export function getUpgradeableEnchant(upgradeable: Upgradeable, enchantId: strin
 
 	result.push({
 		title: enchant.name + ' ' + (applied + 1),
-		increase: nextFortune - currentFortune,
-		stats: {
-			[Stat.FarmingFortune]: nextFortune - currentFortune,
-		},
+		increase,
+		stats: deltaStats,
 		action: normalNext ? UpgradeAction.Apply : UpgradeAction.LevelUp,
 		category: UpgradeCategory.Enchant,
 		conflictKey: `enchant:${enchantId}:${applied + 1}`,
