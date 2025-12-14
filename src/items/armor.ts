@@ -15,13 +15,9 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		name: 'Farmer Boots',
 		wiki: 'https://wiki.hypixel.net/Farmer_Boots',
 		upgrade: {
-			id: 'RANCHERS_BOOTS',
-			reason: UpgradeReason.NextTier,
-			cost: {
-				items: {
-					ENCHANTED_PUMPKIN: 256,
-				},
-			},
+			id: 'MELON_BOOTS',
+			reason: UpgradeReason.DeadEnd,
+			why: 'You can control your speed with the sundial on the Garden!',
 		},
 		maxRarity: Rarity.Rare,
 		slot: GearSlot.Boots,
@@ -50,9 +46,8 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		wiki: 'https://wiki.hypixel.net/Rancher%27s_Boots',
 		upgrade: {
 			id: 'FERMENTO_BOOTS',
-			reason: UpgradeReason.Situational,
-			why: 'Fermento Boots provide more farming fortune, with the tradeoff of not being able to control your speed.',
-			preferred: true,
+			reason: UpgradeReason.DeadEnd,
+			why: 'Fermento Boots provide better overall stats! Your speed is still controllable with the sundial on the Garden.',
 		},
 		maxRarity: Rarity.Legendary,
 		slot: GearSlot.Boots,
