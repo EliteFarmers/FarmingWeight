@@ -437,6 +437,58 @@ export const FARMING_ENCHANTS: Record<string, FarmingEnchant> = {
 		cropSpecific: Crop.Wheat,
 		...turboEnchant,
 	},
+	turbo_rose: {
+		name: 'Turbo-Rose',
+		wiki: 'https://wiki.hypixel.net/Turbo-Rose_Enchantment',
+		cropSpecific: Crop.WildRose,
+		...turboEnchant,
+	},
+	turbo_moonflower: {
+		name: 'Turbo-Moonflower',
+		wiki: 'https://wiki.hypixel.net/Turbo-Moonflower_Enchantment',
+		cropSpecific: Crop.Moonflower,
+		...turboEnchant,
+	},
+	turbo_sunflower: {
+		name: 'Turbo-Sunflower',
+		wiki: 'https://wiki.hypixel.net/Turbo-Sunflower_Enchantment',
+		cropSpecific: Crop.Sunflower,
+		...turboEnchant,
+	},
+	ultimate_crop_fever: {
+		name: 'Crop Fever',
+		appliesTo: [ReforgeTarget.Hoe, ReforgeTarget.Axe],
+		wiki: 'https://wiki.hypixel.net/Ultimate_Crop_Fever_Enchantment',
+		minLevel: 1,
+		maxLevel: 5,
+		levels: {
+			1: {
+				stats: {
+					[Stat.FarmingFortune]: 1,
+				},
+			},
+			2: {
+				stats: {
+					[Stat.FarmingFortune]: 2,
+				},
+			},
+			3: {
+				stats: {
+					[Stat.FarmingFortune]: 3,
+				},
+			},
+			4: {
+				stats: {
+					[Stat.FarmingFortune]: 4,
+				},
+			},
+			5: {
+				stats: {
+					[Stat.FarmingFortune]: 5,
+				},
+			},
+		},
+	},
 } as const;
 
 export const depthStriderLevels = [1, 2, 3] as const;

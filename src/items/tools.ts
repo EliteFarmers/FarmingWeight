@@ -2,165 +2,232 @@ import { Crop } from '../constants/crops.js';
 import { Rarity, ReforgeTarget } from '../constants/reforges.js';
 import { Stat } from '../constants/stats.js';
 import { UpgradeReason } from '../constants/upgrades.js';
-import type { UpgradeableInfo } from '../fortune/upgradeable.js';
+import type { PlayerOptions } from '../index.js';
 import { FarmingToolType, type ItemDefinition } from './definitions.js';
 
 export { FarmingToolType, type ItemDefinition as FarmingToolInfo };
 
 type FarmingToolInfo = ItemDefinition;
 
-const t1hoeStats = {
-	[Rarity.Common]: {
-		[Stat.FarmingFortune]: {
-			value: 10,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 1,
-		},
+const toolStats: Pick<ItemDefinition, 'stats' | 'baseStats' | 'perLevelStats' | 'computedStats'> = {
+	computedStats: (opt: PlayerOptions) => {
+		// TODO: get the tool level somehow
+		const level = /*opt.tools?.find(...).level ?? */ 1;
+		return {
+			[Stat.FarmingFortune]: level * 4,
+		};
 	},
-	[Rarity.Uncommon]: {
-		[Stat.FarmingFortune]: {
-			value: 10,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 2,
-		},
+	baseStats: {
+		[Stat.FarmingWisdom]: 1,
 	},
-	[Rarity.Rare]: {
-		[Stat.FarmingFortune]: {
-			value: 10,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 3,
-		},
-	},
-	[Rarity.Epic]: {
-		[Stat.FarmingFortune]: {
-			value: 10,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 5,
-		},
-	},
-	[Rarity.Legendary]: {
-		[Stat.FarmingFortune]: {
-			value: 10,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 8,
-		},
-	},
-	[Rarity.Mythic]: {
-		[Stat.FarmingFortune]: {
-			value: 10,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 12,
-		},
-	},
-} as UpgradeableInfo['stats'];
+};
 
-const t2hoeStats = {
-	[Rarity.Common]: {
-		[Stat.FarmingFortune]: {
-			value: 25,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 1,
-		},
+const t1Gems: ItemDefinition['gemSlots'] = [
+	{
+		slot_type: 'PERIDOT',
+		costs: [
+			{
+				type: 'ITEM',
+				item_id: 'FINE_PERIDOT_GEM',
+				amount: 20,
+			},
+			{
+				type: 'COINS',
+				coins: 50000,
+			},
+		],
+		requirements: [
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '5',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
+		],
 	},
-	[Rarity.Uncommon]: {
-		[Stat.FarmingFortune]: {
-			value: 25,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 2,
-		},
+	{
+		slot_type: 'PERIDOT',
+		costs: [
+			{
+				type: 'ITEM',
+				item_id: 'FINE_PERIDOT_GEM',
+				amount: 40,
+			},
+			{
+				type: 'COINS',
+				coins: 100000,
+			},
+		],
+		requirements: [
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '15',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
+		],
 	},
-	[Rarity.Rare]: {
-		[Stat.FarmingFortune]: {
-			value: 25,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 3,
-		},
-	},
-	[Rarity.Epic]: {
-		[Stat.FarmingFortune]: {
-			value: 25,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 5,
-		},
-	},
-	[Rarity.Legendary]: {
-		[Stat.FarmingFortune]: {
-			value: 25,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 8,
-		},
-	},
-	[Rarity.Mythic]: {
-		[Stat.FarmingFortune]: {
-			value: 25,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 12,
-		},
-	},
-} as UpgradeableInfo['stats'];
+];
 
-const t3hoeStats = {
-	[Rarity.Common]: {
-		[Stat.FarmingFortune]: {
-			value: 50,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 1,
-		},
+const t2Gems: ItemDefinition['gemSlots'] = [
+	{
+		slot_type: 'PERIDOT',
+		costs: [
+			{
+				type: 'ITEM',
+				item_id: 'FINE_PERIDOT_GEM',
+				amount: 20,
+			},
+			{
+				type: 'COINS',
+				coins: 50000,
+			},
+		],
+		requirements: [
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '5',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
+		],
 	},
-	[Rarity.Uncommon]: {
-		[Stat.FarmingFortune]: {
-			value: 50,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 2,
-		},
+	{
+		slot_type: 'PERIDOT',
+		costs: [
+			{
+				type: 'ITEM',
+				item_id: 'FINE_PERIDOT_GEM',
+				amount: 40,
+			},
+			{
+				type: 'COINS',
+				coins: 100000,
+			},
+		],
+		requirements: [
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '15',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
+		],
 	},
-	[Rarity.Rare]: {
-		[Stat.FarmingFortune]: {
-			value: 50,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 3,
-		},
+	{
+		slot_type: 'PERIDOT',
+		costs: [
+			{
+				type: 'ITEM',
+				item_id: 'FLAWLESS_PERIDOT_GEM',
+				amount: 1,
+			},
+			{
+				type: 'COINS',
+				coins: 250000,
+			},
+		],
+		requirements: [
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '25',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
+		],
 	},
-	[Rarity.Epic]: {
-		[Stat.FarmingFortune]: {
-			value: 50,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 5,
-		},
+];
+
+const t3Gems: ItemDefinition['gemSlots'] = [
+	{
+		slot_type: 'PERIDOT',
+		costs: [
+			{
+				type: 'ITEM',
+				item_id: 'FINE_PERIDOT_GEM',
+				amount: 20,
+			},
+			{
+				type: 'COINS',
+				coins: 50000,
+			},
+		],
+		requirements: [
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '5',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
+		],
 	},
-	[Rarity.Legendary]: {
-		[Stat.FarmingFortune]: {
-			value: 50,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 8,
-		},
+	{
+		slot_type: 'PERIDOT',
+		costs: [
+			{
+				type: 'ITEM',
+				item_id: 'FINE_PERIDOT_GEM',
+				amount: 40,
+			},
+			{
+				type: 'COINS',
+				coins: 100000,
+			},
+		],
+		requirements: [
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '15',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
+		],
 	},
-	[Rarity.Mythic]: {
-		[Stat.FarmingFortune]: {
-			value: 50,
-		},
-		[Stat.FarmingWisdom]: {
-			value: 12,
-		},
+	{
+		slot_type: 'PERIDOT',
+		costs: [
+			{
+				type: 'ITEM',
+				item_id: 'FLAWLESS_PERIDOT_GEM',
+				amount: 1,
+			},
+			{
+				type: 'COINS',
+				coins: 250000,
+			},
+		],
+		requirements: [
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '25',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
+		],
 	},
-} as UpgradeableInfo['stats'];
+	{
+		slot_type: 'PERIDOT',
+		costs: [
+			{
+				type: 'ITEM',
+				item_id: 'FLAWLESS_PERIDOT_GEM',
+				amount: 2,
+			},
+			{
+				type: 'COINS',
+				coins: 1000000,
+			},
+		],
+		requirements: [
+			{
+				type: 'ITEM_DATA',
+				data_key: 'levelable_lvl',
+				value: '50',
+				operator: 'GREATER_THAN_OR_EQUALS',
+			},
+		],
+	},
+];
 
 export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 	CACTUS_KNIFE: {
@@ -168,36 +235,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		crop: Crop.Cactus,
 		maxRarity: Rarity.Legendary,
 		type: ReforgeTarget.Hoe,
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-		],
+		gemSlots: t1Gems,
 		name: 'Cactus Knife',
 		wiki: 'https://wiki.hypixel.net/Cactus_Knife',
 	},
@@ -206,36 +244,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		crop: Crop.CocoaBeans,
 		maxRarity: Rarity.Legendary,
 		type: ReforgeTarget.Axe,
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-		],
+		gemSlots: t1Gems,
 		name: 'Cocoa Chopper',
 		wiki: 'https://wiki.hypixel.net/Cocoa_Chopper',
 		baseStats: {
@@ -247,36 +256,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		crop: Crop.Mushroom,
 		maxRarity: Rarity.Legendary,
 		type: ReforgeTarget.Hoe,
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-		],
+		gemSlots: t1Gems,
 		name: 'Fungi Cutter',
 		wiki: 'https://wiki.hypixel.net/Fungi_Cutter',
 		baseStats: {
@@ -298,22 +278,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 				},
 			},
 		},
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-		],
+		gemSlots: t1Gems,
 		name: 'Melon Dicer',
 		wiki: 'https://wiki.hypixel.net/Melon_Dicer',
 	},
@@ -331,36 +296,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 				},
 			},
 		},
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-		],
+		gemSlots: t2Gems,
 		name: 'Melon Dicer 2.0',
 		wiki: 'https://wiki.hypixel.net/Melon_Dicer_2.0',
 	},
@@ -369,50 +305,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		crop: Crop.Melon,
 		maxRarity: Rarity.Mythic,
 		type: FarmingToolType.Dicer,
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FLAWLESS_PERIDOT_GEM',
-						amount: 1,
-					},
-					{
-						type: 'COINS',
-						coins: 250000,
-					},
-				],
-			},
-		],
+		gemSlots: t3Gems,
 		name: 'Melon Dicer 3.0',
 		wiki: 'https://wiki.hypixel.net/Melon_Dicer_3.0',
 	},
@@ -431,22 +324,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 				},
 			},
 		},
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-		],
+		gemSlots: t1Gems,
 		name: 'Pumpkin Dicer',
 		wiki: 'https://wiki.hypixel.net/Pumpkin_Dicer',
 	},
@@ -455,36 +333,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		crop: Crop.Pumpkin,
 		maxRarity: Rarity.Legendary,
 		type: FarmingToolType.Dicer,
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-		],
+		gemSlots: t2Gems,
 		upgrade: {
 			id: 'PUMPKIN_DICER_3',
 			reason: UpgradeReason.NextTier,
@@ -502,50 +351,7 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 		crop: Crop.Pumpkin,
 		maxRarity: Rarity.Mythic,
 		type: FarmingToolType.Dicer,
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FLAWLESS_PERIDOT_GEM',
-						amount: 1,
-					},
-					{
-						type: 'COINS',
-						coins: 250000,
-					},
-				],
-			},
-		],
+		gemSlots: t3Gems,
 		name: 'Pumpkin Dicer 3.0',
 		wiki: 'https://wiki.hypixel.net/Pumpkin_Dicer_3.0',
 	},
@@ -565,25 +371,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 				},
 			},
 		},
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-		],
+		gemSlots: t1Gems,
 		name: 'Gauss Carrot Hoe',
 		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe#Common_',
-		stats: t1hoeStats,
+		...toolStats,
 	},
 	THEORETICAL_HOE_CARROT_2: {
 		skyblockId: 'THEORETICAL_HOE_CARROT_2',
@@ -600,92 +391,20 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 				},
 			},
 		},
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-		],
+		gemSlots: t2Gems,
 		name: 'Gauss Carrot Hoe',
 		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe#Uncommon_',
-		stats: t2hoeStats,
+		...toolStats,
 	},
 	THEORETICAL_HOE_CARROT_3: {
 		skyblockId: 'THEORETICAL_HOE_CARROT_3',
 		crop: Crop.Carrot,
 		maxRarity: Rarity.Mythic,
 		type: FarmingToolType.MathematicalHoe,
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FLAWLESS_PERIDOT_GEM',
-						amount: 1,
-					},
-					{
-						type: 'COINS',
-						coins: 250000,
-					},
-				],
-			},
-		],
+		gemSlots: t3Gems,
 		name: 'Gauss Carrot Hoe',
 		wiki: 'https://wiki.hypixel.net/Gauss_Carrot_Hoe#Rare_',
-		stats: t3hoeStats,
+		...toolStats,
 	},
 
 	THEORETICAL_HOE_WARTS_1: {
@@ -703,25 +422,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 				},
 			},
 		},
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-		],
+		gemSlots: t1Gems,
 		name: 'Newton Nether Warts Hoe',
 		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe#Common_',
-		stats: t1hoeStats,
+		...toolStats,
 	},
 	THEORETICAL_HOE_WARTS_2: {
 		skyblockId: 'THEORETICAL_HOE_WARTS_2',
@@ -738,92 +442,20 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 				},
 			},
 		},
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-		],
+		gemSlots: t2Gems,
 		name: 'Newton Nether Warts Hoe',
 		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe#Uncommon_',
-		stats: t2hoeStats,
+		...toolStats,
 	},
 	THEORETICAL_HOE_WARTS_3: {
 		skyblockId: 'THEORETICAL_HOE_WARTS_3',
 		crop: Crop.NetherWart,
 		maxRarity: Rarity.Mythic,
 		type: FarmingToolType.MathematicalHoe,
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FLAWLESS_PERIDOT_GEM',
-						amount: 1,
-					},
-					{
-						type: 'COINS',
-						coins: 250000,
-					},
-				],
-			},
-		],
+		gemSlots: t3Gems,
 		name: 'Newton Nether Warts Hoe',
 		wiki: 'https://wiki.hypixel.net/Newton_Nether_Warts_Hoe#Rare_',
-		stats: t3hoeStats,
+		...toolStats,
 	},
 
 	THEORETICAL_HOE_POTATO_1: {
@@ -841,25 +473,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 				},
 			},
 		},
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-		],
+		gemSlots: t1Gems,
 		name: 'Pythagorean Potato Hoe',
 		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe#Common_',
-		stats: t1hoeStats,
+		...toolStats,
 	},
 	THEORETICAL_HOE_POTATO_2: {
 		skyblockId: 'THEORETICAL_HOE_POTATO_2',
@@ -876,92 +493,20 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 				},
 			},
 		},
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-		],
+		gemSlots: t2Gems,
 		name: 'Pythagorean Potato Hoe',
 		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe#Uncommon_',
-		stats: t2hoeStats,
+		...toolStats,
 	},
 	THEORETICAL_HOE_POTATO_3: {
 		skyblockId: 'THEORETICAL_HOE_POTATO_3',
 		crop: Crop.Potato,
 		maxRarity: Rarity.Mythic,
 		type: FarmingToolType.MathematicalHoe,
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FLAWLESS_PERIDOT_GEM',
-						amount: 1,
-					},
-					{
-						type: 'COINS',
-						coins: 250000,
-					},
-				],
-			},
-		],
+		gemSlots: t3Gems,
 		name: 'Pythagorean Potato Hoe',
 		wiki: 'https://wiki.hypixel.net/Pythagorean_Potato_Hoe#Rare_',
-		stats: t3hoeStats,
+		...toolStats,
 	},
 
 	THEORETICAL_HOE_CANE_1: {
@@ -979,25 +524,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 				},
 			},
 		},
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-		],
+		gemSlots: t1Gems,
 		name: 'Turing Sugar Cane Hoe',
 		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe#Common_',
-		stats: t1hoeStats,
+		...toolStats,
 	},
 	THEORETICAL_HOE_CANE_2: {
 		skyblockId: 'THEORETICAL_HOE_CANE_2',
@@ -1014,92 +544,20 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 				},
 			},
 		},
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-		],
+		gemSlots: t2Gems,
 		name: 'Turing Sugar Cane Hoe',
 		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe#Uncommon_',
-		stats: t2hoeStats,
+		...toolStats,
 	},
 	THEORETICAL_HOE_CANE_3: {
 		skyblockId: 'THEORETICAL_HOE_CANE_3',
 		crop: Crop.SugarCane,
 		maxRarity: Rarity.Mythic,
 		type: FarmingToolType.MathematicalHoe,
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FLAWLESS_PERIDOT_GEM',
-						amount: 1,
-					},
-					{
-						type: 'COINS',
-						coins: 250000,
-					},
-				],
-			},
-		],
+		gemSlots: t3Gems,
 		name: 'Turing Sugar Cane Hoe',
 		wiki: 'https://wiki.hypixel.net/Turing_Sugar_Cane_Hoe#Rare_',
-		stats: t3hoeStats,
+		...toolStats,
 	},
 
 	THEORETICAL_HOE_WHEAT_1: {
@@ -1117,25 +575,10 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 				},
 			},
 		},
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-		],
+		gemSlots: t1Gems,
 		name: "Euclid's Wheat Hoe",
 		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe#Common_',
-		stats: t1hoeStats,
+		...toolStats,
 	},
 	THEORETICAL_HOE_WHEAT_2: {
 		skyblockId: 'THEORETICAL_HOE_WHEAT_2',
@@ -1152,92 +595,20 @@ export const FARMING_TOOLS: Partial<Record<string, FarmingToolInfo>> = {
 				},
 			},
 		},
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-		],
+		gemSlots: t2Gems,
 		name: "Euclid's Wheat Hoe",
 		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe#Uncommon_',
-		stats: t2hoeStats,
+		...toolStats,
 	},
 	THEORETICAL_HOE_WHEAT_3: {
 		skyblockId: 'THEORETICAL_HOE_WHEAT_3',
 		crop: Crop.Wheat,
 		maxRarity: Rarity.Mythic,
 		type: FarmingToolType.MathematicalHoe,
-		gemSlots: [
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 20,
-					},
-					{
-						type: 'COINS',
-						coins: 50000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FINE_PERIDOT_GEM',
-						amount: 40,
-					},
-					{
-						type: 'COINS',
-						coins: 100000,
-					},
-				],
-			},
-			{
-				slot_type: 'PERIDOT',
-				costs: [
-					{
-						type: 'ITEM',
-						item_id: 'FLAWLESS_PERIDOT_GEM',
-						amount: 1,
-					},
-					{
-						type: 'COINS',
-						coins: 250000,
-					},
-				],
-			},
-		],
+		gemSlots: t3Gems,
 		name: "Euclid's Wheat Hoe",
 		wiki: 'https://wiki.hypixel.net/Euclid%27s_Wheat_Hoe#Rare_',
-		stats: t3hoeStats,
+		...toolStats,
 	},
 	HOE_OF_NO_TILLING: {
 		skyblockId: 'HOE_OF_NO_TILLING',

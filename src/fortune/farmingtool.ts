@@ -60,6 +60,10 @@ export class FarmingTool extends UpgradeableBase {
 	public declare fortune: number;
 	public declare fortuneBreakdown: Record<string, number>;
 
+	public declare level: number;
+	public declare xp: number;
+	public declare overclocks: number;
+
 	public declare options?: PlayerOptions;
 
 	constructor(item: EliteItemDto, options?: PlayerOptions) {
@@ -296,6 +300,16 @@ export class FarmingTool extends UpgradeableBase {
 	private getCultivating(): number | undefined {
 		const cultivating = +(this.item?.attributes?.farmed_cultivating ?? 0);
 		return cultivating && !isNaN(cultivating) ? cultivating : undefined;
+	}
+
+	private getLevel(): number {
+		const level = +(this.item?.attributes?.levelable_lvl ?? 1);
+		return level && !isNaN(level) ? level : 1;
+	}
+
+	private getXp(): number {
+		const xp = +(this.item?.attributes?.levelable_exp ?? 0);
+		return xp && !isNaN(xp) ? xp : 0;
 	}
 
 	getCultivatingLevel(): number {
