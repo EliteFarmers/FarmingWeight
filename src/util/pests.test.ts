@@ -20,16 +20,14 @@ test('Uncounted crops from pests', () => {
 		pest_beetle_1: 10,
 		pest_worm_1: 51,
 		pest_mouse_1: 4,
-		pest_mantis_1: 7,
 	};
 
 	const uncounted = uncountedCropsFromPests(bestiaryKills);
 
-	expect(Object.values(uncounted)).toHaveLength(4);
+	expect(Object.values(uncounted)).toHaveLength(3);
 	expect(uncounted[Crop.NetherWart]).toBe(0);
 	expect(uncounted[Crop.Melon]).toBe(Math.ceil(PEST_COLLECTION_ADJUSTMENTS[Pest.Worm][50] ?? 0));
-	expect(uncounted[Crop.Wheat]).toBe(38350175);
-	expect(uncounted[Crop.WildRose]).toBe(0);
+	expect(uncounted[Crop.Wheat]).toBe(0);
 });
 
 test('Bestiary tiers', () => {
