@@ -1078,6 +1078,36 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'HELIANTHUS',
 		slot: GearSlot.Helmet,
 		maxRarity: Rarity.Legendary,
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 40,
+					},
+					{
+						type: 'COINS',
+						coins: 100000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 35,
 			[Stat.BonusPestChance]: 20,
@@ -1093,6 +1123,36 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'HELIANTHUS',
 		slot: GearSlot.Chestplate,
 		maxRarity: Rarity.Legendary,
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 40,
+					},
+					{
+						type: 'COINS',
+						coins: 100000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 40,
 			[Stat.BonusPestChance]: 20,
@@ -1108,6 +1168,36 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'HELIANTHUS',
 		slot: GearSlot.Leggings,
 		maxRarity: Rarity.Legendary,
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 40,
+					},
+					{
+						type: 'COINS',
+						coins: 100000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 40,
 			[Stat.BonusPestChance]: 20,
@@ -1123,6 +1213,36 @@ export const FARMING_ARMOR_INFO: Record<string, FarmingArmorInfo> = {
 		family: 'HELIANTHUS',
 		slot: GearSlot.Boots,
 		maxRarity: Rarity.Legendary,
+		gemSlots: [
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 20,
+					},
+					{
+						type: 'COINS',
+						coins: 50000,
+					},
+				],
+			},
+			{
+				slot_type: 'PERIDOT',
+				costs: [
+					{
+						type: 'ITEM',
+						item_id: 'FINE_PERIDOT_GEM',
+						amount: 40,
+					},
+					{
+						type: 'COINS',
+						coins: 100000,
+					},
+				],
+			},
+		],
 		baseStats: {
 			[Stat.FarmingFortune]: 35,
 			[Stat.BonusPestChance]: 20,
@@ -1338,6 +1458,24 @@ export const ARMOR_SET_BONUS: Record<string, ArmorSetBonus> = {
 		special: [SpecialCrop.Fermento],
 	},
 	FERMENTO: {
+		name: 'Feast',
+		piecePotential: {
+			[Stat.FarmingFortune]: 25,
+		},
+		stats: {
+			2: {
+				[Stat.FarmingFortune]: 25,
+			},
+			3: {
+				[Stat.FarmingFortune]: 50,
+			},
+			4: {
+				[Stat.FarmingFortune]: 75,
+			},
+		},
+		special: [SpecialCrop.Cropie, SpecialCrop.Squash, SpecialCrop.Fermento, SpecialCrop.Helianthus],
+	},
+	HELIANTHUS: {
 		name: 'Feast',
 		piecePotential: {
 			[Stat.FarmingFortune]: 25,
