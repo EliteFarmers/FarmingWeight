@@ -51,6 +51,7 @@ export function calculateAverageDrops(options: CalculateDropsOptions & CropFortu
 interface CalculateDetailedDropsOptions extends CalculateDropsOptions {
 	bountiful: boolean;
 	mooshroom: boolean;
+	maxTool?: boolean;
 }
 
 export interface DetailedDropsResult {
@@ -204,6 +205,14 @@ export function calculateDetailedDrops(options: CalculateCropDetailedDropsOption
 			result.collection = Math.round(baseDrops);
 			result.items[crop] = Math.round(baseDrops);
 			break;
+	}
+
+	if (options.maxTool) {
+		const capsules = Math.floor(result.collection / 200_000);
+		if (capsules > 0) {
+			result.items['TOOL_EXP_CAPSULE'] = capsules;
+			result.coinSources['Tool Exp Capsule'] = capsules * 100_000;
+		}
 	}
 
 	result.npcCoins = Object.values(result.coinSources).reduce((a, b) => a + b, 0);
