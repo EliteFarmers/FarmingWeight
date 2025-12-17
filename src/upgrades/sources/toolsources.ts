@@ -93,6 +93,8 @@ export const TOOL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingTool>[] = [
 					category: UpgradeCategory.Reforge,
 					conflictKey: 'reforge',
 					wiki: reforge.wiki,
+					// Optional if this is a priority reforge, and previous reforge is more fortune
+					optional: reforge.priority && nextPrimary < currentPrimary,
 					onto: {
 						name: tool.item.name,
 						skyblockId: tool.item.skyblockId,
