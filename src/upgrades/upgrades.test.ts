@@ -308,3 +308,64 @@ test('Lotus to Blossom Necklace upgrade shows correct fortune delta', () => {
 	expect(base?.current).toBe(5);
 	expect(base?.max).toBe(7);
 });
+
+test('Epic Fermento Helmet with 2 Perfect Peridots upgrading to Helianthus should include gem rarity increase', () => {
+	const epicFermentoHelmet = {
+		id: 397,
+		count: 1,
+		skyblockId: 'FERMENTO_HELMET',
+		uuid: '9a6966f0-dd42-4797-af83-e0461f00bd02',
+		name: '§5Mossy Fermento Helmet',
+		lore: ['§5§l§ka§r §5§l§d§lEPIC HELMET §5§l§ka'],
+		enchantments: {},
+		attributes: {
+			modifier: 'mossy',
+			timestamp: '1676403240000',
+		},
+		gems: { PERIDOT_0: 'PERFECT', PERIDOT_1: 'PERFECT' },
+	};
+
+	const item = new FarmingArmor(epicFermentoHelmet);
+	// Epic with 2 Perfect Peridots = 6 + 6 = 12
+	expect(item.fortuneBreakdown['Peridot Gems']).toBe(12);
+
+	const upgrades = item.getUpgrades();
+	const helianthusUpgrade = upgrades.find((u) => u.title === 'Helianthus Helmet');
+
+	expect(helianthusUpgrade).toBeDefined();
+	// Base fortune increase: 35 - 30 = 5
+	// Gem rarity increase (Legendary Perfect = 8 each): 16 - 12 = 4
+	// Total: 9
+	expect(helianthusUpgrade?.increase).toBe(9);
+});
+
+test('Recombobulated Legendary Fermento Helmet upgrading to Helianthus (Mythic) should include gem rarity increase', () => {
+	const recombLegendaryFermentoHelmet = {
+		id: 397,
+		count: 1,
+		skyblockId: 'FERMENTO_HELMET',
+		uuid: '9a6966f0-dd42-4797-af83-e0461f00bd02',
+		name: '§cRecombobulated Mossy Fermento Helmet',
+		lore: ['§c§l§ka§r §c§l§c§lLEGENDARY HELMET §c§l§ka'],
+		enchantments: {},
+		attributes: {
+			modifier: 'mossy',
+			timestamp: '1676403240000',
+			rarity_upgrades: '1',
+		},
+		gems: { PERIDOT_0: 'PERFECT', PERIDOT_1: 'PERFECT' },
+	};
+
+	const item = new FarmingArmor(recombLegendaryFermentoHelmet);
+	// Legendary with 2 Perfect Peridots = 8 + 8 = 16
+	expect(item.fortuneBreakdown['Peridot Gems']).toBe(16);
+
+	const upgrades = item.getUpgrades();
+	const helianthusUpgrade = upgrades.find((u) => u.title === 'Helianthus Helmet');
+
+	expect(helianthusUpgrade).toBeDefined();
+	// Base fortune increase: 35 - 30 = 5
+	// Gem rarity increase (Mythic Perfect = 10 each): 20 - 16 = 4
+	// Total: 9
+	expect(helianthusUpgrade?.increase).toBe(9);
+});
