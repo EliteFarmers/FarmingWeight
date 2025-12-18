@@ -5,8 +5,15 @@ import {
 	getShardsForLevel,
 	getShardsForNextLevel,
 } from '../../constants/attributes.js';
-import { GARDEN_CHIPS, GARDEN_CHIP_MAX_LEVEL, getChipLevel, type GardenChipInfo } from '../../constants/chips.js';
+import {
+	GARDEN_CHIP_MAX_LEVEL,
+	GARDEN_CHIPS,
+	type GardenChipInfo,
+	getChipLevel,
+	getChipRarity,
+} from '../../constants/chips.js';
 import type { Crop } from '../../constants/crops.js';
+import { Rarity } from '../../constants/reforges.js';
 import {
 	ANITA_FORTUNE_UPGRADE,
 	COMMUNITY_CENTER_UPGRADE,
@@ -17,7 +24,7 @@ import {
 	WRIGGLING_LARVA_SOURCE,
 } from '../../constants/specific.js';
 import { Stat } from '../../constants/stats.js';
-import { type FortuneSourceProgress, type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
+import { type FortuneUpgrade, UpgradeAction, UpgradeCategory } from '../../constants/upgrades.js';
 import { FarmingAccessory } from '../../fortune/farmingaccessory.js';
 import { FARMING_ACCESSORIES_INFO, type FarmingAccessoryInfo } from '../../items/accessories.js';
 import type { FarmingPlayer } from '../../player/player.js';
@@ -116,18 +123,21 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 		name: 'Garden Chips',
 		api: false,
 		alwaysInclude: true,
-		active: () => ({ active: true, reason: 'Garden Chips should be upgraded, but are hard to give fortune numbers for.' }),
+		active: () => ({
+			active: true,
+			reason: 'Garden Chips should be upgraded, but are hard to give fortune numbers for.',
+		}),
 		exists: () => true,
 		max: () => {
 			// Only chips with farming fortune increases
 			const maxFortune = Object.values(GARDEN_CHIPS).reduce((acc, chip) => {
-				const fortunePerLevel = chip.statsPerLevel?.[Stat.FarmingFortune] ?? 0;
-				return acc + (fortunePerLevel * GARDEN_CHIP_MAX_LEVEL);
+				const fortunePerLevel = chip.statsPerRarity?.[Rarity.Legendary]?.[Stat.FarmingFortune] ?? 0;
+				return acc + fortunePerLevel * GARDEN_CHIP_MAX_LEVEL;
 			}, 0);
 			return maxFortune;
 		},
 		current: (player) => {
-			const totalCurrent = Object.values(GARDEN_CHIPS).reduce((acc, chip) => {	
+			const totalCurrent = Object.values(GARDEN_CHIPS).reduce((acc, chip) => {
 				return acc + getChipLevel(player.options.chips?.[chip.skyblockId]);
 			}, 0);
 			return totalCurrent;
@@ -136,7 +146,9 @@ export const GENERAL_FORTUNE_SOURCES: DynamicFortuneSource<FarmingPlayer>[] = [
 			return getSourceProgress<FarmingPlayer>(player, GARDEN_CHIP_SOURCES, false, stats);
 		},
 		upgrades: (player, stats) => {
-			return GARDEN_CHIP_SOURCES.flatMap((source) => source.upgrades?.(player, stats)).filter(Boolean) as FortuneUpgrade[];
+			return GARDEN_CHIP_SOURCES.flatMap((source) => source.upgrades?.(player, stats)).filter(
+				Boolean
+			) as FortuneUpgrade[];
 		},
 	},
 	{
@@ -594,12 +606,12 @@ function mapChipSource(chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer
 		max: () => 0,
 		current: () => 0,
 		maxStat: (player, stat) => {
-			const per = chip.statsPerLevel?.[stat] ?? 0;
+			const per = chip.statsPerRarity?.[Rarity.Legendary]?.[stat] ?? 0;
 			return per * GARDEN_CHIP_MAX_LEVEL;
 		},
 		currentStat: (player, stat) => {
 			const level = getChipLevel(player.options.chips?.[chip.skyblockId]);
-			const per = chip.statsPerLevel?.[stat] ?? 0;
+			const per = chip.statsPerRarity?.[Rarity.Legendary]?.[stat] ?? 0;
 			return per * level;
 		},
 		active: (player) => {
@@ -628,14 +640,15 @@ function mapChipSource(chip: GardenChipInfo): DynamicFortuneSource<FarmingPlayer
 			if (currentLevel >= GARDEN_CHIP_MAX_LEVEL) return [];
 
 			// If a specific stat is requested, only offer upgrades that affect it.
-			if (stats && stats.length > 0 && chip.statsPerLevel) {
-				const affectsRequested = stats.some((s) => (chip.statsPerLevel?.[s] ?? 0) !== 0);
+			if (stats && stats.length > 0 && chip.statsPerRarity) {
+				const affectsRequested = stats.some((s) => (chip.statsPerRarity?.[Rarity.Legendary]?.[s] ?? 0) !== 0);
 				if (!affectsRequested) return [];
 			}
 
 			const nextLevel = currentLevel + 1;
 			const deltaStats: Partial<Record<Stat, number>> = {};
-			for (const [k, v] of Object.entries(chip.statsPerLevel ?? {})) {
+			const nextRarity = getChipRarity(nextLevel);
+			for (const [k, v] of Object.entries(chip.statsPerRarity?.[nextRarity] ?? {})) {
 				const stat = k as Stat;
 				if (v && v !== 0) deltaStats[stat] = v;
 			}

@@ -70,7 +70,6 @@ export const CROP_FORTUNE_SOURCES: DynamicFortuneSource<{
 	},
 	{
 		name: 'Exportable Crop',
-		api: false,
 		wiki: () => 'https://wiki.hypixel.net/Carrolyn',
 		exists: ({ crop }) => CROP_INFO[crop].exportable === true,
 		max: () => EXPORTABLE_CROP_FORTUNE,

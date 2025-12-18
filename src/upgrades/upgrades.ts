@@ -115,6 +115,31 @@ export function getSelfFortuneUpgrade(
 			}
 		}
 
+		// Account for reforge stat changes when the item's base rarity increases
+		// Reforge stats scale with item rarity (e.g., Bustling gives more fortune on Legendary vs Epic)
+		if (upgradeable.reforge) {
+			const currentRarity = upgradeable.rarity;
+			const currentBaseRarity = previousRarity(upgradeable.info.maxRarity) ?? upgradeable.info.maxRarity;
+			const nextBaseRarity = previousRarity(nextInfo.maxRarity) ?? nextInfo.maxRarity;
+
+			// Determine what rarity the upgraded item will be
+			const rarityIncrease = compareRarity(currentRarity, currentBaseRarity);
+			let nextItemRarity = nextBaseRarity;
+			if (rarityIncrease > 0) {
+				// Current item is recombobulated, so next item will also be recombobulated
+				nextItemRarity = nextRarity(nextBaseRarity);
+			}
+
+			if (compareRarity(nextItemRarity, currentRarity) > 0) {
+				const currentReforgeFortune =
+					upgradeable.reforge.tiers?.[currentRarity]?.stats?.[Stat.FarmingFortune] ?? 0;
+				const nextReforgeFortune =
+					upgradeable.reforge.tiers?.[nextItemRarity]?.stats?.[Stat.FarmingFortune] ?? 0;
+				increase += nextReforgeFortune - currentReforgeFortune;
+				deltaStats[Stat.FarmingFortune] = increase;
+			}
+		}
+
 		return {
 			deadEnd: false,
 			upgrade: {

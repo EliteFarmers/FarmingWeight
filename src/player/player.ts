@@ -1,5 +1,11 @@
 import { FARMING_ATTRIBUTE_SHARDS, getShardStat } from '../constants/attributes.js';
-import { getChipLevel } from '../constants/chips.js';
+import {
+	type GardenChipId,
+	getChipLevel,
+	getChipStats,
+	getChipTempMultiplierPerLevel,
+	normalizeChipId,
+} from '../constants/chips.js';
 import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests.js';
 import {
@@ -69,6 +75,18 @@ export class FarmingPlayer {
 
 	setOptions(options: PlayerOptions) {
 		this.options = options;
+
+		// Normalize chip IDs to support both full and short names
+		if (this.options.chips) {
+			const normalizedChips: Partial<Record<GardenChipId, number>> = {};
+			for (const [key, value] of Object.entries(this.options.chips)) {
+				const normalizedId = normalizeChipId(key);
+				if (normalizedId) {
+					normalizedChips[normalizedId] = value;
+				}
+			}
+			this.options.chips = normalizedChips;
+		}
 
 		this.populatePets();
 		this.populateTools();
@@ -392,24 +410,31 @@ export class FarmingPlayer {
 
 		// Garden Chips
 		if (stat === Stat.FarmingFortune) {
-			const level = getChipLevel(this.options.chips?.CROPSHOT_GARDEN_CHIP);
-			const val = 3 * level;
+			const fortune =
+				getChipStats('CROPSHOT_GARDEN_CHIP', this.options.chips?.CROPSHOT_GARDEN_CHIP)?.[Stat.FarmingFortune] ??
+				0;
+			const val = fortune * getChipLevel(this.options.chips?.CROPSHOT_GARDEN_CHIP);
 			if (val > 0) {
 				breakdown['Cropshot Chip'] = val;
 				sum += val;
 			}
 		}
 		if (stat === Stat.BonusPestChance) {
-			const level = getChipLevel(this.options.chips?.VERMIN_VAPORIZER_GARDEN_CHIP);
-			const val = 3 * level;
+			const bpc =
+				getChipStats('VERMIN_VAPORIZER_GARDEN_CHIP', this.options.chips?.VERMIN_VAPORIZER_GARDEN_CHIP)?.[
+					Stat.BonusPestChance
+				] ?? 0;
+			const val = bpc * getChipLevel(this.options.chips?.VERMIN_VAPORIZER_GARDEN_CHIP);
 			if (val > 0) {
 				breakdown['Vermin Vaporizer Chip'] = val;
 				sum += val;
 			}
 		}
 		if (stat === Stat.FarmingWisdom) {
-			const level = getChipLevel(this.options.chips?.SOWLEDGE_GARDEN_CHIP);
-			const val = 1 * level;
+			const wisdom =
+				getChipStats('SOWLEDGE_GARDEN_CHIP', this.options.chips?.SOWLEDGE_GARDEN_CHIP)?.[Stat.FarmingWisdom] ??
+				0;
+			const val = wisdom * getChipLevel(this.options.chips?.SOWLEDGE_GARDEN_CHIP);
 			if (val > 0) {
 				breakdown['Sowledge Chip'] = val;
 				sum += val;
@@ -450,7 +475,13 @@ export class FarmingPlayer {
 		let sum = 0;
 		const breakdown = {} as Record<string, number>;
 
-		const hyperchargeMultiplier = 1 + 0.03 * getChipLevel(this.options.chips?.HYPERCHARGE_GARDEN_CHIP);
+		// Hypercharge multiplier scales by chip rarity tiers:
+		// Rare (<=10): 1 + 0.03 * level
+		// Epic (<=15): 1 + 0.03 * level
+		// Legendary (>15): 2x boost to temporary fortune sources
+		const hyperLevel = getChipLevel(this.options.chips?.HYPERCHARGE_GARDEN_CHIP);
+		const perLevel = getChipTempMultiplierPerLevel('HYPERCHARGE_GARDEN_CHIP', hyperLevel);
+		const hyperchargeMultiplier = 1 + perLevel * hyperLevel;
 
 		if (!this.options.temporaryFortune) {
 			this.tempFortuneBreakdown = breakdown;
@@ -547,7 +578,6 @@ export class FarmingPlayer {
 				sum += upgrade;
 			}
 		}
-
 
 		// Garden Chips
 		// Overdrive: +5 crop fortune for the active contest crop per chip level.

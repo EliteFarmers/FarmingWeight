@@ -43,8 +43,8 @@ test('Hypercharge chip temp fortune scaling test', () => {
 		},
 	});
 
-	// 5 fortune * (1 + 0.03 * 20) = 8
-	expect(player.tempFortuneBreakdown['Century Cake']).toBe(8);
+	// Doubled
+	expect(player.tempFortuneBreakdown['Century Cake']).toBe(10);
 });
 
 test('Garden chips stat contribution test', () => {
@@ -63,6 +63,29 @@ test('Garden chips stat contribution test', () => {
 	expect(ff).toBe(30);
 	expect(bpc).toBe(21);
 	expect(wisdom).toBe(4);
+});
+
+test('Garden chips accept short names', () => {
+	const player = new FarmingPlayer({
+		chips: {
+			CROPSHOT: 10, // Short name
+			VERMIN_VAPORIZER: 7, // Short name
+			SOWLEDGE_GARDEN_CHIP: 4, // Full name still works
+		},
+	});
+
+	const ff = player.getStat(Stat.FarmingFortune);
+	const bpc = player.getStat(Stat.BonusPestChance);
+	const wisdom = player.getStat(Stat.FarmingWisdom);
+
+	expect(ff).toBe(30);
+	expect(bpc).toBe(21);
+	expect(wisdom).toBe(4);
+
+	// Verify internal normalization to full IDs
+	expect(player.options.chips?.CROPSHOT_GARDEN_CHIP).toBe(10);
+	expect(player.options.chips?.VERMIN_VAPORIZER_GARDEN_CHIP).toBe(7);
+	expect(player.options.chips?.SOWLEDGE_GARDEN_CHIP).toBe(4);
 });
 
 test('Overdrive chip contest crop fortune test', () => {
@@ -89,8 +112,8 @@ test('Garden chips appear in progress output', () => {
 
 	const chips = progress.find((p) => p.name === 'Garden Chips');
 	expect(chips).toBeDefined();
-	expect(chips?.progress?.length).toBe(1);
-	expect(chips?.name).toBe('Total Levels');
+	expect(chips?.progress?.length).toBe(10);
+	expect(chips?.name).toBe('Garden Chips');
 });
 
 test('Fortune progress test', () => {

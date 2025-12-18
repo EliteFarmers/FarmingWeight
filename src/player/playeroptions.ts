@@ -1,5 +1,5 @@
-import type { Crop } from '../constants/crops.js';
 import type { GardenChipId } from '../constants/chips.js';
+import type { Crop } from '../constants/crops.js';
 import type { TemporaryFarmingFortune } from '../constants/tempfortune.js';
 import type { Upgrade } from '../constants/upgrades.js';
 import type { FarmingAccessory } from '../fortune/farmingaccessory.js';
@@ -27,7 +27,8 @@ export interface FortuneMissingFromAPI {
 	infestedPlotProbability?: number;
 
 	attributes?: Record<string, number>;
-	chips?: Partial<Record<GardenChipId, number>>;
+	/** Chip levels. Accepts both full IDs (e.g., 'CROPSHOT_GARDEN_CHIP') or short names (e.g., 'CROPSHOT'). */
+	chips?: Partial<Record<GardenChipId, number>> | Record<string, number>;
 	perks?: Record<string, string | null>;
 
 	temporaryFortune?: TemporaryFarmingFortune;
