@@ -38,6 +38,14 @@ test('General fortune sources', () => {
 			ratio: 0,
 			api: false,
 		},
+			{
+				name: 'Garden Chips',
+				current: 0,
+				max: 0,
+				ratio: 0,
+				api: false,
+				alwaysInclude: true,
+			},
 		{
 			name: 'Pest Bestiary',
 			current: 6 * 0.4,

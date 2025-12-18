@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest';
 import { FARMING_ATTRIBUTE_SHARDS } from '../constants/attributes.js';
 import { Crop } from '../constants/crops.js';
+import { Stat } from '../constants/stats.js';
 import { FarmingPet } from '../fortune/farmingpet.js';
 import { FarmingPlayer } from './player.js';
 
@@ -30,6 +31,66 @@ test('Temp fortune test', () => {
 		'Magic 8 Ball': 25,
 		'Spring Filter': 25,
 	});
+});
+
+test('Hypercharge chip temp fortune scaling test', () => {
+	const player = new FarmingPlayer({
+		chips: {
+			HYPERCHARGE_GARDEN_CHIP: 20,
+		},
+		temporaryFortune: {
+			centuryCake: true,
+		},
+	});
+
+	// 5 fortune * (1 + 0.03 * 20) = 8
+	expect(player.tempFortuneBreakdown['Century Cake']).toBe(8);
+});
+
+test('Garden chips stat contribution test', () => {
+	const player = new FarmingPlayer({
+		chips: {
+			CROPSHOT_GARDEN_CHIP: 10,
+			VERMIN_VAPORIZER_GARDEN_CHIP: 7,
+			SOWLEDGE_GARDEN_CHIP: 4,
+		},
+	});
+
+	const ff = player.getStat(Stat.FarmingFortune);
+	const bpc = player.getStat(Stat.BonusPestChance);
+	const wisdom = player.getStat(Stat.FarmingWisdom);
+
+	expect(ff).toBe(30);
+	expect(bpc).toBe(21);
+	expect(wisdom).toBe(4);
+});
+
+test('Overdrive chip contest crop fortune test', () => {
+	const player = new FarmingPlayer({
+		chips: {
+			OVERDRIVE_GARDEN_CHIP: 20,
+		},
+		jacobContest: {
+			enabled: true,
+			crop: Crop.Wheat,
+		},
+	});
+
+	const cropFortune = player.getCropFortune(Crop.Wheat);
+	expect(cropFortune.breakdown['Overdrive Chip']).toBe(100);
+
+	const other = player.getCropFortune(Crop.Carrot);
+	expect(other.breakdown['Overdrive Chip']).toBeUndefined();
+});
+
+test('Garden chips appear in progress output', () => {
+	const player = new FarmingPlayer({});
+	const progress = player.getProgress();
+
+	const chips = progress.find((p) => p.name === 'Garden Chips');
+	expect(chips).toBeDefined();
+	expect(chips?.progress?.length).toBe(1);
+	expect(chips?.name).toBe('Total Levels');
 });
 
 test('Fortune progress test', () => {

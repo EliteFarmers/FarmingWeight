@@ -1,4 +1,5 @@
 import { FARMING_ATTRIBUTE_SHARDS, getShardStat } from '../constants/attributes.js';
+import { getChipLevel } from '../constants/chips.js';
 import { CROP_INFO, Crop, EXPORTABLE_CROP_FORTUNE } from '../constants/crops.js';
 import { fortuneFromPersonalBestContest } from '../constants/personalbests.js';
 import {
@@ -389,6 +390,32 @@ export class FarmingPlayer {
 			}
 		}
 
+		// Garden Chips
+		if (stat === Stat.FarmingFortune) {
+			const level = getChipLevel(this.options.chips?.CROPSHOT_GARDEN_CHIP);
+			const val = 3 * level;
+			if (val > 0) {
+				breakdown['Cropshot Chip'] = val;
+				sum += val;
+			}
+		}
+		if (stat === Stat.BonusPestChance) {
+			const level = getChipLevel(this.options.chips?.VERMIN_VAPORIZER_GARDEN_CHIP);
+			const val = 3 * level;
+			if (val > 0) {
+				breakdown['Vermin Vaporizer Chip'] = val;
+				sum += val;
+			}
+		}
+		if (stat === Stat.FarmingWisdom) {
+			const level = getChipLevel(this.options.chips?.SOWLEDGE_GARDEN_CHIP);
+			const val = 1 * level;
+			if (val > 0) {
+				breakdown['Sowledge Chip'] = val;
+				sum += val;
+			}
+		}
+
 		// Attribute Shards
 		for (const [shardId, value] of Object.entries(this.attributes)) {
 			const shard = FARMING_ATTRIBUTE_SHARDS[shardId as keyof typeof FARMING_ATTRIBUTE_SHARDS];
@@ -423,6 +450,8 @@ export class FarmingPlayer {
 		let sum = 0;
 		const breakdown = {} as Record<string, number>;
 
+		const hyperchargeMultiplier = 1 + 0.03 * getChipLevel(this.options.chips?.HYPERCHARGE_GARDEN_CHIP);
+
 		if (!this.options.temporaryFortune) {
 			this.tempFortuneBreakdown = breakdown;
 			return sum;
@@ -434,8 +463,9 @@ export class FarmingPlayer {
 
 			const fortune = source.fortune(this.options.temporaryFortune);
 			if (fortune) {
-				breakdown[source.name] = fortune;
-				sum += fortune;
+				const boosted = fortune * hyperchargeMultiplier;
+				breakdown[source.name] = boosted;
+				sum += boosted;
 			}
 		}
 
@@ -515,6 +545,18 @@ export class FarmingPlayer {
 			if (upgrade > 0) {
 				breakdown['Cocoa Fortune Upgrade'] = upgrade;
 				sum += upgrade;
+			}
+		}
+
+
+		// Garden Chips
+		// Overdrive: +5 crop fortune for the active contest crop per chip level.
+		if (this.options.jacobContest?.enabled && this.options.jacobContest.crop === crop) {
+			const level = getChipLevel(this.options.chips?.OVERDRIVE_GARDEN_CHIP);
+			const val = 5 * level;
+			if (val > 0) {
+				breakdown['Overdrive Chip'] = val;
+				sum += val;
 			}
 		}
 
@@ -772,6 +814,12 @@ export class FarmingPlayer {
 			this.options.attributes ??= {};
 			this.options.attributes[key] = Number(value);
 			this.permFortune = this.getGeneralFortune();
+		} else if (type === 'chip' && id && value) {
+			this.options.chips ??= {};
+			// @ts-ignore - `id` is a GardenChipId string
+			this.options.chips[id] = Number(value);
+			this.permFortune = this.getGeneralFortune();
+			this.tempFortune = this.getTempFortune();
 		} else if (type === 'crop_upgrade' && key && value) {
 			this.options.cropUpgrades ??= {};
 			// @ts-ignore
