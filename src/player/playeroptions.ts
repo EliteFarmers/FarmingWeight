@@ -29,7 +29,7 @@ export interface FortuneMissingFromAPI {
 	attributes?: Record<string, number>;
 	/** Chip levels. Accepts both full IDs (e.g., 'CROPSHOT_GARDEN_CHIP') or short names (e.g., 'CROPSHOT'). */
 	chips?: Partial<Record<GardenChipId, number>> | Record<string, number>;
-	perks?: Record<string, string | null>;
+	perks?: Record<string, string | null | number>;
 
 	temporaryFortune?: TemporaryFarmingFortune;
 }

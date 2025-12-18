@@ -542,3 +542,84 @@ test('Earthy Axe should recommend switching to Bountiful', () => {
 	// Blessed should not be suggested
 	expect(blessed).toBeUndefined();
 });
+
+test('Axed perk should be detected from perks string or number', () => {
+	const axe = {
+		id: 258,
+		count: 1,
+		skyblockId: 'COCO_CHOPPER_3',
+		uuid: 'test-axe-uuid',
+		name: '§6Cocoa Chopper',
+		lore: ['§7Farming Fortune: §a+100', '', '§6§lLEGENDARY AXE'],
+		enchantments: {},
+		attributes: {
+			modifier: 'bountiful',
+			farming_for_dummies_count: '5',
+		},
+	};
+
+	// Test with string "1"
+	const toolWithAxedString = new FarmingTool(axe, {
+		perks: {
+			axed: '1',
+		},
+	});
+
+	expect(toolWithAxedString.hasAxedPerk()).toBe(true);
+	expect(toolWithAxedString.fortuneBreakdown['Axed Perk']).toBeGreaterThan(0);
+
+	const progressString = toolWithAxedString.getProgress();
+	const axedProgressString = progressString.find((p) => p.name === 'Axed Perk');
+	expect(axedProgressString).toBeDefined();
+	expect(axedProgressString?.current).toBeGreaterThan(0);
+
+	// Test with number 1
+	const toolWithAxedNumber = new FarmingTool(axe, {
+		perks: {
+			axed: 1,
+		},
+	});
+
+	expect(toolWithAxedNumber.hasAxedPerk()).toBe(true);
+	expect(toolWithAxedNumber.fortuneBreakdown['Axed Perk']).toBeGreaterThan(0);
+
+	const progressNumber = toolWithAxedNumber.getProgress();
+	const axedProgressNumber = progressNumber.find((p) => p.name === 'Axed Perk');
+	expect(axedProgressNumber).toBeDefined();
+	expect(axedProgressNumber?.current).toBeGreaterThan(0);
+
+	// Without the perk
+	const toolWithoutAxed = new FarmingTool(axe, {
+		perks: {},
+	});
+
+	expect(toolWithoutAxed.hasAxedPerk()).toBe(false);
+	expect(toolWithoutAxed.fortuneBreakdown['Axed Perk']).toBeUndefined();
+
+	const progressWithout = toolWithoutAxed.getProgress();
+	const axedProgressWithout = progressWithout.find((p) => p.name === 'Axed Perk');
+	expect(axedProgressWithout).toBeDefined(); // Still present as an available upgrade
+	expect(axedProgressWithout?.current).toBe(0); // But not active
+	expect(axedProgressWithout?.upgrades).toBeDefined();
+
+	// With number 0
+	const toolWithZero = new FarmingTool(axe, {
+		perks: {
+			axed: 0,
+		},
+	});
+
+	expect(toolWithZero.hasAxedPerk()).toBe(false);
+	expect(toolWithZero.fortuneBreakdown['Axed Perk']).toBeUndefined();
+
+	// With null perk
+	const toolWithNull = new FarmingTool(axe, {
+		perks: {
+			axed: null,
+		},
+	});
+
+	expect(toolWithNull.hasAxedPerk()).toBe(false);
+	expect(toolWithNull.fortuneBreakdown['Axed Perk']).toBeUndefined();
+});
+
