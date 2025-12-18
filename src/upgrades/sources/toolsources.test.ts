@@ -653,9 +653,7 @@ test('Axed perk should not be applied twice in progress', () => {
 	const axedProgress = progress.find((p) => p.name === 'Axed Perk');
 
 	// The Axed Perk in progress should be 2% of other sources
-	const otherSourcesSum = progress
-		.filter((p) => p.name !== 'Axed Perk')
-		.reduce((acc, p) => acc + p.current, 0);
+	const otherSourcesSum = progress.filter((p) => p.name !== 'Axed Perk').reduce((acc, p) => acc + p.current, 0);
 	const expectedAxed = otherSourcesSum * 0.02;
 
 	expect(axedProgress?.current).toBeCloseTo(expectedAxed, 1);
@@ -740,4 +738,3 @@ test('alwaysInclude enchants should not contribute to max/current totals', () =>
 	expect(cropFever?.progress?.[0]?.max).toBe(5);
 	expect(cropFever?.progress?.[0]?.current).toBe(5);
 });
-
