@@ -1,9 +1,12 @@
+# Archived
+
+This repo is no longer being used, you can find the new location for the farming weight code in the packages folder of [EliteWebsite](https://github.com/EliteFarmers/Website).
+
+
 # Farming Weight
 NPM package for Farming Weight and fortune calculations in Hypixel SkyBlock.
 
 Created specifically for the [EliteWebsite](https://github.com/EliteFarmers/Website) and [EliteBot](https://github.com/EliteFarmers/Bot) projects, but can be used for any project, as long as some credit is given per the license.
-
-**This is a new package that's changing rapidly, there aren't any comprehensive docs at this time**
 
 ## Installation
 ```bash
