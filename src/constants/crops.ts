@@ -1,6 +1,7 @@
+import type { DropKind, DropTag } from '../effects/types.js';
 import { ITEM_IDS } from './itemids.js';
 import { Stat } from './stats.js';
-import type { UpgradeCost } from './upgrades.js';
+import type { UpgradeCost } from './costs.js';
 
 export enum Crop {
 	Cactus = 'CACTUS',
@@ -13,7 +14,7 @@ export enum Crop {
 	Pumpkin = 'PUMPKIN',
 	SugarCane = 'SUGAR_CANE',
 	Wheat = 'WHEAT',
-	Seeds = 'WHEAT_SEEDS',
+	Seeds = 'SEEDS',
 	Sunflower = 'DOUBLE_PLANT',
 	Moonflower = 'MOONFLOWER',
 	WildRose = 'WILD_ROSE',
@@ -30,6 +31,27 @@ export interface CropCraft {
 	}[];
 }
 
+export interface CropRngDrop {
+	chance: number;
+	drops: Record<string, number>;
+	/** Output bucket for this drop. Defaults to `rng`. */
+	output?: 'rng' | 'collection' | 'currency';
+	/**
+	 * If `harvestFeast`, this drop only occurs when a Harvest Feast is active and this crop is in-season.
+	 * Used for Seasoning + per-crop Harvest Feast materials.
+	 */
+	only?: 'harvestFeast';
+	/**
+	 * Drop kind classification used by the effects pipeline. Defaults to `'rng'` when omitted.
+	 */
+	dropKind?: DropKind;
+	/**
+	 * Drop tags consumed by `Effect.scope.tags`. See `DropTagBuiltin` for the well-known set.
+	 * Defaults to `['overbloom','rare-crop']` when omitted (the SkyBlock RARE CROP pool).
+	 */
+	tags?: readonly DropTag[];
+}
+
 export interface CropInfo {
 	name: string;
 	npc: number;
@@ -40,8 +62,65 @@ export interface CropInfo {
 	exportable?: boolean;
 	exportableCost?: UpgradeCost;
 	startingTool: string;
+	toolXpFactor: number;
 	crafts: CropCraft[];
-	rng?: { chance: number; drops: Record<string, number> }[];
+	rng?: CropRngDrop[];
+}
+
+/** Drop chance of Seasoning from any in-season crop during a Harvest Feast (1/2,250). */
+export const HARVEST_FEAST_SEASONING_CHANCE = 1 / 2_250;
+
+/** Drop chance of a per-crop Harvest Feast unique material from in-season crops (1/18,000). */
+export const HARVEST_FEAST_MATERIAL_CHANCE = 1 / 18_000;
+
+/** Per-crop unique Harvest Feast material item id, dropped at 1/18,000 from in-season crops. */
+export const HARVEST_FEAST_MATERIALS: Partial<Record<Crop, string>> = {
+	[Crop.Wheat]: 'CORNUCOPIA',
+	[Crop.Carrot]: 'CARROT_ZEST',
+	[Crop.Potato]: 'DEEPFRIES',
+	[Crop.Pumpkin]: 'AGGOURDIAN',
+	[Crop.SugarCane]: 'CANE_KNOT',
+	[Crop.Melon]: 'MELON_JUICE',
+	[Crop.Cactus]: 'CACTUS_FLOWER',
+	[Crop.CocoaBeans]: 'DESIGNER_COFFEE_BEANS',
+	[Crop.Mushroom]: 'FEASTFUNGUS',
+	[Crop.NetherWart]: 'BOTROOT',
+	[Crop.Sunflower]: 'SALTED_SUNFLOWER_SEEDS',
+	[Crop.Moonflower]: 'CRYSTALIZED_MOONLIGHT',
+	[Crop.WildRose]: 'FLORAL_GELATIN',
+};
+
+function harvestFeastDrops(crop: Crop): CropRngDrop[] {
+	const material = HARVEST_FEAST_MATERIALS[crop];
+	const entries: CropRngDrop[] = [
+		{
+			chance: HARVEST_FEAST_SEASONING_CHANCE,
+			drops: { SEASONING: 1 },
+			output: 'currency',
+			only: 'harvestFeast',
+			tags: ['overbloom', 'rare-crop', 'seasoning', 'feast'],
+		},
+	];
+	if (material) {
+		entries.push({
+			chance: HARVEST_FEAST_MATERIAL_CHANCE,
+			drops: { [material]: 1 },
+			only: 'harvestFeast',
+			tags: ['overbloom', 'rare-crop', 'feast'],
+		});
+	}
+	return entries;
+}
+
+function cropRngDrops(crop: Crop): CropRngDrop[] {
+	return [
+		{
+			chance: 0.000005, // 1 in 200,000
+			drops: { RAREFINDER_GARDEN_CHIP: 1 },
+			tags: ['overbloom', 'rare-crop'],
+		},
+		...harvestFeastDrops(crop),
+	];
 }
 
 export const CROP_INFO: Record<Crop, CropInfo> = {
@@ -50,7 +129,14 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		npc: 4,
 		drops: 2,
 		breaks: 2,
+		toolXpFactor: 1.5,
 		fortuneType: Stat.CactusFortune,
+		exportable: true,
+		exportableCost: {
+			items: {
+				POTTED_CACTUS: 3000,
+			},
+		},
 		startingTool: 'CACTUS_KNIFE',
 		crafts: [
 			{
@@ -62,11 +148,13 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
+		rng: cropRngDrops(Crop.Cactus),
 	},
 	[Crop.Carrot]: {
 		name: 'Carrot',
 		npc: 3,
 		drops: 3,
+		toolXpFactor: 3.5,
 		fortuneType: Stat.CarrotFortune,
 		replenish: true,
 		exportable: true,
@@ -86,11 +174,13 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
+		rng: cropRngDrops(Crop.Carrot),
 	},
 	[Crop.CocoaBeans]: {
 		name: 'Cocoa Beans',
 		npc: 3,
 		drops: 3,
+		toolXpFactor: 1.5,
 		fortuneType: Stat.CocoaBeanFortune,
 		replenish: true,
 		exportable: true,
@@ -110,11 +200,13 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
+		rng: cropRngDrops(Crop.CocoaBeans),
 	},
 	[Crop.Melon]: {
 		name: 'Melon',
 		npc: 2,
 		drops: 5,
+		toolXpFactor: 4,
 		fortuneType: Stat.MelonFortune,
 		startingTool: 'MELON_DICER',
 		crafts: [
@@ -127,11 +219,13 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
+		rng: cropRngDrops(Crop.Melon),
 	},
 	[Crop.Mushroom]: {
 		name: 'Mushroom',
 		npc: 10,
 		drops: 1,
+		toolXpFactor: 0.95,
 		exportable: true,
 		fortuneType: Stat.MushroomFortune,
 		exportableCost: {
@@ -160,17 +254,20 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		],
 		rng: [
 			{
-				chance: 1 / 250000,
+				chance: 1 / 350_000,
 				drops: {
 					BURROWING_SPORES: 1,
 				},
+				tags: ['overbloom', 'rare-crop'],
 			},
+			...cropRngDrops(Crop.Mushroom),
 		],
 	},
 	[Crop.NetherWart]: {
 		name: 'Nether Wart',
 		npc: 4,
 		drops: 2.5,
+		toolXpFactor: 3,
 		replenish: true,
 		exportable: true,
 		fortuneType: Stat.NetherWartFortune,
@@ -190,11 +287,13 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
+		rng: cropRngDrops(Crop.NetherWart),
 	},
 	[Crop.Potato]: {
 		name: 'Potato',
 		npc: 3,
 		drops: 3,
+		toolXpFactor: 3,
 		replenish: true,
 		fortuneType: Stat.PotatoFortune,
 		startingTool: 'THEORETICAL_HOE_POTATO_1',
@@ -208,11 +307,13 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
+		rng: cropRngDrops(Crop.Potato),
 	},
 	[Crop.Pumpkin]: {
 		name: 'Pumpkin',
 		npc: 10,
 		drops: 1,
+		toolXpFactor: 0.85,
 		exportable: true,
 		fortuneType: Stat.PumpkinFortune,
 		exportableCost: {
@@ -231,12 +332,14 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
+		rng: cropRngDrops(Crop.Pumpkin),
 	},
 	[Crop.SugarCane]: {
 		name: 'Sugar Cane',
 		npc: 4,
 		drops: 2,
 		breaks: 2,
+		toolXpFactor: 2,
 		fortuneType: Stat.SugarCaneFortune,
 		startingTool: 'THEORETICAL_HOE_CANE_1',
 		crafts: [
@@ -249,11 +352,13 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
+		rng: cropRngDrops(Crop.SugarCane),
 	},
 	[Crop.Wheat]: {
 		name: 'Wheat',
 		npc: 6,
 		drops: 1,
+		toolXpFactor: 1,
 		exportable: true,
 		fortuneType: Stat.WheatFortune,
 		exportableCost: {
@@ -272,11 +377,13 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
+		rng: cropRngDrops(Crop.Wheat),
 	},
 	[Crop.Seeds]: {
 		name: 'Seeds',
 		npc: 3,
 		drops: 1.5,
+		toolXpFactor: 1,
 		replenish: true,
 		fortuneType: Stat.WheatFortune,
 		startingTool: 'THEORETICAL_HOE_WHEAT_1',
@@ -295,6 +402,7 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 		name: 'Sunflower',
 		npc: 4,
 		drops: 2,
+		toolXpFactor: 2,
 		fortuneType: Stat.SunflowerFortune,
 		replenish: true,
 		startingTool: 'THEORETICAL_HOE_SUNFLOWER_1',
@@ -308,11 +416,13 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
+		rng: cropRngDrops(Crop.Sunflower),
 	},
 	[Crop.Moonflower]: {
 		name: 'Moonflower',
 		npc: 4,
 		drops: 2,
+		toolXpFactor: 2,
 		fortuneType: Stat.MoonflowerFortune,
 		replenish: true,
 		startingTool: 'THEORETICAL_HOE_SUNFLOWER_1', // Same as sunflower
@@ -326,11 +436,13 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
+		rng: cropRngDrops(Crop.Moonflower),
 	},
 	[Crop.WildRose]: {
 		name: 'Wild Rose',
 		npc: 4,
 		drops: 2,
+		toolXpFactor: 1.5,
 		fortuneType: Stat.WildRoseFortune,
 		replenish: true,
 		exportable: true,
@@ -350,26 +462,28 @@ export const CROP_INFO: Record<Crop, CropInfo> = {
 				takes: 160 * 160,
 			},
 		],
+		rng: cropRngDrops(Crop.WildRose),
 	},
 };
 
-// TODO: Calculate this from a list of sources
-// Base plus pb fortune
+// TODO: Calculate this from the list of sources
+// Base plus crop specific fortune
+// Does not include temporary fortune sources
 export const MAX_CROP_FORTUNE: Record<Crop, number> = {
-	[Crop.Cactus]: 1824,
-	[Crop.Carrot]: 2053,
-	[Crop.CocoaBeans]: 1886,
-	[Crop.Melon]: 1854,
-	[Crop.Mushroom]: 1870,
-	[Crop.NetherWart]: 2053,
-	[Crop.Potato]: 2041,
-	[Crop.Pumpkin]: 1866,
-	[Crop.SugarCane]: 2041,
-	[Crop.Wheat]: 2053,
-	[Crop.Seeds]: 2053,
-	[Crop.Sunflower]: 2053,
-	[Crop.Moonflower]: 2053,
-	[Crop.WildRose]: 2053,
+	[Crop.Cactus]: 2629.28 + 12,
+	[Crop.Carrot]: 2629.28 + 12,
+	[Crop.CocoaBeans]: 2629.28 + 37,
+	[Crop.Melon]: 2629.28,
+	[Crop.Mushroom]: 2629.28 + 12,
+	[Crop.NetherWart]: 2629.28 + 12,
+	[Crop.Potato]: 2629.28,
+	[Crop.Pumpkin]: 2629.28 + 12,
+	[Crop.SugarCane]: 2629.28,
+	[Crop.Wheat]: 2629.28 + 12,
+	[Crop.Seeds]: 2629.28 + 12,
+	[Crop.Sunflower]: 2629.28,
+	[Crop.Moonflower]: 2629.28,
+	[Crop.WildRose]: 2629.28 + 12,
 };
 
 export const LIST_OF_CROPS: Exclude<Crop, Crop.Seeds>[] = [

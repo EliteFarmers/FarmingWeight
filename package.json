@@ -1,51 +1,55 @@
 {
-	"name": "farming-weight",
-	"version": "0.12.2",
-	"description": "Tools for calculating farming weight and fortune in Hypixel Skyblock",
-	"type": "module",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
-	"module": "dist/index.js",
-	"scripts": {
-		"build": "tsc",
-		"format": "pnpm biome check --write",
-		"lint": "pnpm biome check",
-		"test": "vitest run",
-		"test:watch": "vitest",
-		"debug": "vitest --test-timeout=0 --no-file-parallelism"
-	},
-	"keywords": [
-		"farming",
-		"weight",
-		"farming-weight",
-		"skyblock",
-		"hypixel",
-		"hypixel-skyblock",
-		"fortune"
-	],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/EliteFarmers/FarmingWeight.git"
-	},
-	"files": [
-		"dist/**/*"
-	],
-	"bugs": {
-		"url": "https://github.com/EliteFarmers/FarmingWeight/issues"
-	},
-	"publishConfig": {
-		"registry": "https://registry.npmjs.org/",
-		"access": "public"
-	},
-	"homepage": "https://github.com/EliteFarmers/FarmingWeight#readme",
-	"author": "Kaeso",
-	"license": "MIT",
-	"devDependencies": {
-		"@biomejs/biome": "2.0.6",
-		"@types/madge": "^5.0.3",
-		"madge": "^8.0.0",
-		"typescript": "^5.8.3",
-		"vitest": "^4.0.16"
-	},
-	"packageManager": "pnpm@9.15.0"
+  "name": "farming-weight",
+  "version": "0.17.0",
+  "description": "Tools for calculating farming weight and fortune in Hypixel Skyblock",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "typecheck:tests": "tsc -p tsconfig.test.json --noEmit",
+    "format": "pnpm oxfmt .",
+    "lint": "pnpm oxlint --deny-warnings --tsconfig ./tsconfig.json src",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "debug": "vitest --test-timeout=0 --no-file-parallelism"
+  },
+  "keywords": [
+    "farming",
+    "weight",
+    "farming-weight",
+    "skyblock",
+    "hypixel",
+    "hypixel-skyblock",
+    "fortune"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EliteFarmers/FarmingWeight.git"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "bugs": {
+    "url": "https://github.com/EliteFarmers/FarmingWeight/issues"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "homepage": "https://github.com/EliteFarmers/FarmingWeight#readme",
+  "author": "Kaeso",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/madge": "^5.0.3",
+    "madge": "^8.0.0",
+    "typescript": "^5.8.3",
+    "vitest": "^4.0.16",
+    "oxfmt": "^0.64.0",
+    "oxlint": "^1.79.0"
+  },
+  "packageManager": "pnpm@11.25.0+sha512.5cde925b4f075f725eb71fbae18a42ffe784524789f19b61c731cb8721ec28aaee160e01a8d5af4fedb2a42cdbf300efe23db356b0d4a17b4d63e11f8ab7c956"
 }

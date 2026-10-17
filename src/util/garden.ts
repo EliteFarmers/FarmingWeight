@@ -1,7 +1,5 @@
 import type { Crop } from '../constants/crops.js';
-import { CROP_MILESTONES, GARDEN_EXP_REQUIRED, GARDEN_VISITORS } from '../constants/garden.js';
-import { GARDEN_PLOT_COSTS, GARDEN_PLOTS, type PlotType } from '../constants/plots.js';
-import type { Rarity } from '../constants/reforges.js';
+import { CROP_MILESTONES, GARDEN_EXP_REQUIRED } from '../constants/garden.js';
 import { getCropFromName } from './names.js';
 
 export interface LevelingStats {
@@ -118,74 +116,4 @@ export function getCropUpgrades(upgrades: Record<string, number>): Record<Crop, 
 	}
 
 	return cropUpgrades;
-}
-
-export function getGardenVisitor(visitor: string) {
-	return GARDEN_VISITORS[visitor];
-}
-
-export interface GardenVisitorStats {
-	visits: number;
-	accepted: number;
-}
-
-export interface GardenVisitorStatsWithName extends GardenVisitorStats {
-	name: string;
-	short?: string;
-	rarity: Rarity;
-}
-
-export function groupGardenVisitors(visitors: Record<string, GardenVisitorStats>) {
-	const groups = {} as Record<Rarity, GardenVisitorStatsWithName[]>;
-
-	for (const [visitorId, stats] of Object.entries(visitors)) {
-		const visitor = getGardenVisitor(visitorId);
-		if (!visitor) continue;
-
-		groups[visitor.rarity] ??= [];
-		groups[visitor.rarity].push({
-			...visitor,
-			...stats,
-		});
-	}
-
-	for (const group of Object.values(groups)) {
-		group.sort((a, b) => {
-			if (b.visits === a.visits) {
-				if (b.accepted === a.accepted) {
-					return a.name.localeCompare(b.name);
-				}
-				return b.accepted - a.accepted;
-			}
-			return b.visits - a.visits;
-		});
-	}
-
-	return groups;
-}
-
-export function getNextPlotCost(plots: string[]) {
-	const unlocked = plots.reduce<Partial<Record<PlotType, number>>>((acc, plot) => {
-		const plotData = GARDEN_PLOTS[plot as keyof typeof GARDEN_PLOTS];
-		if (plotData) {
-			acc[plotData.type] = (acc[plotData.type] ?? 0) + 1;
-		}
-		return acc;
-	}, {});
-
-	for (const [type, count] of Object.entries(GARDEN_PLOT_COSTS)) {
-		const plotType = type as PlotType;
-		if (unlocked[plotType] === undefined || (unlocked[plotType] ?? 0) < count.length) {
-			const nextPlot = Object.entries(GARDEN_PLOTS)
-				.filter(([id, plot]) => plot.type === plotType && !plots.includes(id))
-				.sort((a, b) => a[1].name.localeCompare(b[1].name))[0];
-			return {
-				cost: count[unlocked?.[plotType] ?? 0],
-				plot: nextPlot ? nextPlot[1] : undefined,
-				plotId: nextPlot ? nextPlot[0] : undefined,
-			};
-		}
-	}
-
-	return undefined;
 }

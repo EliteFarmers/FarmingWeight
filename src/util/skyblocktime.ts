@@ -84,7 +84,7 @@ export class SkyBlockTime {
 	 * @returns {SkyBlockTime}
 	 */
 	static from(sbYear: number, sbMonth = 1, sbDay = 1): SkyBlockTime {
-		return this.fromZeroIndexed(sbYear - 1, sbMonth - 1, sbDay - 1);
+		return SkyBlockTime.fromZeroIndexed(sbYear - 1, sbMonth - 1, sbDay - 1);
 	}
 
 	/**
@@ -113,7 +113,7 @@ export class SkyBlockTime {
 		const [year, monthDay] = contestKey.split(':') ?? [];
 		const [month, day] = monthDay?.split('_').map(Number) ?? [];
 
-		return this.fromZeroIndexed(+(year ?? 0), (month ?? 0) - 1, (day ?? 0) - 1);
+		return SkyBlockTime.fromZeroIndexed(+(year ?? 0), (month ?? 0) - 1, (day ?? 0) - 1);
 	}
 
 	isSpring() {
@@ -130,6 +130,11 @@ export class SkyBlockTime {
 
 	isWinter() {
 		return this.month > 9 && this.month < 13;
+	}
+
+	isHarvestFeast() {
+		// Every SkyBlock Year from the 1st of Early Autumn through the 31st of Late Autumn
+		return this.month > 6 && this.month < 10;
 	}
 
 	/**

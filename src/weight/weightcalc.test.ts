@@ -1,7 +1,6 @@
 import { expect, test } from 'vitest';
 import { Crop } from '../constants/crops.js';
 import { CROP_WEIGHT } from '../constants/weight.js';
-import { createFarmingPlayer } from '../player/player.js';
 import { uncountedCropsFromPests } from '../util/pests.js';
 import { createFarmingWeightCalculator } from './weightcalc.js';
 
@@ -28,14 +27,6 @@ test('Basic weight calculation', () => {
 	});
 
 	expect(weight.getWeightInfo().totalWeight).toBeCloseTo(170);
-});
-
-test('Basic player weight calculation', () => {
-	const player = createFarmingPlayer({
-		collection: crops,
-	});
-
-	expect(player.getWeightCalc().getWeightInfo().totalWeight).toBeCloseTo(170);
 });
 
 test('Mushroom weight calculation', () => {
@@ -134,82 +125,4 @@ test('Contest medals calculation', () => {
 	expect(weight.earnedMedals.diamond).toBe(1);
 	expect(weight.earnedMedals.platinum).toBe(1);
 	expect(bonus['Contest Medals']).toBe(0.75 + 0.5);
-});
-
-test('Full weight calculation', () => {
-	const crops = {
-		[Crop.Cactus]: 1219395,
-		[Crop.Carrot]: 14238991,
-		[Crop.CocoaBeans]: 901826,
-		[Crop.Melon]: 5041491,
-		[Crop.Mushroom]: 9063168,
-		[Crop.NetherWart]: 897212645,
-		[Crop.Potato]: 171017100,
-		[Crop.Pumpkin]: 1496477,
-		[Crop.SugarCane]: 15509429,
-		[Crop.Wheat]: 21996256,
-	};
-
-	const pests = {
-		pest_fly_1: 222,
-		pest_rat_1: 40,
-		pest_mite_1: 43,
-		pest_moth_1: 40,
-		pest_slug_1: 34,
-		pest_worm_1: 32,
-		pest_beetle_1: 265,
-		pest_locust_1: 41,
-		pest_cricket_1: 36,
-		pest_mosquito_1: 41,
-	};
-
-	const minions = [
-		'WHEAT_11',
-		'CARROT_11',
-		'POTATO_12',
-		'PUMPKIN_12',
-		'MELON_12',
-		'MUSHROOM_12',
-		'COCOA_11',
-		'CACTUS_11',
-		'SUGAR_CANE_12',
-		'NETHER_WARTS_12',
-	];
-
-	const info = {
-		collection: crops,
-		pests: pests,
-		farmingXp: 286958923.31966937,
-		levelCapUpgrade: 10,
-		anitaBonusFarmingFortuneLevel: 15,
-		minions: minions,
-	};
-
-	const weight = createFarmingWeightCalculator(info).setEarnedMedals({
-		diamond: 246,
-		platinum: 75,
-		gold: 99,
-	});
-
-	expect(weight.getWeightInfo().totalWeight).toBeCloseTo(5217.48);
-
-	const player = createFarmingPlayer({ ...info, bestiaryKills: pests });
-	const playerWeight = player
-		.getWeightCalc({
-			minions: minions,
-			levelCapUpgrade: 10,
-			anitaBonusFarmingFortuneLevel: 15,
-		})
-		.setEarnedMedals({
-			diamond: 246,
-			platinum: 75,
-			gold: 99,
-		});
-
-	expect(playerWeight.getCropWeights()).toStrictEqual(weight.getCropWeights());
-	expect(playerWeight.getBonusWeights()).toStrictEqual(weight.getBonusWeights());
-	expect(playerWeight.getWeightInfo().uncountedCrops).toStrictEqual(weight.getWeightInfo().uncountedCrops);
-
-	expect(playerWeight.getWeightInfo().cropWeight).toBe(weight.getWeightInfo().cropWeight);
-	expect(playerWeight.getWeightInfo().totalWeight).toBeCloseTo(weight.getWeightInfo().totalWeight);
 });

@@ -2,47 +2,37 @@ name: Check
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
 
 jobs:
-  test:
-    name: Tests
+  check:
+    name: Build, test and lint
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup
-        uses: ./.github/actions/setup
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
-      - name: Run tests
-        run: pnpm test
-  lint:
-    name: Linting
-    runs-on: ubuntu-latest 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
 
-      - name: Setup
-        uses: ./.github/actions/setup
-
-      - name: Lint
-        run: pnpm run lint
-  build:
-    name: Build
-    runs-on: ubuntu-latest 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup
-        uses: ./.github/actions/setup
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm run build
+        run: pnpm build
+
+      - name: Test
+        run: pnpm test
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck tests
+        run: pnpm typecheck:tests

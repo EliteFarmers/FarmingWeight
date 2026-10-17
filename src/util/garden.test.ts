@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { Crop } from '../constants/crops.js';
-import { getCropMilestoneLevels, getCropMilestones, getNextPlotCost } from './garden.js';
+import { getCropMilestoneLevels, getCropMilestones } from './garden.js';
 
 test('Crop Milestones', () => {
 	const fromElite = {
@@ -30,7 +30,11 @@ test('Crop Milestones', () => {
 	};
 
 	expect(getCropMilestoneLevels(fromElite)).toEqual(expected);
-	expect(getCropMilestoneLevels(fromElite, true)).toEqual({ ...expected, [Crop.Wheat]: 53, [Crop.NetherWart]: 57 });
+	expect(getCropMilestoneLevels(fromElite, true)).toEqual({
+		...expected,
+		[Crop.Wheat]: 53,
+		[Crop.NetherWart]: 57,
+	});
 });
 
 test('Overflow Crop Milestones', () => {
@@ -67,84 +71,11 @@ test('Overflow Crop Milestones', () => {
 	expect(milestones[Crop.Melon].maxed).toBe(true);
 	expect(milestones[Crop.Melon].next).toBe(4523);
 	expect(milestones[Crop.Melon].goal).toBe(4000000);
-	expect(milestones[Crop.Melon].ratio).toBeCloseTo(0.738851);
-	expect(milestones[Crop.Melon].progress).toBe(2955404);
+	expect(milestones[Crop.Melon].ratio).toBeCloseTo(0.770101);
+	expect(milestones[Crop.Melon].progress).toBe(3080404);
 
 	expect(milestones[Crop.Mushroom].maxed).toBe(true);
 
 	expect(milestones[Crop.Pumpkin].maxed).toBe(false);
 	expect(milestones[Crop.Pumpkin].next).toBe(22);
-});
-
-test('Plot costs', () => {
-	expect(getNextCost([])).toBe(1);
-	expect(getNextCost(['beginner_1'])).toBe(2);
-	expect(getNextCost(['beginner_1', 'advanced_1'])).toBe(2);
-	expect(getNextCost(['beginner_1', 'advanced_1', 'expert_1'])).toBe(2);
-
-	expect(getNextCost(['beginner_1', 'beginner_2'])).toBe(4);
-	expect(getNextCost(['beginner_1', 'beginner_2', 'beginner_3'])).toBe(8);
-	expect(getNextCost(['beginner_1', 'beginner_3'])).toBe(4);
-	expect(getNextCost(['beginner_1', 'beginner_2', 'beginner_3', 'beginner_4'])).toBe(16);
-
-	expect(
-		getNextCost([
-			'beginner_1',
-			'beginner_2',
-			'beginner_3',
-			'beginner_4',
-			'intermediate_1',
-			'intermediate_2',
-			'intermediate_3',
-			'intermediate_4',
-			'advanced_1',
-			'advanced_2',
-			'advanced_3',
-			'advanced_4',
-			'advanced_5',
-			'advanced_6',
-			'advanced_7',
-			'advanced_8',
-			'advanced_9',
-			'advanced_10',
-			'advanced_11',
-			'advanced_12',
-			'expert_1',
-			'expert_2',
-			'expert_3',
-			'expert_4',
-		])
-	).toBe(undefined);
-
-	expect(
-		getNextCost([
-			'beginner_1',
-			'beginner_2',
-			'beginner_3',
-			'beginner_4',
-			'intermediate_1',
-			'intermediate_2',
-			'intermediate_3',
-			'intermediate_4',
-			'advanced_1',
-			'advanced_2',
-			'advanced_3',
-			'advanced_4',
-			'advanced_5',
-			'advanced_6',
-			'advanced_7',
-			'advanced_8',
-			'advanced_9',
-			'advanced_10',
-			'advanced_11',
-			'advanced_12',
-			'expert_1',
-			'expert_2',
-			'expert_3',
-		])
-	).toBe(2400);
-
-	function getNextCost(plots: string[]): number | undefined {
-		return getNextPlotCost(plots)?.cost?.items?.COMPOST;
-	}
 });
