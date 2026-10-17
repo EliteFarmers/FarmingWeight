@@ -1,7 +1,7 @@
 import type { DropKind, DropTag } from '../effects/types.js';
 import { ITEM_IDS } from './itemids.js';
 import { Stat } from './stats.js';
-import type { UpgradeCost } from './upgrades.js';
+import type { UpgradeCost } from './costs.js';
 
 export enum Crop {
 	Cactus = 'CACTUS',

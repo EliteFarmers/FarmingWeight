@@ -1,5 +1,5 @@
 import { ITEM_IDS } from '../../constants/itemids.js';
-import { mergeCost, type UpgradeCost } from '../../constants/upgrades.js';
+import { mergeCost, type UpgradeCost } from '../../constants/costs.js';
 import { ComposterUpgrade } from './composter.js';
 
 interface ComposterUpgradeInfo {

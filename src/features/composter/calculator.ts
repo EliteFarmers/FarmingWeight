@@ -1,5 +1,5 @@
 import { ComposterUpgrade } from './composter.js';
-import { getComposterStats } from './progress.js';
+import { COMPOSTER_UPGRADES } from './upgrades.js';
 
 export interface ComposterMaterial {
 	itemId: string;
@@ -177,9 +177,20 @@ export function rankComposterMaterials(
 		.sort((a, b) => a.coinsPerValue - b.coinsPerValue || a.name.localeCompare(b.name));
 }
 
+function getComposterUpgradeStats(levels: Partial<Record<ComposterUpgrade, number>>): Record<ComposterUpgrade, number> {
+	const stats = {} as Record<ComposterUpgrade, number>;
+	for (const [key, upgrade] of Object.entries(COMPOSTER_UPGRADES) as [
+		ComposterUpgrade,
+		(typeof COMPOSTER_UPGRADES)[ComposterUpgrade],
+	][]) {
+		stats[key] = upgrade.current(levels[key] ?? 0);
+	}
+	return stats;
+}
+
 export function calculateComposter(input: ComposterCalculatorInput): ComposterCalculatorResult {
 	const upgradeLevels = normalizeComposterUpgradeLevels(input.upgradeLevels);
-	const { stats } = getComposterStats(upgradeLevels);
+	const stats = getComposterUpgradeStats(upgradeLevels);
 	const speedMultiplier = 1 + stats[ComposterUpgrade.Speed];
 	const multiDropChance = stats[ComposterUpgrade.MultiDrop];
 	const costReduction = stats[ComposterUpgrade.CostReduction];

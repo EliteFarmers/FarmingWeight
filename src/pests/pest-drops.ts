@@ -1,7 +1,6 @@
-import { CROP_INFO, Crop, HARVEST_FEAST_MATERIALS } from '../constants/crops.js';
+import { Crop, HARVEST_FEAST_MATERIALS } from '../constants/crops.js';
 import { ITEM_IDS } from '../constants/itemids.js';
 import { CROP_TO_PEST, PEST_TO_CROP, Pest } from '../constants/pests.js';
-import type { FarmingPlayer } from '../player/player.js';
 
 export interface PestGuaranteedDropDefinition {
 	itemId: string;
@@ -302,16 +301,6 @@ export function calculatePestCropDropAmount(options: {
 		(options.includeCropFortune === false ? 0 : options.cropFortune) +
 		options.pestKillFortune;
 	return options.baseAmount + fortune / options.scalingFortune;
-}
-
-export function getAssociatedCropFortune(player: FarmingPlayer, crop: Crop): number {
-	const cropStat = CROP_INFO[crop]?.fortuneType;
-	if (!cropStat) return 0;
-
-	const breakdown = player.getStatBreakdown(cropStat, crop);
-	return Object.values(breakdown)
-		.filter((entry) => entry.stat === cropStat)
-		.reduce((sum, entry) => sum + entry.value, 0);
 }
 
 export function getPestForCrop(crop: Crop): Pest | undefined {

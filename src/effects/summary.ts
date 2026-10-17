@@ -1,7 +1,18 @@
 import type { FarmingMechanic } from '../constants/mechanics.js';
 import type { Stat } from '../constants/stats.js';
-import type { EffectSummary } from '../constants/upgrades.js';
-import type { Effect } from './types.js';
+import type { Effect, EffectOp, Scope } from './types.js';
+
+export interface EffectSummary {
+	source: string;
+	op: EffectOp;
+	description?: string;
+	relatedStats?: readonly Stat[];
+	mechanic?: FarmingMechanic;
+	scope?: Scope;
+	value?: number;
+	valueDisplay?: 'stat' | 'percent' | 'factor' | 'none';
+	valueStat?: Stat;
+}
 
 export function effectToSummary(effect: Effect): EffectSummary | undefined {
 	if ((!effect.relatedStats || effect.relatedStats.length === 0) && !effect.mechanic) return undefined;

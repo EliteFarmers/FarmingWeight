@@ -58,74 +58,34 @@ console.log(weight.bonusSources);
 
 ### Rates Calculator
 
-This package also contains an effect-driven rates calculator, which can be used to calculate farming drops and NPC profit for a player's active crop.
+The rates calculator turns farming fortune and a list of effects into expected drops, collection and NPC profit.
 
 ```ts
-import { createFarmingPlayer, Crop } from 'farming-weight';
-
-const player = createFarmingPlayer({
-	tools: farmingTools,
-	armor: armorSet,
-	equipment,
-	accessories,
-	pets,
-	attributes,
-	chips,
-	selectedCrop: Crop.Wheat,
-});
-
-const drops = player.getRates(Crop.Wheat, 24000); // 100% efficiency for 20 minutes
-
-console.log(drops.collection); // 123000 (or whatever the collection is)
-console.log(drops.effectsBreakdown); // { "Sunset": 5, ... }
-console.log(drops.appliedEffects.CROPIE); // Per-drop effect details
-```
-
-For lower-level callers that already collect effects, use the effect calculator directly:
-
-```ts
-import { calculateDetailedDropsFromEffects, Crop } from 'farming-weight';
+import {
+	buildEffectEnvironmentFromOptions,
+	calculateDetailedDropsFromEffects,
+	Crop,
+	type Effect,
+} from 'farming-weight';
 
 const crop = Crop.Wheat;
-const env = player.buildEnvironment(crop);
-const effects = player.collectEffects(env);
+const env = buildEffectEnvironmentFromOptions({ selectedCrop: crop }, crop);
+
+const effects: Effect[] = [
+	// Effects from your tools, armor, pets, etc.
+];
 
 const drops = calculateDetailedDropsFromEffects({
 	crop,
-	blocksBroken: 24000,
-	farmingFortune: player.getCropFortune(crop).fortune + player.fortune,
-	bountiful: player.getBestTool(crop)?.bountiful ?? false,
+	blocksBroken: 24000, // 100% efficiency for 20 minutes
+	farmingFortune: 2000,
 	effects,
 	env,
 });
 
+console.log(drops.collection);
 console.log(drops.effectsBreakdown);
 console.log(drops.appliedEffects);
 ```
 
-### FarmingPlayer Calculator
-
-The `createFarmingPlayer` function is used to create a `FarmingPlayer` object, which can be used to calculate fortune and other player-specific farming values. However, this approach is limited by the data available in Hypixel's API, which won't include every fortune source.
-
-```ts
-const options = {
-	tools: farmingTools // Array of FarmingTool objects, or EliteItemFto objects (not raw NBT data)
-	armor: armorSet // Array of FarmingArmor objects, an ArmorSet object, or EliteItemDto objects
-	equipment: equipment // Array of FarmingEquipment objects, or EliteItemDto objects
-	accessories: accessories // Array of FarmingAccessory objects, or EliteItemDto objects
-	pets: pets // Array of FarmingPet objects, or raw Hypixel API pet data
-
-	// ... other options (check the type definition)
-} satisfies PlayerOptions;
-
-const player = createFarmingPlayer(options);
-// Get a player's Wheat fortune
-const cropFortune = player.getCropFortune(Crop.Wheat);
-
-// Calculate drops using the player's scalar stats plus scoped effects
-const rates = player.getRates(Crop.Wheat, blocksBroken);
-
-console.log(cropFortune.fortune);
-console.log(rates.items);
-console.log(rates.appliedEffects);
-```
+Effects are resolved by the functions in `effects/resolver.ts`, which are also exported if you only need stat totals or breakdowns.
