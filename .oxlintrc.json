@@ -1,0 +1,16 @@
+{
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"categories": {
+		"correctness": "error"
+	},
+	"plugins": ["eslint", "typescript", "unicorn"],
+	"env": {
+		"node": true
+	},
+	"ignorePatterns": ["**/*.js", "**/*.cjs", "**/*.mjs", "**/*.d.ts", "dist/**", "link/**"],
+	"rules": {
+		"no-useless-assignment": "off",
+		"unicorn/no-useless-fallback-in-spread": "off",
+		"unicorn/no-empty-file": "off"
+	}
+}
