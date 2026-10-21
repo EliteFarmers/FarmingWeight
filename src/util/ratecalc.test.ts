@@ -6,9 +6,12 @@ import { buildEffectEnvironmentFromOptions, type EffectEnvironmentOptions } from
 import type { Effect } from '../effects/types.js';
 import { getPossibleResultsFromCrops } from './ratecalc.js';
 import {
+	BASE_DROP_SOURCE,
+	BOUNTIFUL_DROP_SOURCE,
 	type CalculateDetailedDropsFromEffectsOptions,
 	calculateDetailedDropsFromEffects,
 	type DetailedDropsFromEffectsResult,
+	MOOSHROOM_DROP_SOURCE,
 } from './ratecalc-effects.js';
 
 const crops = [
@@ -524,4 +527,75 @@ test('Absent effects leave results unchanged', () => {
 	expect(resultWithIdentityEffect.specialCropBonus).toBe(0);
 	expect(resultWithIdentityEffect.effectsBreakdown).toStrictEqual({});
 	expect(resultWithIdentityEffect.items['CROPIE']).toBe(resultWithoutModifiers.items['CROPIE']);
+});
+
+function sumSourceOutputs(result: DetailedDropsFromEffectsResult, kind: 'items' | 'rngItems' | 'currencies') {
+	const totals: Record<string, number> = {};
+	for (const output of Object.values(result.bySource)) {
+		for (const [itemId, amount] of Object.entries(output[kind])) totals[itemId] = (totals[itemId] ?? 0) + amount;
+	}
+	return totals;
+}
+
+function blessedEffect(crop: Crop): Effect {
+	return {
+		source: 'Blessed Reforge',
+		op: 'add-drop',
+		scope: { crops: [crop] },
+		drop: { itemId: crop, output: 'collection', baseAmount: 0.0022 * 160, dropKind: 'crop', tags: ['crop-drop'] },
+	};
+}
+
+test.each(crops)('%s source outputs add up to the totals', (crop) => {
+	const result = detailed({
+		crop,
+		blocksBroken: 100_000,
+		bountiful: true,
+		mooshroom: true,
+		maxTool: true,
+		harvestFeast: { active: true, inSeasonCrops: [crop] },
+		effects: [overbloomEffect(20), cropeetleEffect(), wartyBugEffect(), blessedEffect(crop)],
+	});
+
+	for (const kind of ['items', 'rngItems', 'currencies'] as const) {
+		const totals = kind === 'rngItems' ? (result.rngItems ?? {}) : result[kind];
+		const sourceTotals = sumSourceOutputs(result, kind);
+		expect(Object.keys(sourceTotals).sort(), kind).toEqual(Object.keys(totals).sort());
+		for (const [itemId, amount] of Object.entries(totals)) {
+			expect(sourceTotals[itemId], `${kind} ${itemId}`).toBeCloseTo(amount, 6);
+		}
+	}
+});
+
+test('drops from different sources stay separate when they share an item', () => {
+	const result = detailed({
+		crop: Crop.Wheat,
+		blocksBroken: 10_000,
+		bountiful: true,
+		mooshroom: true,
+		effects: [
+			blessedEffect(Crop.Wheat),
+			{ source: 'Crop Fever', op: 'add-drop', drop: { itemId: 'ENCHANTED_WHEAT', chance: 0.001, tags: [] } },
+			{ source: 'Mosquito Shard', op: 'add-drop', drop: { itemId: 'ENCHANTED_WHEAT', chance: 0.0001, tags: [] } },
+		],
+	});
+
+	expect(result.bySource['Crop Fever']?.rngItems).toEqual({ ENCHANTED_WHEAT: 10 });
+	expect(result.bySource['Mosquito Shard']?.rngItems).toEqual({ ENCHANTED_WHEAT: 1 });
+	expect(Object.keys(result.bySource['Blessed Reforge']?.items ?? {})).toEqual([Crop.Wheat]);
+	expect(result.bySource['Blessed Reforge']?.items[Crop.Wheat]).toBeCloseTo(3_520, 8);
+	expect(result.bySource[BASE_DROP_SOURCE]?.items[Crop.Wheat]).toBeCloseTo(result.items[Crop.Wheat]! - 3_520, 8);
+	expect(result.bySource[MOOSHROOM_DROP_SOURCE]?.items).toEqual({ [Crop.Mushroom]: result.otherCollection.Mushroom });
+	expect(result.bySource[BOUNTIFUL_DROP_SOURCE]?.coins).toBe(
+		result.coinSources.Bountiful! + result.coinSources['Bountiful (Seeds)']!
+	);
+	expect(result.bySource[BASE_DROP_SOURCE]?.coins).toBe(0);
+});
+
+test('Mooshroom Cow mushrooms are counted on top of farmed mushrooms', () => {
+	const withoutPet = detailed({ crop: Crop.Mushroom, blocksBroken: 10_000, mooshroom: false });
+	const withPet = detailed({ crop: Crop.Mushroom, blocksBroken: 10_000, mooshroom: true });
+
+	expect(withPet.bySource[MOOSHROOM_DROP_SOURCE]?.items[Crop.Mushroom]).toBe(10_000);
+	expect(withPet.items[Crop.Mushroom]).toBe(withoutPet.items[Crop.Mushroom]! + 10_000);
 });

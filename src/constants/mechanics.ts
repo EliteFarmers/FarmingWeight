@@ -10,30 +10,14 @@ export enum FarmingMechanic {
 
 export interface FarmingMechanicInfo {
 	name: string;
-	icon: string;
 }
 
 export const FARMING_MECHANIC_INFO: Record<FarmingMechanic, FarmingMechanicInfo> = {
-	[FarmingMechanic.CropFeverChance]: { name: 'Crop Fever Chance', icon: '%' },
-	[FarmingMechanic.CropGrowth]: { name: 'Crop Growth', icon: '☀' },
-	[FarmingMechanic.SprayonatorMaterialChance]: {
-		name: 'Sprayonator Material Chance',
-		icon: '%',
-	},
-	[FarmingMechanic.EnchantedCropChance]: {
-		name: 'Enchanted Crop Chance',
-		icon: '%',
-	},
-	[FarmingMechanic.AtmosphericFilterEffect]: {
-		name: 'Atmospheric Filter Effect',
-		icon: '%',
-	},
-	[FarmingMechanic.PestCooldownReductionSeconds]: {
-		name: 'Pest Cooldown Reduction',
-		icon: 's',
-	},
-	[FarmingMechanic.FarmingToolExperience]: {
-		name: 'Farming Tool EXP',
-		icon: '×',
-	},
+	[FarmingMechanic.CropFeverChance]: { name: 'Crop Fever Chance' },
+	[FarmingMechanic.CropGrowth]: { name: 'Crop Growth' },
+	[FarmingMechanic.SprayonatorMaterialChance]: { name: 'Sprayonator Material Chance' },
+	[FarmingMechanic.EnchantedCropChance]: { name: 'Enchanted Crop Chance' },
+	[FarmingMechanic.AtmosphericFilterEffect]: { name: 'Atmospheric Filter Effect' },
+	[FarmingMechanic.PestCooldownReductionSeconds]: { name: 'Pest Cooldown Reduction' },
+	[FarmingMechanic.FarmingToolExperience]: { name: 'Farming Tool EXP' },
 };

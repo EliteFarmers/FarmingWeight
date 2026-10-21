@@ -51,6 +51,42 @@ export interface DetailedDropsFromEffectsResult {
 	specialCropBonusBreakdown: Record<string, number>;
 	appliedEffects: Record<string, AppliedEffect[]>;
 	effectsBreakdown: EffectsBreakdown;
+	bySource: Record<string, DropSourceOutput>;
+}
+
+export const BASE_DROP_SOURCE = 'Base Drops';
+export const MOOSHROOM_DROP_SOURCE = 'Mooshroom Cow';
+export const BOUNTIFUL_DROP_SOURCE = 'Bountiful';
+
+export interface DropSourceOutput {
+	items: Record<string, number>;
+	rngItems: Record<string, number>;
+	currencies: Record<string, number>;
+	/** Coins paid out directly instead of by selling an item (ex: Bountiful) */
+	coins: number;
+}
+
+type DropOutputKind = 'items' | 'rngItems' | 'currencies';
+
+function getSourceOutput(result: DetailedDropsFromEffectsResult, source: string): DropSourceOutput {
+	return (result.bySource[source] ??= { items: {}, rngItems: {}, currencies: {}, coins: 0 });
+}
+
+function addDrop(
+	result: DetailedDropsFromEffectsResult,
+	source: string,
+	kind: DropOutputKind,
+	itemId: string,
+	amount: number
+): void {
+	const totals = kind === 'rngItems' ? (result.rngItems ??= {}) : result[kind];
+	totals[itemId] = (totals[itemId] ?? 0) + amount;
+	const sourceOutput = getSourceOutput(result, source)[kind];
+	sourceOutput[itemId] = (sourceOutput[itemId] ?? 0) + amount;
+}
+
+function addDirectCoins(result: DetailedDropsFromEffectsResult, source: string, coins: number): void {
+	getSourceOutput(result, source).coins += coins;
 }
 
 interface CandidateRngDrop {
@@ -161,6 +197,7 @@ export function calculateDetailedDropsFromEffects(
 		specialCropBonusBreakdown: {},
 		appliedEffects: {},
 		effectsBreakdown: {},
+		bySource: {},
 	};
 
 	result.fortune = calcOptions.farmingFortune ?? MAX_CROP_FORTUNE[crop] ?? 0;
@@ -177,29 +214,30 @@ export function calculateDetailedDropsFromEffects(
 
 	if (calcOptions.bountiful) {
 		result.coinSources['Bountiful'] = Math.round(baseDrops * 0.2);
+		addDirectCoins(result, BOUNTIFUL_DROP_SOURCE, result.coinSources['Bountiful']);
 	}
 	if (calcOptions.mooshroom) {
 		const mushroomDrops = Math.round(blocksBroken * breaks);
 		result.coinSources['Mooshroom'] = mushroomDrops * CROP_INFO[Crop.Mushroom].npc;
 		result.otherCollection['Mushroom'] = mushroomDrops;
-		result.items[Crop.Mushroom] = mushroomDrops;
+		addDrop(result, MOOSHROOM_DROP_SOURCE, 'items', Crop.Mushroom, mushroomDrops);
 	}
 
 	const armorPieces = Math.min(Math.max(calcOptions.armorPieces ?? 4, 0), 4) as 0 | 1 | 2 | 3 | 4;
 	const baseSpecialCrops = calculateAverageSpecialCrops(blocksBroken, crop, armorPieces, 1);
 	result.otherCollection[baseSpecialCrops.type] = baseSpecialCrops.amount;
-	result.items[baseSpecialCrops.id] = baseSpecialCrops.amount;
+	addDrop(result, BASE_DROP_SOURCE, 'items', baseSpecialCrops.id, baseSpecialCrops.amount);
 	result.coinSources[baseSpecialCrops.type] = baseSpecialCrops.npc;
 
 	if (replenish) {
 		result.coinSources['Collection'] = Math.round((baseDrops - blocksBroken * breaks) * npc);
 		result.otherCollection['Replenish'] = -Math.round(blocksBroken * breaks);
 		result.collection = Math.round(baseDrops);
-		result.items[crop] = Math.round(baseDrops - blocksBroken * breaks);
+		addDrop(result, BASE_DROP_SOURCE, 'items', crop, Math.round(baseDrops - blocksBroken * breaks));
 	} else {
 		result.coinSources['Collection'] = Math.round(baseDrops * npc);
 		result.collection = Math.round(baseDrops);
-		result.items[crop] = Math.round(baseDrops);
+		addDrop(result, BASE_DROP_SOURCE, 'items', crop, Math.round(baseDrops));
 	}
 
 	if (crop === Crop.Wheat) {
@@ -212,10 +250,11 @@ export function calculateDetailedDropsFromEffects(
 		});
 		const seedCollection = seedsResult.collection - blocksBroken;
 		result.otherCollection['Seeds'] = seedCollection;
-		result.items[Crop.Seeds] = seedCollection;
+		addDrop(result, BASE_DROP_SOURCE, 'items', Crop.Seeds, seedCollection);
 		result.coinSources['Seeds'] = seedCollection * seedsResult.npcPrice;
 		if (calcOptions.bountiful) {
 			result.coinSources['Bountiful (Seeds)'] = seedsResult.coinSources['Bountiful'] ?? 0;
+			addDirectCoins(result, BOUNTIFUL_DROP_SOURCE, result.coinSources['Bountiful (Seeds)']);
 		}
 	}
 
@@ -228,7 +267,7 @@ export function calculateDetailedDropsFromEffects(
 		const capsules =
 			((result.collection + (result.otherCollection['Seeds'] ?? 0)) * multiplier) / toolXpFactor / 200_000;
 		if (capsules > 0) {
-			result.items['TOOL_EXP_CAPSULE'] = capsules;
+			addDrop(result, BASE_DROP_SOURCE, 'items', 'TOOL_EXP_CAPSULE', capsules);
 			result.coinSources['Tool Exp Capsule'] = capsules * 100_000;
 			result.otherCollection['Tool Exp Capsule'] = capsules;
 		}
@@ -260,10 +299,11 @@ export function calculateDetailedDropsFromEffects(
 					}
 				: undefined;
 		const appliedEffects = producingEffect ? [producingEffect, ...applied] : applied;
+		const source = candidate.source ?? BASE_DROP_SOURCE;
 
 		if (candidate.output === 'collection') {
 			result.collection += finalAmount;
-			result.items[candidate.itemId] = (result.items[candidate.itemId] ?? 0) + finalAmount;
+			addDrop(result, source, 'items', candidate.itemId, finalAmount);
 			result.otherCollection[candidate.source ?? candidate.itemId] =
 				(result.otherCollection[candidate.source ?? candidate.itemId] ?? 0) + finalAmount;
 
@@ -283,7 +323,7 @@ export function calculateDetailedDropsFromEffects(
 		}
 
 		if (candidate.output === 'currency') {
-			result.currencies[candidate.itemId] = (result.currencies[candidate.itemId] ?? 0) + finalAmount;
+			addDrop(result, source, 'currencies', candidate.itemId, finalAmount);
 
 			if (appliedEffects.length > 0) {
 				result.appliedEffects[candidate.itemId] = (result.appliedEffects[candidate.itemId] ?? []).concat(
@@ -294,8 +334,7 @@ export function calculateDetailedDropsFromEffects(
 			continue;
 		}
 
-		result.rngItems ??= {};
-		result.rngItems[candidate.itemId] = (result.rngItems[candidate.itemId] ?? 0) + finalAmount;
+		addDrop(result, source, 'rngItems', candidate.itemId, finalAmount);
 
 		if (appliedEffects.length > 0) {
 			result.appliedEffects[candidate.itemId] = (result.appliedEffects[candidate.itemId] ?? []).concat(
@@ -304,7 +343,7 @@ export function calculateDetailedDropsFromEffects(
 			aggregateEffectsBreakdown(result.effectsBreakdown, appliedEffects);
 		}
 	}
-	
+
 	const specialCrop = MATCHING_SPECIAL_CROP[crop];
 	if (specialCrop) {
 		const specialCtx: DropContext = {
@@ -319,8 +358,13 @@ export function calculateDetailedDropsFromEffects(
 		const totalMultiplier = (1 + addRarePct / 100) * mulRare * mulDrop;
 		if (totalMultiplier !== 1 && totalMultiplier > 0) {
 			const newAmount = calculateAverageSpecialCrops(blocksBroken, crop, armorPieces, totalMultiplier);
+			const specialCropId = SPECIAL_CROP_INFO[specialCrop].id;
 			result.otherCollection[specialCrop] = newAmount.amount;
-			result.items[SPECIAL_CROP_INFO[specialCrop].id] = newAmount.amount;
+
+			const baseItems = getSourceOutput(result, BASE_DROP_SOURCE).items;
+			baseItems[specialCropId] =
+				(baseItems[specialCropId] ?? 0) + newAmount.amount - (result.items[specialCropId] ?? 0);
+			result.items[specialCropId] = newAmount.amount;
 			result.coinSources[specialCrop] = newAmount.npc;
 			if (applied.length > 0) {
 				result.appliedEffects[SPECIAL_CROP_INFO[specialCrop].id] = applied;
