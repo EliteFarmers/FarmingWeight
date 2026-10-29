@@ -1145,7 +1145,7 @@ function getGreenhouseMutationsBase(): Record<string, Omit<GreenhouseMutation, '
 				},
 			},
 			analysis: {
-				baseCost: 80000,
+				baseCost: 160000,
 				copper: 80,
 			},
 		},
